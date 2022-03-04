@@ -1,0 +1,22 @@
+{
+  "name": "paper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "vite",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@enable3d/ammo-physics": "^0.25.1",
+    "@enable3d/three-graphics": "^0.25.1",
+    "ammojs-wasm-typed": "^1.1.0",
+    "dat.gui": "^0.7.7",
+    "enable3d": "^0.25.1",
+    "three": "^0.137.5",
+    "vite": "^2.7.13"
+  }
+}
