@@ -1,2 +1,1 @@
-web: sh -c 'cd ./neo/ && npm run start'
-
+web: npm start --prefix neo
