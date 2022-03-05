@@ -9,7 +9,7 @@ const start = async () => {
     try {
         Initializer(fastify)
 
-        await fastify.listen(3000)
+        await fastify.listen(process.env.PORT || 3000)
     } catch (err) {
         fastify.log.error(err)
         process.exit(1)
