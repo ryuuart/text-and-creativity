@@ -1,8 +1,9 @@
-export async function web(fastify, options) {
-    fastify.get('/', async (req, rep) => {
-        const client = await fastify.pg.connect();
-        const { rows } = await client.query('SELECT text FROM words LIMIT 50');
-        client.release();
-        return rows;
+export default function async(fastify, options, done) {
+    fastify.get("/", async (req, rep) => {
+        rep.view("/src/views/index.pug", {
+            words: JSON.stringify((await fastify.dbGetNWords(2)).rows)
+        })
     })
+
+    done();
 }
