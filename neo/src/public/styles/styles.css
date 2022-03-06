@@ -1,0 +1,17 @@
+@font-face {
+  font-family: "East Lift";
+  src: url("/fonts/eastlift.regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Zero Hour";
+  src: url("/fonts/zero-hour.regular.woff") format("woff");
+}
+
+:root {
+}
+
+h1 {
+  font-family: "East Lift";
+  font-weight: normal;
+}

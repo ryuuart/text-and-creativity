@@ -1,0 +1,21 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/esbuild main.js --bundle --minify --outfile=../public/js/main.js",
+    "dev": "./node_modules/.bin/esbuild main.js --bundle --watch --outfile=../public/js/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@theatre/core": "^0.4.7",
+    "esbuild": "^0.14.25",
+    "three": "^0.138.3"
+  },
+  "devDependencies": {
+    "@theatre/studio": "^0.4.7"
+  }
+}
