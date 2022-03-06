@@ -975,7 +975,7 @@
       var __getProtoOf2 = Object.getPrototypeOf;
       var __hasOwnProp2 = Object.prototype.hasOwnProperty;
       var __propIsEnum = Object.prototype.propertyIsEnumerable;
-      var __defNormalProp = (obj2, key, value) => key in obj2 ? __defProp2(obj2, key, { enumerable: true, configurable: true, writable: true, value }) : obj2[key] = value;
+      var __defNormalProp = (obj, key, value) => key in obj ? __defProp2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
       var __spreadValues = (a, b) => {
         for (var prop in b || (b = {}))
           if (__hasOwnProp2.call(b, prop))
@@ -1537,17 +1537,17 @@
       var pointerMetaSymbol = Symbol("pointerMeta");
       var cachedSubPointersWeakMap = /* @__PURE__ */ new WeakMap();
       var handler = {
-        get(obj2, prop) {
+        get(obj, prop) {
           if (prop === pointerMetaSymbol)
-            return pointerMetaWeakMap.get(obj2);
-          let subs = cachedSubPointersWeakMap.get(obj2);
+            return pointerMetaWeakMap.get(obj);
+          let subs = cachedSubPointersWeakMap.get(obj);
           if (!subs) {
             subs = {};
-            cachedSubPointersWeakMap.set(obj2, subs);
+            cachedSubPointersWeakMap.set(obj, subs);
           }
           if (subs[prop])
             return subs[prop];
-          const meta = pointerMetaWeakMap.get(obj2);
+          const meta = pointerMetaWeakMap.get(obj);
           const subPointer = pointer({ root: meta.root, path: [...meta.path, prop] });
           subs[prop] = subPointer;
           return subPointer;
@@ -2163,7 +2163,7 @@
       var __getProtoOf2 = Object.getPrototypeOf;
       var __hasOwnProp2 = Object.prototype.hasOwnProperty;
       var __propIsEnum = Object.prototype.propertyIsEnumerable;
-      var __defNormalProp = (obj2, key, value) => key in obj2 ? __defProp2(obj2, key, { enumerable: true, configurable: true, writable: true, value }) : obj2[key] = value;
+      var __defNormalProp = (obj, key, value) => key in obj ? __defProp2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
       var __spreadValues = (a2, b2) => {
         for (var prop in b2 || (b2 = {}))
           if (__hasOwnProp2.call(b2, prop))
@@ -2208,8 +2208,8 @@
       var __toModule = (module2) => {
         return __reExport2(__markAsModule2(__defProp2(module2 != null ? __create2(__getProtoOf2(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
       };
-      var __publicField = (obj2, key, value) => {
-        __defNormalProp(obj2, typeof key !== "symbol" ? key + "" : key, value);
+      var __publicField = (obj, key, value) => {
+        __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
         return value;
       };
       var require_UnitBezier = __commonJS2({
@@ -3209,8 +3209,8 @@
         }
       };
       var SheetObject = class {
-        constructor(sheet2, template, nativeObject) {
-          this.sheet = sheet2;
+        constructor(sheet, template, nativeObject) {
+          this.sheet = sheet;
           this.template = template;
           this.nativeObject = nativeObject;
           __publicField(this, "$$isIdentityDerivationProvider", true);
@@ -3219,7 +3219,7 @@
           __publicField(this, "_initialValue", new import_dataverse6.Atom({}));
           __publicField(this, "_cache", new SimpleCache());
           this.address = __spreadProps(__spreadValues({}, template.address), {
-            sheetInstanceId: sheet2.address.sheetInstanceId
+            sheetInstanceId: sheet.address.sheetInstanceId
           });
           this.publicApi = new TheatreSheetObject(this);
         }
@@ -3314,9 +3314,9 @@
         get config() {
           return this._config.getState();
         }
-        createInstance(sheet2, nativeObject, config) {
+        createInstance(sheet, nativeObject, config) {
           this._config.setState(config);
-          return new SheetObject(sheet2, this, nativeObject);
+          return new SheetObject(sheet, this, nativeObject);
         }
         overrideConfig(config) {
           this._config.setState(config);
@@ -3886,8 +3886,8 @@
         get type() {
           return "Theatre_Sequence_PublicAPI";
         }
-        constructor(sheet2) {
-          setPrivateAPI(this, sheet2);
+        constructor(sheet) {
+          setPrivateAPI(this, sheet);
         }
         play(conf) {
           if (privateAPI(this)._project.isReady()) {
@@ -4498,8 +4498,8 @@ project.ready.then(() => {
         get type() {
           return "Theatre_Sheet_PublicAPI";
         }
-        constructor(sheet2) {
-          setPrivateAPI(this, sheet2);
+        constructor(sheet) {
+          setPrivateAPI(this, sheet);
         }
         object(key, config) {
           const internal = privateAPI(this);
@@ -5298,6 +5298,272 @@ Note that it **is okay** to import '@theatre/core' multiple times. But those imp
           possibleExistingStudioBundle.registerCoreBundle(coreBundle2);
         }
       }
+    }
+  });
+
+  // ../../node_modules/shortid/lib/random/random-from-seed.js
+  var require_random_from_seed = __commonJS({
+    "../../node_modules/shortid/lib/random/random-from-seed.js"(exports, module) {
+      "use strict";
+      var seed = 1;
+      function getNextValue() {
+        seed = (seed * 9301 + 49297) % 233280;
+        return seed / 233280;
+      }
+      function setSeed(_seed_) {
+        seed = _seed_;
+      }
+      module.exports = {
+        nextValue: getNextValue,
+        seed: setSeed
+      };
+    }
+  });
+
+  // ../../node_modules/shortid/lib/alphabet.js
+  var require_alphabet = __commonJS({
+    "../../node_modules/shortid/lib/alphabet.js"(exports, module) {
+      "use strict";
+      var randomFromSeed = require_random_from_seed();
+      var ORIGINAL = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
+      var alphabet;
+      var previousSeed;
+      var shuffled;
+      function reset() {
+        shuffled = false;
+      }
+      function setCharacters(_alphabet_) {
+        if (!_alphabet_) {
+          if (alphabet !== ORIGINAL) {
+            alphabet = ORIGINAL;
+            reset();
+          }
+          return;
+        }
+        if (_alphabet_ === alphabet) {
+          return;
+        }
+        if (_alphabet_.length !== ORIGINAL.length) {
+          throw new Error("Custom alphabet for shortid must be " + ORIGINAL.length + " unique characters. You submitted " + _alphabet_.length + " characters: " + _alphabet_);
+        }
+        var unique = _alphabet_.split("").filter(function(item, ind, arr) {
+          return ind !== arr.lastIndexOf(item);
+        });
+        if (unique.length) {
+          throw new Error("Custom alphabet for shortid must be " + ORIGINAL.length + " unique characters. These characters were not unique: " + unique.join(", "));
+        }
+        alphabet = _alphabet_;
+        reset();
+      }
+      function characters(_alphabet_) {
+        setCharacters(_alphabet_);
+        return alphabet;
+      }
+      function setSeed(seed) {
+        randomFromSeed.seed(seed);
+        if (previousSeed !== seed) {
+          reset();
+          previousSeed = seed;
+        }
+      }
+      function shuffle() {
+        if (!alphabet) {
+          setCharacters(ORIGINAL);
+        }
+        var sourceArray = alphabet.split("");
+        var targetArray = [];
+        var r = randomFromSeed.nextValue();
+        var characterIndex;
+        while (sourceArray.length > 0) {
+          r = randomFromSeed.nextValue();
+          characterIndex = Math.floor(r * sourceArray.length);
+          targetArray.push(sourceArray.splice(characterIndex, 1)[0]);
+        }
+        return targetArray.join("");
+      }
+      function getShuffled() {
+        if (shuffled) {
+          return shuffled;
+        }
+        shuffled = shuffle();
+        return shuffled;
+      }
+      function lookup(index) {
+        var alphabetShuffled = getShuffled();
+        return alphabetShuffled[index];
+      }
+      function get2() {
+        return alphabet || ORIGINAL;
+      }
+      module.exports = {
+        get: get2,
+        characters,
+        seed: setSeed,
+        lookup,
+        shuffled: getShuffled
+      };
+    }
+  });
+
+  // ../../node_modules/shortid/lib/random/random-byte-browser.js
+  var require_random_byte_browser = __commonJS({
+    "../../node_modules/shortid/lib/random/random-byte-browser.js"(exports, module) {
+      "use strict";
+      var crypto2 = typeof window === "object" && (window.crypto || window.msCrypto);
+      var randomByte;
+      if (!crypto2 || !crypto2.getRandomValues) {
+        randomByte = function(size) {
+          var bytes = [];
+          for (var i = 0; i < size; i++) {
+            bytes.push(Math.floor(Math.random() * 256));
+          }
+          return bytes;
+        };
+      } else {
+        randomByte = function(size) {
+          return crypto2.getRandomValues(new Uint8Array(size));
+        };
+      }
+      module.exports = randomByte;
+    }
+  });
+
+  // ../../node_modules/shortid/node_modules/nanoid/format.browser.js
+  var require_format_browser = __commonJS({
+    "../../node_modules/shortid/node_modules/nanoid/format.browser.js"(exports, module) {
+      module.exports = function(random, alphabet, size) {
+        var mask = (2 << Math.log(alphabet.length - 1) / Math.LN2) - 1;
+        var step = -~(1.6 * mask * size / alphabet.length);
+        var id = "";
+        while (true) {
+          var bytes = random(step);
+          var i = step;
+          while (i--) {
+            id += alphabet[bytes[i] & mask] || "";
+            if (id.length === +size)
+              return id;
+          }
+        }
+      };
+    }
+  });
+
+  // ../../node_modules/shortid/lib/generate.js
+  var require_generate = __commonJS({
+    "../../node_modules/shortid/lib/generate.js"(exports, module) {
+      "use strict";
+      var alphabet = require_alphabet();
+      var random = require_random_byte_browser();
+      var format = require_format_browser();
+      function generate(number) {
+        var loopCounter = 0;
+        var done;
+        var str = "";
+        while (!done) {
+          str = str + format(random, alphabet.get(), 1);
+          done = number < Math.pow(16, loopCounter + 1);
+          loopCounter++;
+        }
+        return str;
+      }
+      module.exports = generate;
+    }
+  });
+
+  // ../../node_modules/shortid/lib/build.js
+  var require_build = __commonJS({
+    "../../node_modules/shortid/lib/build.js"(exports, module) {
+      "use strict";
+      var generate = require_generate();
+      var alphabet = require_alphabet();
+      var REDUCE_TIME = 1567752802062;
+      var version = 7;
+      var counter;
+      var previousSeconds;
+      function build(clusterWorkerId) {
+        var str = "";
+        var seconds = Math.floor((Date.now() - REDUCE_TIME) * 1e-3);
+        if (seconds === previousSeconds) {
+          counter++;
+        } else {
+          counter = 0;
+          previousSeconds = seconds;
+        }
+        str = str + generate(version);
+        str = str + generate(clusterWorkerId);
+        if (counter > 0) {
+          str = str + generate(counter);
+        }
+        str = str + generate(seconds);
+        return str;
+      }
+      module.exports = build;
+    }
+  });
+
+  // ../../node_modules/shortid/lib/is-valid.js
+  var require_is_valid = __commonJS({
+    "../../node_modules/shortid/lib/is-valid.js"(exports, module) {
+      "use strict";
+      var alphabet = require_alphabet();
+      function isShortId(id) {
+        if (!id || typeof id !== "string" || id.length < 6) {
+          return false;
+        }
+        var nonAlphabetic = new RegExp("[^" + alphabet.get().replace(/[|\\{}()[\]^$+*?.-]/g, "\\$&") + "]");
+        return !nonAlphabetic.test(id);
+      }
+      module.exports = isShortId;
+    }
+  });
+
+  // ../../node_modules/shortid/lib/util/cluster-worker-id-browser.js
+  var require_cluster_worker_id_browser = __commonJS({
+    "../../node_modules/shortid/lib/util/cluster-worker-id-browser.js"(exports, module) {
+      "use strict";
+      module.exports = 0;
+    }
+  });
+
+  // ../../node_modules/shortid/lib/index.js
+  var require_lib = __commonJS({
+    "../../node_modules/shortid/lib/index.js"(exports, module) {
+      "use strict";
+      var alphabet = require_alphabet();
+      var build = require_build();
+      var isValid = require_is_valid();
+      var clusterWorkerId = require_cluster_worker_id_browser() || 0;
+      function seed(seedValue) {
+        alphabet.seed(seedValue);
+        return module.exports;
+      }
+      function worker(workerId) {
+        clusterWorkerId = workerId;
+        return module.exports;
+      }
+      function characters(newCharacters) {
+        if (newCharacters !== void 0) {
+          alphabet.characters(newCharacters);
+        }
+        return alphabet.shuffled();
+      }
+      function generate() {
+        return build(clusterWorkerId);
+      }
+      module.exports = generate;
+      module.exports.generate = generate;
+      module.exports.seed = seed;
+      module.exports.worker = worker;
+      module.exports.characters = characters;
+      module.exports.isValid = isValid;
+    }
+  });
+
+  // ../../node_modules/shortid/index.js
+  var require_shortid = __commonJS({
+    "../../node_modules/shortid/index.js"(exports, module) {
+      "use strict";
+      module.exports = require_lib();
     }
   });
 
@@ -25180,9 +25446,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var scheduleUpdate = null;
           var setSuspenseHandler = null;
           {
-            var copyWithDeleteImpl = function(obj2, path, index2) {
+            var copyWithDeleteImpl = function(obj, path, index2) {
               var key = path[index2];
-              var updated = Array.isArray(obj2) ? obj2.slice() : _assign({}, obj2);
+              var updated = Array.isArray(obj) ? obj.slice() : _assign({}, obj);
               if (index2 + 1 === path.length) {
                 if (Array.isArray(updated)) {
                   updated.splice(key, 1);
@@ -25191,15 +25457,15 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 }
                 return updated;
               }
-              updated[key] = copyWithDeleteImpl(obj2[key], path, index2 + 1);
+              updated[key] = copyWithDeleteImpl(obj[key], path, index2 + 1);
               return updated;
             };
-            var copyWithDelete = function(obj2, path) {
-              return copyWithDeleteImpl(obj2, path, 0);
+            var copyWithDelete = function(obj, path) {
+              return copyWithDeleteImpl(obj, path, 0);
             };
-            var copyWithRenameImpl = function(obj2, oldPath, newPath, index2) {
+            var copyWithRenameImpl = function(obj, oldPath, newPath, index2) {
               var oldKey = oldPath[index2];
-              var updated = Array.isArray(obj2) ? obj2.slice() : _assign({}, obj2);
+              var updated = Array.isArray(obj) ? obj.slice() : _assign({}, obj);
               if (index2 + 1 === oldPath.length) {
                 var newKey = newPath[index2];
                 updated[newKey] = updated[oldKey];
@@ -25209,11 +25475,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   delete updated[oldKey];
                 }
               } else {
-                updated[oldKey] = copyWithRenameImpl(obj2[oldKey], oldPath, newPath, index2 + 1);
+                updated[oldKey] = copyWithRenameImpl(obj[oldKey], oldPath, newPath, index2 + 1);
               }
               return updated;
             };
-            var copyWithRename = function(obj2, oldPath, newPath) {
+            var copyWithRename = function(obj, oldPath, newPath) {
               if (oldPath.length !== newPath.length) {
                 warn("copyWithRename() expects paths of the same length");
                 return;
@@ -25225,19 +25491,19 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   }
                 }
               }
-              return copyWithRenameImpl(obj2, oldPath, newPath, 0);
+              return copyWithRenameImpl(obj, oldPath, newPath, 0);
             };
-            var copyWithSetImpl = function(obj2, path, index2, value) {
+            var copyWithSetImpl = function(obj, path, index2, value) {
               if (index2 >= path.length) {
                 return value;
               }
               var key = path[index2];
-              var updated = Array.isArray(obj2) ? obj2.slice() : _assign({}, obj2);
-              updated[key] = copyWithSetImpl(obj2[key], path, index2 + 1, value);
+              var updated = Array.isArray(obj) ? obj.slice() : _assign({}, obj);
+              updated[key] = copyWithSetImpl(obj[key], path, index2 + 1, value);
               return updated;
             };
-            var copyWithSet = function(obj2, path, value) {
-              return copyWithSetImpl(obj2, path, 0, value);
+            var copyWithSet = function(obj, path, value) {
+              return copyWithSetImpl(obj, path, 0, value);
             };
             var findHook = function(fiber, id) {
               var currentHook2 = fiber.memoizedState;
@@ -27492,7 +27758,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var __getProtoOf2 = Object.getPrototypeOf;
       var __hasOwnProp2 = Object.prototype.hasOwnProperty;
       var __propIsEnum = Object.prototype.propertyIsEnumerable;
-      var __defNormalProp = (obj2, key, value) => key in obj2 ? __defProp2(obj2, key, { enumerable: true, configurable: true, writable: true, value }) : obj2[key] = value;
+      var __defNormalProp = (obj, key, value) => key in obj ? __defProp2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
       var __spreadValues = (a2, b2) => {
         for (var prop in b2 || (b2 = {}))
           if (__hasOwnProp2.call(b2, prop))
@@ -27537,8 +27803,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var __toModule = (module2) => {
         return __reExport2(__markAsModule2(__defProp2(module2 != null ? __create2(__getProtoOf2(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
       };
-      var __publicField = (obj2, key, value) => {
-        __defNormalProp(obj2, typeof key !== "symbol" ? key + "" : key, value);
+      var __publicField = (obj, key, value) => {
+        __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
         return value;
       };
       var __async = (__this, __arguments, generator) => {
@@ -28026,8 +28292,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var _hslToRgb = /* @__PURE__ */ _interopRequireDefault(require_hslToRgb());
           var _nameToHex = /* @__PURE__ */ _interopRequireDefault(require_nameToHex());
           var _errors = /* @__PURE__ */ _interopRequireDefault(require_errors());
-          function _interopRequireDefault(obj2) {
-            return obj2 && obj2.__esModule ? obj2 : { "default": obj2 };
+          function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : { "default": obj };
           }
           var hexRegex2 = /^#[a-fA-F0-9]{6}$/;
           var hexRgbaRegex2 = /^#[a-fA-F0-9]{8}$/;
@@ -28167,8 +28433,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var _reduceHexValue = /* @__PURE__ */ _interopRequireDefault(require_reduceHexValue());
           var _numberToHex = /* @__PURE__ */ _interopRequireDefault(require_numberToHex());
           var _errors = /* @__PURE__ */ _interopRequireDefault(require_errors());
-          function _interopRequireDefault(obj2) {
-            return obj2 && obj2.__esModule ? obj2 : { "default": obj2 };
+          function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : { "default": obj };
           }
           function rgb2(value, green, blue) {
             if (typeof value === "number" && typeof green === "number" && typeof blue === "number") {
@@ -28189,8 +28455,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var _parseToRgb = /* @__PURE__ */ _interopRequireDefault(require_parseToRgb());
           var _rgb = /* @__PURE__ */ _interopRequireDefault(require_rgb());
           var _errors = /* @__PURE__ */ _interopRequireDefault(require_errors());
-          function _interopRequireDefault(obj2) {
-            return obj2 && obj2.__esModule ? obj2 : { "default": obj2 };
+          function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : { "default": obj };
           }
           function rgba2(firstValue, secondValue, thirdValue, fourthValue) {
             if (typeof firstValue === "string" && typeof secondValue === "number") {
@@ -28215,8 +28481,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var _guard = /* @__PURE__ */ _interopRequireDefault(require_guard());
           var _rgba = /* @__PURE__ */ _interopRequireDefault(require_rgba());
           var _parseToRgb = /* @__PURE__ */ _interopRequireDefault(require_parseToRgb());
-          function _interopRequireDefault(obj2) {
-            return obj2 && obj2.__esModule ? obj2 : { "default": obj2 };
+          function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : { "default": obj };
           }
           function _extends2() {
             _extends2 = Object.assign || function(target) {
@@ -29617,23 +29883,23 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var require_shallowCopy = __commonJS2({
         "../node_modules/json-touch-patch/lib/utils/shallowCopy.js"(exports2, module2) {
           "use strict";
-          function shallowCopy(obj2) {
-            if (!obj2 || typeof obj2 !== "object") {
-              return obj2;
+          function shallowCopy(obj) {
+            if (!obj || typeof obj !== "object") {
+              return obj;
             }
-            if (Array.isArray(obj2)) {
-              var len = obj2.length;
+            if (Array.isArray(obj)) {
+              var len = obj.length;
               var ary = new Array(len);
               for (var i22 = 0; i22 < len; i22++) {
-                ary[i22] = obj2[i22];
+                ary[i22] = obj[i22];
               }
               return ary;
             }
-            var keys2 = Object.keys(obj2);
+            var keys2 = Object.keys(obj);
             var copy = {};
             for (var j2 = 0, jmax = keys2.length; j2 < jmax; j2++) {
               var key = keys2[j2];
-              copy[key] = obj2[key];
+              copy[key] = obj[key];
             }
             return copy;
           }
@@ -29837,7 +30103,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           module2.exports = patchFn;
         }
       });
-      var require_lib = __commonJS2({
+      var require_lib2 = __commonJS2({
         "../node_modules/json-touch-patch/lib/index.js"(exports2, module2) {
           module2.exports = require_patch();
         }
@@ -33036,10 +33302,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           if (s2.type === "Sheet") {
             return sheetInstance;
           }
-          const obj2 = (0, import_dataverse4.val)(sheetInstance.objectsP[s2.objectKey]);
-          if (!obj2)
+          const obj = (0, import_dataverse4.val)(sheetInstance.objectsP[s2.objectKey]);
+          if (!obj)
             return;
-          return obj2;
+          return obj;
         });
         return uniq_default(mapped.filter((s2) => typeof s2 !== "undefined"));
       };
@@ -33061,10 +33327,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       }
       function getSelectedSequence() {
         const selectedSheets = uniq_default(getOutlineSelection().filter((s2) => isSheet(s2) || isSheetObject(s2)).map((s2) => isSheetObject(s2) ? s2.sheet : s2));
-        const sheet2 = selectedSheets[0];
-        if (!sheet2)
+        const sheet = selectedSheets[0];
+        if (!sheet)
           return;
-        return sheet2.getSequence();
+        return sheet.getSequence();
       }
       var import_react14 = __toModule(require_react());
       var import_dataverse6 = __toModule(require_dist());
@@ -33093,9 +33359,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var Li = import_styled_components4.default.li`
   color: ${(props) => props.isSelected ? "white" : "hsl(1, 1%, 80%)"};
 `;
-      var ObjectsList = ({ sheet: sheet2, depth }) => {
+      var ObjectsList = ({ sheet, depth }) => {
         return usePrism(() => {
-          const objects = (0, import_dataverse5.val)(sheet2.objectsP);
+          const objects = (0, import_dataverse5.val)(sheet.objectsP);
           const objectsEntries = Object.entries(objects);
           return /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, objectsEntries.map(([objectPath, object]) => {
             return /* @__PURE__ */ import_react8.default.createElement(ObjectItem, {
@@ -33104,7 +33370,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               sheetObject: object
             });
           }));
-        }, [sheet2, depth]);
+        }, [sheet, depth]);
       };
       var ObjectsList_default = ObjectsList;
       var Head = import_styled_components5.default.div`
@@ -33114,23 +33380,23 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   color: ${(props) => props.isSelected ? "white" : "hsl(1, 1%, 80%)"};
 `;
       var Body = import_styled_components5.default.div``;
-      var SheetInstanceItem = ({ sheet: sheet2, depth }) => {
+      var SheetInstanceItem = ({ sheet, depth }) => {
         const setSelectedSheet = (0, import_react10.useCallback)(() => {
           getStudio().transaction(({ stateEditors: stateEditors2 }) => {
-            stateEditors2.studio.historic.panels.outline.selection.set([sheet2]);
+            stateEditors2.studio.historic.panels.outline.selection.set([sheet]);
           });
-        }, [sheet2]);
+        }, [sheet]);
         return usePrism(() => {
           const selection = getOutlineSelection();
           return /* @__PURE__ */ import_react10.default.createElement(BaseItem_default, {
             depth,
             select: setSelectedSheet,
-            selectionStatus: selection.some((s2) => s2 === sheet2) ? "selected" : selection.some((s2) => s2.type === "Theatre_SheetObject" && s2.sheet === sheet2) ? "descendant-is-selected" : "not-selected",
-            label: /* @__PURE__ */ import_react10.default.createElement(Head, null, sheet2.address.sheetId, ": ", sheet2.address.sheetInstanceId)
+            selectionStatus: selection.some((s2) => s2 === sheet) ? "selected" : selection.some((s2) => s2.type === "Theatre_SheetObject" && s2.sheet === sheet) ? "descendant-is-selected" : "not-selected",
+            label: /* @__PURE__ */ import_react10.default.createElement(Head, null, sheet.address.sheetId, ": ", sheet.address.sheetInstanceId)
           }, /* @__PURE__ */ import_react10.default.createElement(Body, null, /* @__PURE__ */ import_react10.default.createElement(ObjectsList_default, {
             depth: depth + 1,
-            sheet: sheet2,
-            key: "objectList" + sheet2.address.sheetInstanceId
+            sheet,
+            key: "objectList" + sheet.address.sheetInstanceId
           })));
         }, [depth]);
       };
@@ -33285,22 +33551,22 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         return [state, setRafState];
       };
       var useRafState_default = useRafState;
-      function on(obj2) {
+      function on(obj) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
           args[_i - 1] = arguments[_i];
         }
-        if (obj2 && obj2.addEventListener) {
-          obj2.addEventListener.apply(obj2, args);
+        if (obj && obj.addEventListener) {
+          obj.addEventListener.apply(obj, args);
         }
       }
-      function off(obj2) {
+      function off(obj) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
           args[_i - 1] = arguments[_i];
         }
-        if (obj2 && obj2.removeEventListener) {
-          obj2.removeEventListener.apply(obj2, args);
+        if (obj && obj.removeEventListener) {
+          obj.removeEventListener.apply(obj, args);
         }
       }
       var isBrowser = typeof window !== "undefined";
@@ -33483,18 +33749,18 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         }, children);
       };
       var TooltipContext_default = TooltipContext;
-      function _defineProperty(obj2, key, value) {
-        if (key in obj2) {
-          Object.defineProperty(obj2, key, {
+      function _defineProperty(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
             value,
             enumerable: true,
             configurable: true,
             writable: true
           });
         } else {
-          obj2[key] = value;
+          obj[key] = value;
         }
-        return obj2;
+        return obj;
       }
       function ownKeys(object, enumerableOnly) {
         var keys2 = Object.keys(object);
@@ -33542,18 +33808,18 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var import_react32 = __toModule(require_react());
       var import_react30 = __toModule(require_react());
       var SystemContext = /* @__PURE__ */ (0, import_react30.createContext)({});
-      function _defineProperty2(obj2, key, value) {
-        if (key in obj2) {
-          Object.defineProperty(obj2, key, {
+      function _defineProperty2(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
             value,
             enumerable: true,
             configurable: true,
             writable: true
           });
         } else {
-          obj2[key] = value;
+          obj[key] = value;
         }
-        return obj2;
+        return obj;
       }
       function ownKeys2(object, enumerableOnly) {
         var keys2 = Object.keys(object);
@@ -33659,18 +33925,18 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         }
         return /* @__PURE__ */ (0, import_react31.createElement)(type, props, children);
       };
-      function _defineProperty3(obj2, key, value) {
-        if (key in obj2) {
-          Object.defineProperty(obj2, key, {
+      function _defineProperty3(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
             value,
             enumerable: true,
             configurable: true,
             writable: true
           });
         } else {
-          obj2[key] = value;
+          obj[key] = value;
         }
-        return obj2;
+        return obj;
       }
       function ownKeys3(object, enumerableOnly) {
         var keys2 = Object.keys(object);
@@ -34982,11 +35248,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         }, /* @__PURE__ */ import_react56.default.createElement(Icons.Next, null)));
       };
       var NextPrevKeyframeCursors_default = NextPrevKeyframeCursors;
-      function useEditingToolsForPrimitiveProp(pointerToProp, obj2, propConfig) {
+      function useEditingToolsForPrimitiveProp(pointerToProp, obj, propConfig) {
         return usePrism(() => {
           var _a;
           const pathToProp = (0, import_dataverse11.getPointerParts)(pointerToProp).path;
-          const final = obj2.getValueByPointer(pointerToProp);
+          const final = obj.getValueByPointer(pointerToProp);
           const callbacks = import_dataverse11.prism.memo("callbacks", () => {
             let currentScrub = null;
             return {
@@ -35019,7 +35285,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               }
             };
           }, []);
-          const beingScrubbed = (0, import_dataverse11.val)(get_default2(getStudio().atomP.ephemeral.projects.stateByProjectId[obj2.address.projectId].stateBySheetId[obj2.address.sheetId].stateByObjectKey[obj2.address.objectKey].valuesBeingScrubbed, (0, import_dataverse11.getPointerParts)(pointerToProp).path)) === true;
+          const beingScrubbed = (0, import_dataverse11.val)(get_default2(getStudio().atomP.ephemeral.projects.stateByProjectId[obj.address.projectId].stateBySheetId[obj.address.sheetId].stateByObjectKey[obj.address.objectKey].valuesBeingScrubbed, (0, import_dataverse11.getPointerParts)(pointerToProp).path)) === true;
           const contextMenuItems = [];
           const common2 = __spreadProps(__spreadValues({}, callbacks), {
             value: final,
@@ -35029,7 +35295,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           });
           const isSequencable = isPropConfSequencable(propConfig);
           if (isSequencable) {
-            const validSequencedTracks = (0, import_dataverse11.val)(obj2.template.getMapOfValidSequenceTracks_forStudio());
+            const validSequencedTracks = (0, import_dataverse11.val)(obj.template.getMapOfValidSequenceTracks_forStudio());
             const possibleSequenceTrackId = getDeep(validSequencedTracks, pathToProp);
             const isSequenced = typeof possibleSequenceTrackId === "string";
             if (isSequenced) {
@@ -35037,19 +35303,19 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 label: "Make static",
                 callback: () => {
                   getStudio().transaction(({ stateEditors: stateEditors2 }) => {
-                    const propAddress = __spreadProps(__spreadValues({}, obj2.address), { pathToProp });
+                    const propAddress = __spreadProps(__spreadValues({}, obj.address), { pathToProp });
                     stateEditors2.coreByProject.historic.sheetsById.sequence.setPrimitivePropAsStatic(__spreadProps(__spreadValues({}, propAddress), {
-                      value: obj2.getValueByPointer(pointerToProp)
+                      value: obj.getValueByPointer(pointerToProp)
                     }));
                   });
                 }
               });
               const sequenceTrcackId = possibleSequenceTrackId;
               const nearbyKeyframes = import_dataverse11.prism.sub("lcr", () => {
-                const track = (0, import_dataverse11.val)(obj2.template.project.pointers.historic.sheetsById[obj2.address.sheetId].sequence.tracksByObject[obj2.address.objectKey].trackData[sequenceTrcackId]);
+                const track = (0, import_dataverse11.val)(obj.template.project.pointers.historic.sheetsById[obj.address.sheetId].sequence.tracksByObject[obj.address.objectKey].trackData[sequenceTrcackId]);
                 if (!track || track.keyframes.length === 0)
                   return {};
-                const pos = (0, import_dataverse11.val)(obj2.sheet.getSequence().positionDerivation);
+                const pos = (0, import_dataverse11.val)(obj.sheet.getSequence().positionDerivation);
                 const i22 = track.keyframes.findIndex((kf) => kf.position >= pos);
                 if (i22 === -1)
                   return {
@@ -35083,7 +35349,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               }
               const nextPrevKeyframeCursors = /* @__PURE__ */ import_react58.default.createElement(NextPrevKeyframeCursors_default, __spreadProps(__spreadValues({}, nearbyKeyframes), {
                 jumpToPosition: (position2) => {
-                  obj2.sheet.getSequence().position = position2;
+                  obj.sheet.getSequence().position = position2;
                 },
                 toggleKeyframeOnCurrentPosition: () => {
                   if (nearbyKeyframes.cur) {
@@ -35119,13 +35385,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               label: "Sequence",
               callback: () => {
                 getStudio().transaction(({ stateEditors: stateEditors2 }) => {
-                  const propAddress = __spreadProps(__spreadValues({}, obj2.address), { pathToProp });
+                  const propAddress = __spreadProps(__spreadValues({}, obj.address), { pathToProp });
                   stateEditors2.coreByProject.historic.sheetsById.sequence.setPrimitivePropAsSequenced(propAddress);
                 });
               }
             });
           }
-          const statics = (0, import_dataverse11.val)(obj2.template.getStaticValues());
+          const statics = (0, import_dataverse11.val)(obj.template.getStaticValues());
           if (typeof getDeep(statics, pathToProp) !== "undefined") {
             const ret2 = __spreadProps(__spreadValues({}, common2), {
               type: "Static",
@@ -35433,11 +35699,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var Input = (0, import_styled_components22.default)(BasicCheckbox_default)`
   margin-left: 6px;
 `;
-      var BooleanPropEditor = ({ propConfig, pointerToProp, obj: obj2 }) => {
-        const stuff = useEditingToolsForPrimitiveProp(pointerToProp, obj2, propConfig);
+      var BooleanPropEditor = ({ propConfig, pointerToProp, obj }) => {
+        const stuff = useEditingToolsForPrimitiveProp(pointerToProp, obj, propConfig);
         const onChange = (0, import_react66.useCallback)((el) => {
           stuff.permenantlySetValue(Boolean(el.target.checked));
-        }, [propConfig, pointerToProp, obj2]);
+        }, [propConfig, pointerToProp, obj]);
         return /* @__PURE__ */ import_react66.default.createElement(SingleRowPropEditor, __spreadValues({}, { stuff, propConfig, pointerToProp }), /* @__PURE__ */ import_react66.default.createElement(Input, {
           checked: stuff.value,
           onChange
@@ -35486,7 +35752,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   /* background: ${({ depth }) => curriedDarken(depth * 0.03, color)}; */
   /* padding: ${(props) => props.lastSubIsComposite ? 0 : "4px"} 0; */
 `;
-      var CompoundPropEditor = ({ pointerToProp, obj: obj2, propConfig, depth }) => {
+      var CompoundPropEditor = ({ pointerToProp, obj, propConfig, depth }) => {
         var _a;
         const propName = (_a = propConfig.label) != null ? _a : last_default2((0, import_dataverse13.getPointerParts)(pointerToProp).path);
         const allSubs = Object.entries(propConfig.props);
@@ -35509,7 +35775,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             key: "prop-" + subPropKey,
             propConfig: subPropConfig,
             pointerToProp: pointerToProp[subPropKey],
-            obj: obj2,
+            obj,
             depth: depth + 1
           });
         })));
@@ -35884,8 +36150,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       }
       var BasicNumberInput_default = BasicNumberInput;
       var import_react70 = __toModule(require_react());
-      var NumberPropEditor = ({ propConfig, pointerToProp, obj: obj2 }) => {
-        const stuff = useEditingToolsForPrimitiveProp(pointerToProp, obj2, propConfig);
+      var NumberPropEditor = ({ propConfig, pointerToProp, obj }) => {
+        const stuff = useEditingToolsForPrimitiveProp(pointerToProp, obj, propConfig);
         const nudge2 = (0, import_react70.useCallback)((params) => {
           return propConfig.nudgeFn(__spreadProps(__spreadValues({}, params), { config: propConfig }));
         }, [propConfig]);
@@ -36022,11 +36288,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         }, options[key]))), /* @__PURE__ */ import_react72.default.createElement(IconContainer, null, /* @__PURE__ */ import_react72.default.createElement(CgSelect, null)));
       };
       var BasicSelect_default = BasicSelect;
-      var StringLiteralPropEditor = ({ propConfig, pointerToProp, obj: obj2 }) => {
-        const stuff = useEditingToolsForPrimitiveProp(pointerToProp, obj2, propConfig);
+      var StringLiteralPropEditor = ({ propConfig, pointerToProp, obj }) => {
+        const stuff = useEditingToolsForPrimitiveProp(pointerToProp, obj, propConfig);
         const onChange = (0, import_react73.useCallback)((val39) => {
           stuff.permenantlySetValue(val39);
-        }, [propConfig, pointerToProp, obj2]);
+        }, [propConfig, pointerToProp, obj]);
         return /* @__PURE__ */ import_react73.default.createElement(SingleRowPropEditor, __spreadValues({}, { stuff, propConfig, pointerToProp }), propConfig.as === "menu" ? /* @__PURE__ */ import_react73.default.createElement(BasicSelect_default, {
           value: stuff.value,
           onChange,
@@ -36179,8 +36445,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         return v2;
       }
       var BasicStringInput_default = BasicStringInput;
-      var StringPropEditor = ({ propConfig, pointerToProp, obj: obj2 }) => {
-        const stuff = useEditingToolsForPrimitiveProp(pointerToProp, obj2, propConfig);
+      var StringPropEditor = ({ propConfig, pointerToProp, obj }) => {
+        const stuff = useEditingToolsForPrimitiveProp(pointerToProp, obj, propConfig);
         return /* @__PURE__ */ import_react75.default.createElement(SingleRowPropEditor, __spreadValues({}, { stuff, propConfig, pointerToProp }), /* @__PURE__ */ import_react75.default.createElement(BasicStringInput_default, {
           value: stuff.value,
           temporarilySetValue: stuff.temporarilySetValue,
@@ -36189,8 +36455,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         }));
       };
       var StringPropEditor_default = StringPropEditor;
-      var getPropTypeByPointer = (pointerToProp, obj2) => {
-        const rootConf = obj2.template.config.props;
+      var getPropTypeByPointer = (pointerToProp, obj) => {
+        const rootConf = obj.template.config.props;
         const p2 = (0, import_dataverse14.getPointerParts)(pointerToProp).path;
         let conf = rootConf;
         while (p2.length !== 0) {
@@ -36238,13 +36504,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       };
       var DeterminePropEditor_default = DeterminePropEditor;
       var ObjectDetails = ({ objects }) => {
-        const obj2 = objects[0];
-        const key = (0, import_react77.useMemo)(() => JSON.stringify(obj2.address), [obj2]);
+        const obj = objects[0];
+        const key = (0, import_react77.useMemo)(() => JSON.stringify(obj.address), [obj]);
         return /* @__PURE__ */ import_react77.default.createElement(DeterminePropEditor_default, {
           key,
-          obj: obj2,
-          pointerToProp: obj2.propsP,
-          propConfig: obj2.template.config,
+          obj,
+          pointerToProp: obj.propsP,
+          propConfig: obj.template.config,
           depth: 1
         });
       };
@@ -36549,12 +36815,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var DetailPanel = (props) => {
         return usePrism(() => {
           const selection = getOutlineSelection();
-          const obj2 = selection.find(isSheetObject);
-          if (obj2) {
+          const obj = selection.find(isSheetObject);
+          if (obj) {
             return /* @__PURE__ */ import_react83.default.createElement(Container19, null, /* @__PURE__ */ import_react83.default.createElement(Content2, null, /* @__PURE__ */ import_react83.default.createElement(Header3, null, /* @__PURE__ */ import_react83.default.createElement(Title2, {
-              title: `${obj2.sheet.address.sheetId}: ${obj2.sheet.address.sheetInstanceId} > ${obj2.address.objectKey}`
-            }, /* @__PURE__ */ import_react83.default.createElement(TitleBar_Piece, null, obj2.sheet.address.sheetId, " "), /* @__PURE__ */ import_react83.default.createElement(TitleBar_Punctuation, null, ":", "\xA0"), /* @__PURE__ */ import_react83.default.createElement(TitleBar_Piece, null, obj2.sheet.address.sheetInstanceId, " "), /* @__PURE__ */ import_react83.default.createElement(TitleBar_Punctuation, null, "\xA0", ">", "\xA0"), /* @__PURE__ */ import_react83.default.createElement(TitleBar_Piece, null, obj2.address.objectKey))), /* @__PURE__ */ import_react83.default.createElement(Body4, null, /* @__PURE__ */ import_react83.default.createElement(ObjectDetails_default, {
-              objects: [obj2]
+              title: `${obj.sheet.address.sheetId}: ${obj.sheet.address.sheetInstanceId} > ${obj.address.objectKey}`
+            }, /* @__PURE__ */ import_react83.default.createElement(TitleBar_Piece, null, obj.sheet.address.sheetId, " "), /* @__PURE__ */ import_react83.default.createElement(TitleBar_Punctuation, null, ":", "\xA0"), /* @__PURE__ */ import_react83.default.createElement(TitleBar_Piece, null, obj.sheet.address.sheetInstanceId, " "), /* @__PURE__ */ import_react83.default.createElement(TitleBar_Punctuation, null, "\xA0", ">", "\xA0"), /* @__PURE__ */ import_react83.default.createElement(TitleBar_Piece, null, obj.address.objectKey))), /* @__PURE__ */ import_react83.default.createElement(Body4, null, /* @__PURE__ */ import_react83.default.createElement(ObjectDetails_default, {
+              objects: [obj]
             }))));
           }
           const project = selection.find(isProject);
@@ -37337,9 +37603,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         return atom;
       }
       var import_dataverse18 = __toModule(require_dist());
-      function mutableSetDeep(obj2, getPath, val39) {
+      function mutableSetDeep(obj, getPath, val39) {
         const path = (0, import_dataverse18.getPointerParts)(getPath((0, import_dataverse18.pointer)({ root: {}, path: [] }))).path;
-        set_default(obj2, path, val39);
+        set_default(obj, path, val39);
       }
       var import_dataverse19 = __toModule(require_dist());
       var import_react99 = __toModule(require_react());
@@ -37434,7 +37700,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           }
         }
         function boundsToSelection(layoutP, bounds) {
-          const sheet2 = (0, import_dataverse19.val)(layoutP.tree.sheet);
+          const sheet = (0, import_dataverse19.val)(layoutP.tree.sheet);
           const selection = {
             type: "DopeSheetSelection",
             byObjectKey: {},
@@ -37470,7 +37736,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                           translate: delta,
                           scale: 1,
                           origin: 0,
-                          snappingFunction: sheet2.getSequence().closestGridPosition,
+                          snappingFunction: sheet.getSequence().closestGridPosition,
                           objectKey,
                           projectId: origin.projectId,
                           sheetId: origin.sheetId
@@ -37500,7 +37766,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   const { byTrackId } = selection.byObjectKey[objectKey];
                   for (const trackId of Object.keys(byTrackId)) {
                     const { byKeyframeId } = byTrackId[trackId];
-                    deleteKeyframes(__spreadProps(__spreadValues({}, sheet2.address), {
+                    deleteKeyframes(__spreadProps(__spreadValues({}, sheet.address), {
                       objectKey,
                       trackId,
                       keyframeIds: Object.keys(byKeyframeId)
@@ -39101,14 +39367,14 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
 `;
       var GraphEditor = ({ layoutP }) => {
         return usePrism(() => {
-          const sheet2 = (0, import_dataverse33.val)(layoutP.sheet);
-          const selectedPropsByObject = (0, import_dataverse33.val)(getStudio().atomP.historic.projects.stateByProjectId[sheet2.address.projectId].stateBySheetId[sheet2.address.sheetId].sequenceEditor.selectedPropsByObject);
+          const sheet = (0, import_dataverse33.val)(layoutP.sheet);
+          const selectedPropsByObject = (0, import_dataverse33.val)(getStudio().atomP.historic.projects.stateByProjectId[sheet.address.projectId].stateBySheetId[sheet.address.sheetId].sequenceEditor.selectedPropsByObject);
           const height2 = (0, import_dataverse33.val)(layoutP.graphEditorDims.height);
           const unitSpaceToScaledSpaceMultiplier = (0, import_dataverse33.val)(layoutP.scaledSpace.fromUnitSpace)(1);
           const graphs = [];
           if (selectedPropsByObject) {
             for (const [objectKey, props] of Object.entries(selectedPropsByObject)) {
-              const sheetObject = sheet2.getObject(objectKey);
+              const sheetObject = sheet.getObject(objectKey);
               if (!sheetObject)
                 continue;
               const validSequenceTracks = (0, import_dataverse33.val)(sheetObject.template.getMapOfValidSequenceTracks_forStudio());
@@ -39202,8 +39468,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
 `;
       var PrimitivePropRow2 = ({ leaf }) => {
         const pointerToProp = pointerDeep(leaf.sheetObject.propsP, leaf.pathToProp);
-        const obj2 = leaf.sheetObject;
-        const { controlIndicators } = useEditingToolsForPrimitiveProp(pointerToProp, obj2, leaf.propConf);
+        const obj = leaf.sheetObject;
+        const { controlIndicators } = useEditingToolsForPrimitiveProp(pointerToProp, obj, leaf.propConf);
         const possibleColor = usePrism(() => {
           const c2 = leaf.sheetObject.address;
           const encodedPathToProp = encodePathToProp(leaf.pathToProp);
@@ -39351,13 +39617,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var import_dataverse38 = __toModule(require_dist());
       var import_dataverse37 = __toModule(require_dist());
       var heightOfAnyTitle = 28;
-      var calculateSequenceEditorTree = (sheet2) => {
+      var calculateSequenceEditorTree = (sheet) => {
         import_dataverse37.prism.ensurePrism();
         let topSoFar = titleBarHeight;
         let nSoFar = 0;
         const tree = {
           type: "sheet",
-          sheet: sheet2,
+          sheet,
           children: [],
           top: topSoFar,
           depth: -1,
@@ -39367,7 +39633,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         };
         topSoFar += tree.nodeHeight;
         nSoFar += 1;
-        for (const [_2, sheetObject] of Object.entries((0, import_dataverse37.val)(sheet2.objectsP))) {
+        for (const [_2, sheetObject] of Object.entries((0, import_dataverse37.val)(sheet.objectsP))) {
           addObject(sheetObject, tree.children, tree.depth + 1);
         }
         tree.heightIncludingChildren = topSoFar - tree.top;
@@ -39456,13 +39722,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       };
       var panelSplitRatio = 0.2;
       var initialClippedSpaceRange = { start: 0, end: 10 };
-      function sequenceEditorPanelLayout(sheet2, panelDimsP) {
+      function sequenceEditorPanelLayout(sheet, panelDimsP) {
         const studio3 = getStudio();
-        const ahistoricStateP = studio3.atomP.ahistoric.projects.stateByProjectId[sheet2.address.projectId].stateBySheetId[sheet2.address.sheetId];
-        const historicStateP = studio3.atomP.historic.projects.stateByProjectId[sheet2.address.projectId].stateBySheetId[sheet2.address.sheetId];
+        const ahistoricStateP = studio3.atomP.ahistoric.projects.stateByProjectId[sheet.address.projectId].stateBySheetId[sheet.address.sheetId];
+        const historicStateP = studio3.atomP.historic.projects.stateByProjectId[sheet.address.projectId].stateBySheetId[sheet.address.sheetId];
         return (0, import_dataverse38.prism)(() => {
           var _a;
-          const tree = subPrism("tree", () => calculateSequenceEditorTree(sheet2), []);
+          const tree = subPrism("tree", () => calculateSequenceEditorTree(sheet), []);
           const panelDims = (0, import_dataverse38.val)(panelDimsP);
           const graphEditorState = (0, import_dataverse38.val)(studio3.atomP.historic.panels.sequenceEditor.graphEditor);
           const selectedPropsByObject = (0, import_dataverse38.val)(historicStateP.sequenceEditor.selectedPropsByObject);
@@ -39566,7 +39832,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   range.start = 0;
                   range.end = length;
                 }
-                stateEditors2.studio.ahistoric.projects.stateByProjectId.stateBySheetId.sequence.clippedSpaceRange.set(__spreadProps(__spreadValues({}, sheet2.address), { range }));
+                stateEditors2.studio.ahistoric.projects.stateByProjectId.stateBySheetId.sequence.clippedSpaceRange.set(__spreadProps(__spreadValues({}, sheet.address), { range }));
               });
             };
           }, []);
@@ -39587,7 +39853,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             return new import_dataverse38.Atom({});
           }, []);
           const finalAtom = valToAtom("finalAtom", {
-            sheet: sheet2,
+            sheet,
             tree,
             panelDims,
             leftDims,
@@ -39761,7 +40027,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
 `;
       var nudge = ({ deltaX }) => deltaX * 0.25;
       var LengthEditorPopover = ({ layoutP, onRequestClose }) => {
-        const sheet2 = useVal(layoutP.sheet);
+        const sheet = useVal(layoutP.sheet);
         const fns = (0, import_react148.useMemo)(() => {
           let tempTransaction;
           return {
@@ -39771,7 +40037,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 tempTransaction = void 0;
               }
               tempTransaction = getStudio().tempTransaction(({ stateEditors: stateEditors2 }) => {
-                stateEditors2.coreByProject.historic.sheetsById.sequence.setLength(__spreadProps(__spreadValues({}, sheet2.address), {
+                stateEditors2.coreByProject.historic.sheetsById.sequence.setLength(__spreadProps(__spreadValues({}, sheet.address), {
                   length: newLength
                 }));
               });
@@ -39788,19 +40054,19 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 tempTransaction = void 0;
               }
               getStudio().transaction(({ stateEditors: stateEditors2 }) => {
-                stateEditors2.coreByProject.historic.sheetsById.sequence.setLength(__spreadProps(__spreadValues({}, sheet2.address), {
+                stateEditors2.coreByProject.historic.sheetsById.sequence.setLength(__spreadProps(__spreadValues({}, sheet.address), {
                   length: newLength
                 }));
               });
             }
           };
-        }, [layoutP, sheet2]);
+        }, [layoutP, sheet]);
         const inputRef = (0, import_react148.useRef)(null);
         (0, import_react148.useLayoutEffect)(() => {
           inputRef.current.focus();
         }, []);
         return usePrism(() => {
-          const sequence = sheet2.getSequence();
+          const sequence = sheet.getSequence();
           const sequenceLength = sequence.length;
           return /* @__PURE__ */ import_react148.default.createElement(Container50, null, /* @__PURE__ */ import_react148.default.createElement(Label3, null, "Sequence length"), /* @__PURE__ */ import_react148.default.createElement(BasicNumberInput_default, __spreadProps(__spreadValues({
             value: sequenceLength
@@ -39810,7 +40076,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             onBlur: onRequestClose,
             nudge
           })));
-        }, [sheet2, fns, inputRef]);
+        }, [sheet, fns, inputRef]);
       };
       var LengthEditorPopover_default = LengthEditorPopover;
       var coverWidth = 1e3;
@@ -39921,9 +40187,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           }));
         });
         return usePrism(() => {
-          const sheet2 = (0, import_dataverse40.val)(layoutP.sheet);
+          const sheet = (0, import_dataverse40.val)(layoutP.sheet);
           const height2 = (0, import_dataverse40.val)(layoutP.rightDims.height);
-          const sequence = sheet2.getSequence();
+          const sequence = sheet.getSequence();
           const sequenceLength = sequence.length;
           const startInUnitSpace = sequenceLength;
           let startX = (0, import_dataverse40.val)(layoutP.clippedSpace.fromUnitSpace)(startInUnitSpace);
@@ -39968,15 +40234,15 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           let toUnitSpace;
           let tempTransaction;
           let propsAtStartOfDrag;
-          let sheet2;
+          let sheet;
           let initialLength;
           return {
             lockCursorTo: "ew-resize",
             onDragStart(event) {
               setIsDragging(true);
               propsAtStartOfDrag = propsRef.current;
-              sheet2 = (0, import_dataverse40.val)(propsRef.current.layoutP.sheet);
-              initialLength = sheet2.getSequence().length;
+              sheet = (0, import_dataverse40.val)(propsRef.current.layoutP.sheet);
+              initialLength = sheet.getSequence().length;
               toUnitSpace = (0, import_dataverse40.val)(propsAtStartOfDrag.layoutP.scaledSpace.toUnitSpace);
             },
             onDrag(dx, dy, event) {
@@ -39986,7 +40252,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 tempTransaction = void 0;
               }
               tempTransaction = getStudio().tempTransaction(({ stateEditors: stateEditors2 }) => {
-                stateEditors2.coreByProject.historic.sheetsById.sequence.setLength(__spreadProps(__spreadValues({}, sheet2.address), {
+                stateEditors2.coreByProject.historic.sheetsById.sequence.setLength(__spreadProps(__spreadValues({}, sheet.address), {
                   length: initialLength + delta
                 }));
               });
@@ -40539,7 +40805,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var GraphEditorToggle = ({ layoutP }) => {
         const isOpen = useVal(layoutP.graphEditorDims.isOpen);
         const toggle = (0, import_react162.useCallback)(() => {
-          const sheet2 = (0, import_dataverse45.val)(layoutP.sheet);
+          const sheet = (0, import_dataverse45.val)(layoutP.sheet);
           const isOpen2 = (0, import_dataverse45.val)(layoutP.graphEditorDims.isOpen);
           getStudio().transaction(({ stateEditors: stateEditors2 }) => {
             stateEditors2.studio.historic.panels.sequenceEditor.graphEditor.setIsOpen({
@@ -40626,14 +40892,14 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           const selectedTemplates = uniq_default(selectedSheets.map((s2) => s2.template));
           if (selectedTemplates.length !== 1)
             return /* @__PURE__ */ import_react164.default.createElement(import_react164.default.Fragment, null);
-          const sheet2 = selectedSheets[0];
-          if (!sheet2)
+          const sheet = selectedSheets[0];
+          if (!sheet)
             return /* @__PURE__ */ import_react164.default.createElement(import_react164.default.Fragment, null);
           const panelSizeP = valToAtom("panelSizeP", panelSize).pointer;
-          const key = import_dataverse46.prism.memo("key", () => JSON.stringify(sheet2.address), [sheet2]);
+          const key = import_dataverse46.prism.memo("key", () => JSON.stringify(sheet.address), [sheet]);
           const layoutP = import_dataverse46.prism.memo("layout", () => {
-            return sequenceEditorPanelLayout(sheet2, panelSizeP);
-          }, [sheet2, panelSizeP]).getValue();
+            return sequenceEditorPanelLayout(sheet, panelSizeP);
+          }, [sheet, panelSizeP]).getValue();
           if ((0, import_dataverse46.val)(layoutP.tree.children).length === 0)
             return /* @__PURE__ */ import_react164.default.createElement(import_react164.default.Fragment, null);
           const containerRef = import_dataverse46.prism.memo("containerRef", preventHorizontalWheelEvents, []);
@@ -40664,12 +40930,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         layoutP
       }) => {
         return usePrism(() => {
-          const sheet2 = (0, import_dataverse46.val)(layoutP.sheet);
+          const sheet = (0, import_dataverse46.val)(layoutP.sheet);
           return /* @__PURE__ */ import_react164.default.createElement(Header_Container, {
             style: {
               width: (0, import_dataverse46.val)(layoutP.leftDims.width)
             }
-          }, /* @__PURE__ */ import_react164.default.createElement(TitleBar, null, /* @__PURE__ */ import_react164.default.createElement(TitleBar_Piece, null, sheet2.address.sheetId, " "), /* @__PURE__ */ import_react164.default.createElement(TitleBar_Punctuation, null, ":", "\xA0"), /* @__PURE__ */ import_react164.default.createElement(TitleBar_Piece, null, sheet2.address.sheetInstanceId, " "), /* @__PURE__ */ import_react164.default.createElement(TitleBar_Punctuation, null, "\xA0", ">", "\xA0"), /* @__PURE__ */ import_react164.default.createElement(TitleBar_Piece, null, "Sequence")));
+          }, /* @__PURE__ */ import_react164.default.createElement(TitleBar, null, /* @__PURE__ */ import_react164.default.createElement(TitleBar_Piece, null, sheet.address.sheetId, " "), /* @__PURE__ */ import_react164.default.createElement(TitleBar_Punctuation, null, ":", "\xA0"), /* @__PURE__ */ import_react164.default.createElement(TitleBar_Piece, null, sheet.address.sheetInstanceId, " "), /* @__PURE__ */ import_react164.default.createElement(TitleBar_Punctuation, null, "\xA0", ">", "\xA0"), /* @__PURE__ */ import_react164.default.createElement(TitleBar_Piece, null, "Sequence")));
         }, [layoutP]);
       };
       var SequenceEditorPanel_default = SequenceEditorPanel;
@@ -40959,7 +41225,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       };
       var actionCreator_default = actionCreator;
       var import_jiff = __toModule(require_jiff());
-      var import_json_touch_patch = __toModule(require_lib());
+      var import_json_touch_patch = __toModule(require_lib2());
       var getRandomValues;
       var rnds8 = new Uint8Array(16);
       function rng() {
@@ -42010,8 +42276,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         (function(coreByProject2) {
           let historic;
           (function(historic2) {
-            let revisionHistory;
-            (function(revisionHistory2) {
+            let revisionHistory2;
+            (function(revisionHistory22) {
               function add(p2) {
                 const revisionHistory3 = drafts().historic.coreByProject[p2.projectId].revisionHistory;
                 const maxNumOfRevisionsToKeep = 50;
@@ -42020,10 +42286,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   revisionHistory3.length = maxNumOfRevisionsToKeep;
                 }
               }
-              revisionHistory2.add = add;
-            })(revisionHistory = historic2.revisionHistory || (historic2.revisionHistory = {}));
-            let sheetsById;
-            (function(sheetsById2) {
+              revisionHistory22.add = add;
+            })(revisionHistory2 = historic2.revisionHistory || (historic2.revisionHistory = {}));
+            let sheetsById2;
+            (function(sheetsById22) {
               function _ensure(p2) {
                 const sheetsById3 = drafts().historic.coreByProject[p2.projectId].sheetsById;
                 if (!sheetsById3[p2.sheetId]) {
@@ -42031,7 +42297,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 }
                 return sheetsById3[p2.sheetId];
               }
-              sheetsById2._ensure = _ensure;
+              sheetsById22._ensure = _ensure;
               let sequence;
               (function(sequence2) {
                 function _ensure2(p2) {
@@ -42190,7 +42456,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   track.keyframes = sorted;
                 }
                 sequence2.replaceKeyframes = replaceKeyframes;
-              })(sequence = sheetsById2.sequence || (sheetsById2.sequence = {}));
+              })(sequence = sheetsById22.sequence || (sheetsById22.sequence = {}));
               let staticOverrides;
               (function(staticOverrides2) {
                 let byObject;
@@ -42219,8 +42485,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   }
                   byObject2.unsetValueOfPrimitiveProp = unsetValueOfPrimitiveProp;
                 })(byObject = staticOverrides2.byObject || (staticOverrides2.byObject = {}));
-              })(staticOverrides = sheetsById2.staticOverrides || (sheetsById2.staticOverrides = {}));
-            })(sheetsById = historic2.sheetsById || (historic2.sheetsById = {}));
+              })(staticOverrides = sheetsById22.staticOverrides || (sheetsById22.staticOverrides = {}));
+            })(sheetsById2 = historic2.sheetsById || (historic2.sheetsById = {}));
           })(historic = coreByProject2.historic || (coreByProject2.historic = {}));
         })(coreByProject = stateEditors2.coreByProject || (stateEditors2.coreByProject = {}));
       })(stateEditors || (stateEditors = {}));
@@ -45649,11 +45915,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
       return this;
     }
-    project(camera2) {
-      return this.applyMatrix4(camera2.matrixWorldInverse).applyMatrix4(camera2.projectionMatrix);
+    project(camera) {
+      return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(camera.projectionMatrix);
     }
-    unproject(camera2) {
-      return this.applyMatrix4(camera2.projectionMatrixInverse).applyMatrix4(camera2.matrixWorld);
+    unproject(camera) {
+      return this.applyMatrix4(camera.projectionMatrixInverse).applyMatrix4(camera.matrixWorld);
     }
     transformDirection(m) {
       const x = this.x, y = this.y, z = this.z;
@@ -46023,19 +46289,19 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     }
     expandByObject(object, precise = false) {
       object.updateWorldMatrix(false, false);
-      const geometry2 = object.geometry;
-      if (geometry2 !== void 0) {
-        if (precise && geometry2.attributes != void 0 && geometry2.attributes.position !== void 0) {
-          const position = geometry2.attributes.position;
+      const geometry = object.geometry;
+      if (geometry !== void 0) {
+        if (precise && geometry.attributes != void 0 && geometry.attributes.position !== void 0) {
+          const position = geometry.attributes.position;
           for (let i = 0, l = position.count; i < l; i++) {
             _vector$b.fromBufferAttribute(position, i).applyMatrix4(object.matrixWorld);
             this.expandByPoint(_vector$b);
           }
         } else {
-          if (geometry2.boundingBox === null) {
-            geometry2.computeBoundingBox();
+          if (geometry.boundingBox === null) {
+            geometry.computeBoundingBox();
           }
-          _box$3.copy(geometry2.boundingBox);
+          _box$3.copy(geometry.boundingBox);
           _box$3.applyMatrix4(object.matrixWorld);
           this.union(_box$3);
         }
@@ -49077,9 +49343,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         normalAttribute.needsUpdate = true;
       }
     }
-    merge(geometry2, offset) {
-      if (!(geometry2 && geometry2.isBufferGeometry)) {
-        console.error("THREE.BufferGeometry.merge(): geometry not an instance of THREE.BufferGeometry.", geometry2);
+    merge(geometry, offset) {
+      if (!(geometry && geometry.isBufferGeometry)) {
+        console.error("THREE.BufferGeometry.merge(): geometry not an instance of THREE.BufferGeometry.", geometry);
         return;
       }
       if (offset === void 0) {
@@ -49088,11 +49354,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       }
       const attributes = this.attributes;
       for (const key in attributes) {
-        if (geometry2.attributes[key] === void 0)
+        if (geometry.attributes[key] === void 0)
           continue;
         const attribute1 = attributes[key];
         const attributeArray1 = attribute1.array;
-        const attribute2 = geometry2.attributes[key];
+        const attribute2 = geometry.attributes[key];
         const attributeArray2 = attribute2.array;
         const attributeOffset = attribute2.itemSize * offset;
         const length = Math.min(attributeArray2.length, attributeArray1.length - attributeOffset);
@@ -49300,11 +49566,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var _intersectionPoint = /* @__PURE__ */ new Vector3();
   var _intersectionPointWorld = /* @__PURE__ */ new Vector3();
   var Mesh = class extends Object3D {
-    constructor(geometry2 = new BufferGeometry(), material2 = new MeshBasicMaterial()) {
+    constructor(geometry = new BufferGeometry(), material = new MeshBasicMaterial()) {
       super();
       this.type = "Mesh";
-      this.geometry = geometry2;
-      this.material = material2;
+      this.geometry = geometry;
+      this.material = material;
       this.updateMorphTargets();
     }
     copy(source) {
@@ -49320,9 +49586,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       return this;
     }
     updateMorphTargets() {
-      const geometry2 = this.geometry;
-      if (geometry2.isBufferGeometry) {
-        const morphAttributes = geometry2.morphAttributes;
+      const geometry = this.geometry;
+      if (geometry.isBufferGeometry) {
+        const morphAttributes = geometry.morphAttributes;
         const keys = Object.keys(morphAttributes);
         if (keys.length > 0) {
           const morphAttribute = morphAttributes[keys[0]];
@@ -49337,45 +49603,45 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           }
         }
       } else {
-        const morphTargets = geometry2.morphTargets;
+        const morphTargets = geometry.morphTargets;
         if (morphTargets !== void 0 && morphTargets.length > 0) {
           console.error("THREE.Mesh.updateMorphTargets() no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.");
         }
       }
     }
     raycast(raycaster, intersects2) {
-      const geometry2 = this.geometry;
-      const material2 = this.material;
+      const geometry = this.geometry;
+      const material = this.material;
       const matrixWorld = this.matrixWorld;
-      if (material2 === void 0)
+      if (material === void 0)
         return;
-      if (geometry2.boundingSphere === null)
-        geometry2.computeBoundingSphere();
-      _sphere$3.copy(geometry2.boundingSphere);
+      if (geometry.boundingSphere === null)
+        geometry.computeBoundingSphere();
+      _sphere$3.copy(geometry.boundingSphere);
       _sphere$3.applyMatrix4(matrixWorld);
       if (raycaster.ray.intersectsSphere(_sphere$3) === false)
         return;
       _inverseMatrix$2.copy(matrixWorld).invert();
       _ray$2.copy(raycaster.ray).applyMatrix4(_inverseMatrix$2);
-      if (geometry2.boundingBox !== null) {
-        if (_ray$2.intersectsBox(geometry2.boundingBox) === false)
+      if (geometry.boundingBox !== null) {
+        if (_ray$2.intersectsBox(geometry.boundingBox) === false)
           return;
       }
       let intersection;
-      if (geometry2.isBufferGeometry) {
-        const index = geometry2.index;
-        const position = geometry2.attributes.position;
-        const morphPosition = geometry2.morphAttributes.position;
-        const morphTargetsRelative = geometry2.morphTargetsRelative;
-        const uv = geometry2.attributes.uv;
-        const uv2 = geometry2.attributes.uv2;
-        const groups = geometry2.groups;
-        const drawRange = geometry2.drawRange;
+      if (geometry.isBufferGeometry) {
+        const index = geometry.index;
+        const position = geometry.attributes.position;
+        const morphPosition = geometry.morphAttributes.position;
+        const morphTargetsRelative = geometry.morphTargetsRelative;
+        const uv = geometry.attributes.uv;
+        const uv2 = geometry.attributes.uv2;
+        const groups = geometry.groups;
+        const drawRange = geometry.drawRange;
         if (index !== null) {
-          if (Array.isArray(material2)) {
+          if (Array.isArray(material)) {
             for (let i = 0, il = groups.length; i < il; i++) {
               const group = groups[i];
-              const groupMaterial = material2[group.materialIndex];
+              const groupMaterial = material[group.materialIndex];
               const start = Math.max(group.start, drawRange.start);
               const end = Math.min(index.count, Math.min(group.start + group.count, drawRange.start + drawRange.count));
               for (let j = start, jl = end; j < jl; j += 3) {
@@ -49397,7 +49663,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
               const a = index.getX(i);
               const b = index.getX(i + 1);
               const c = index.getX(i + 2);
-              intersection = checkBufferGeometryIntersection(this, material2, raycaster, _ray$2, position, morphPosition, morphTargetsRelative, uv, uv2, a, b, c);
+              intersection = checkBufferGeometryIntersection(this, material, raycaster, _ray$2, position, morphPosition, morphTargetsRelative, uv, uv2, a, b, c);
               if (intersection) {
                 intersection.faceIndex = Math.floor(i / 3);
                 intersects2.push(intersection);
@@ -49405,10 +49671,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             }
           }
         } else if (position !== void 0) {
-          if (Array.isArray(material2)) {
+          if (Array.isArray(material)) {
             for (let i = 0, il = groups.length; i < il; i++) {
               const group = groups[i];
-              const groupMaterial = material2[group.materialIndex];
+              const groupMaterial = material[group.materialIndex];
               const start = Math.max(group.start, drawRange.start);
               const end = Math.min(position.count, Math.min(group.start + group.count, drawRange.start + drawRange.count));
               for (let j = start, jl = end; j < jl; j += 3) {
@@ -49430,7 +49696,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
               const a = i;
               const b = i + 1;
               const c = i + 2;
-              intersection = checkBufferGeometryIntersection(this, material2, raycaster, _ray$2, position, morphPosition, morphTargetsRelative, uv, uv2, a, b, c);
+              intersection = checkBufferGeometryIntersection(this, material, raycaster, _ray$2, position, morphPosition, morphTargetsRelative, uv, uv2, a, b, c);
               if (intersection) {
                 intersection.faceIndex = Math.floor(i / 3);
                 intersects2.push(intersection);
@@ -49438,18 +49704,18 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             }
           }
         }
-      } else if (geometry2.isGeometry) {
+      } else if (geometry.isGeometry) {
         console.error("THREE.Mesh.raycast() no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.");
       }
     }
   };
   Mesh.prototype.isMesh = true;
-  function checkIntersection(object, material2, raycaster, ray, pA, pB, pC, point) {
+  function checkIntersection(object, material, raycaster, ray, pA, pB, pC, point) {
     let intersect;
-    if (material2.side === BackSide) {
+    if (material.side === BackSide) {
       intersect = ray.intersectTriangle(pC, pB, pA, true, point);
     } else {
-      intersect = ray.intersectTriangle(pA, pB, pC, material2.side !== DoubleSide, point);
+      intersect = ray.intersectTriangle(pA, pB, pC, material.side !== DoubleSide, point);
     }
     if (intersect === null)
       return null;
@@ -49464,7 +49730,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       object
     };
   }
-  function checkBufferGeometryIntersection(object, material2, raycaster, ray, position, morphPosition, morphTargetsRelative, uv, uv2, a, b, c) {
+  function checkBufferGeometryIntersection(object, material, raycaster, ray, position, morphPosition, morphTargetsRelative, uv, uv2, a, b, c) {
     _vA$1.fromBufferAttribute(position, a);
     _vB$1.fromBufferAttribute(position, b);
     _vC$1.fromBufferAttribute(position, c);
@@ -49500,7 +49766,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       object.boneTransform(b, _vB$1);
       object.boneTransform(c, _vC$1);
     }
-    const intersection = checkIntersection(object, material2, raycaster, ray, _vA$1, _vB$1, _vC$1, _intersectionPoint);
+    const intersection = checkIntersection(object, material, raycaster, ray, _vA$1, _vB$1, _vC$1, _intersectionPoint);
     if (intersection) {
       if (uv) {
         _uvA$1.fromBufferAttribute(uv, a);
@@ -49933,31 +50199,31 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       cameraNZ.lookAt(new Vector3(0, 0, -1));
       this.add(cameraNZ);
     }
-    update(renderer2, scene2) {
+    update(renderer, scene) {
       if (this.parent === null)
         this.updateMatrixWorld();
       const renderTarget = this.renderTarget;
       const [cameraPX, cameraNX, cameraPY, cameraNY, cameraPZ, cameraNZ] = this.children;
-      const currentXrEnabled = renderer2.xr.enabled;
-      const currentRenderTarget = renderer2.getRenderTarget();
-      renderer2.xr.enabled = false;
+      const currentXrEnabled = renderer.xr.enabled;
+      const currentRenderTarget = renderer.getRenderTarget();
+      renderer.xr.enabled = false;
       const generateMipmaps = renderTarget.texture.generateMipmaps;
       renderTarget.texture.generateMipmaps = false;
-      renderer2.setRenderTarget(renderTarget, 0);
-      renderer2.render(scene2, cameraPX);
-      renderer2.setRenderTarget(renderTarget, 1);
-      renderer2.render(scene2, cameraNX);
-      renderer2.setRenderTarget(renderTarget, 2);
-      renderer2.render(scene2, cameraPY);
-      renderer2.setRenderTarget(renderTarget, 3);
-      renderer2.render(scene2, cameraNY);
-      renderer2.setRenderTarget(renderTarget, 4);
-      renderer2.render(scene2, cameraPZ);
+      renderer.setRenderTarget(renderTarget, 0);
+      renderer.render(scene, cameraPX);
+      renderer.setRenderTarget(renderTarget, 1);
+      renderer.render(scene, cameraNX);
+      renderer.setRenderTarget(renderTarget, 2);
+      renderer.render(scene, cameraPY);
+      renderer.setRenderTarget(renderTarget, 3);
+      renderer.render(scene, cameraNY);
+      renderer.setRenderTarget(renderTarget, 4);
+      renderer.render(scene, cameraPZ);
       renderTarget.texture.generateMipmaps = generateMipmaps;
-      renderer2.setRenderTarget(renderTarget, 5);
-      renderer2.render(scene2, cameraNZ);
-      renderer2.setRenderTarget(currentRenderTarget);
-      renderer2.xr.enabled = currentXrEnabled;
+      renderer.setRenderTarget(renderTarget, 5);
+      renderer.render(scene, cameraNZ);
+      renderer.setRenderTarget(currentRenderTarget);
+      renderer.xr.enabled = currentXrEnabled;
       renderTarget.texture.needsPMREMUpdate = true;
     }
   };
@@ -49986,7 +50252,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this.texture.generateMipmaps = options.generateMipmaps !== void 0 ? options.generateMipmaps : false;
       this.texture.minFilter = options.minFilter !== void 0 ? options.minFilter : LinearFilter;
     }
-    fromEquirectangularTexture(renderer2, texture) {
+    fromEquirectangularTexture(renderer, texture) {
       this.texture.type = texture.type;
       this.texture.format = RGBAFormat;
       this.texture.encoding = texture.encoding;
@@ -50035,8 +50301,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
 				}
 			`
       };
-      const geometry2 = new BoxGeometry(5, 5, 5);
-      const material2 = new ShaderMaterial({
+      const geometry = new BoxGeometry(5, 5, 5);
+      const material = new ShaderMaterial({
         name: "CubemapFromEquirect",
         uniforms: cloneUniforms(shader.uniforms),
         vertexShader: shader.vertexShader,
@@ -50044,25 +50310,25 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         side: BackSide,
         blending: NoBlending
       });
-      material2.uniforms.tEquirect.value = texture;
-      const mesh = new Mesh(geometry2, material2);
+      material.uniforms.tEquirect.value = texture;
+      const mesh = new Mesh(geometry, material);
       const currentMinFilter = texture.minFilter;
       if (texture.minFilter === LinearMipmapLinearFilter)
         texture.minFilter = LinearFilter;
-      const camera2 = new CubeCamera(1, 10, this);
-      camera2.update(renderer2, mesh);
+      const camera = new CubeCamera(1, 10, this);
+      camera.update(renderer, mesh);
       texture.minFilter = currentMinFilter;
       mesh.geometry.dispose();
       mesh.material.dispose();
       return this;
     }
-    clear(renderer2, color, depth, stencil) {
-      const currentRenderTarget = renderer2.getRenderTarget();
+    clear(renderer, color, depth, stencil) {
+      const currentRenderTarget = renderer.getRenderTarget();
       for (let i = 0; i < 6; i++) {
-        renderer2.setRenderTarget(this, i);
-        renderer2.clear(color, depth, stencil);
+        renderer.setRenderTarget(this, i);
+        renderer.clear(color, depth, stencil);
       }
-      renderer2.setRenderTarget(currentRenderTarget);
+      renderer.setRenderTarget(currentRenderTarget);
     }
   };
   WebGLCubeRenderTarget.prototype.isWebGLCubeRenderTarget = true;
@@ -50206,10 +50472,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       return this;
     }
     intersectsObject(object) {
-      const geometry2 = object.geometry;
-      if (geometry2.boundingSphere === null)
-        geometry2.computeBoundingSphere();
-      _sphere$2.copy(geometry2.boundingSphere).applyMatrix4(object.matrixWorld);
+      const geometry = object.geometry;
+      if (geometry.boundingSphere === null)
+        geometry.computeBoundingSphere();
+      _sphere$2.copy(geometry.boundingSphere).applyMatrix4(object.matrixWorld);
       return this.intersectsSphere(_sphere$2);
     }
     intersectsSprite(sprite) {
@@ -51096,7 +51362,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     vertexShader: ShaderChunk.meshphysical_vert,
     fragmentShader: ShaderChunk.meshphysical_frag
   };
-  function WebGLBackground(renderer2, cubemaps, state, objects, alpha, premultipliedAlpha) {
+  function WebGLBackground(renderer, cubemaps, state, objects, alpha, premultipliedAlpha) {
     const clearColor = new Color(0);
     let clearAlpha = alpha === true ? 0 : 1;
     let planeMesh;
@@ -51104,13 +51370,13 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     let currentBackground = null;
     let currentBackgroundVersion = 0;
     let currentTonemapping = null;
-    function render(renderList, scene2) {
+    function render(renderList, scene) {
       let forceClear = false;
-      let background = scene2.isScene === true ? scene2.background : null;
+      let background = scene.isScene === true ? scene.background : null;
       if (background && background.isTexture) {
         background = cubemaps.get(background);
       }
-      const xr = renderer2.xr;
+      const xr = renderer.xr;
       const session = xr.getSession && xr.getSession();
       if (session && session.environmentBlendMode === "additive") {
         background = null;
@@ -51121,8 +51387,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         setClear(background, 1);
         forceClear = true;
       }
-      if (renderer2.autoClear || forceClear) {
-        renderer2.clear(renderer2.autoClearColor, renderer2.autoClearDepth, renderer2.autoClearStencil);
+      if (renderer.autoClear || forceClear) {
+        renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
       }
       if (background && (background.isCubeTexture || background.mapping === CubeUVReflectionMapping)) {
         if (boxMesh === void 0) {
@@ -51138,8 +51404,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           }));
           boxMesh.geometry.deleteAttribute("normal");
           boxMesh.geometry.deleteAttribute("uv");
-          boxMesh.onBeforeRender = function(renderer3, scene3, camera2) {
-            this.matrixWorld.copyPosition(camera2.matrixWorld);
+          boxMesh.onBeforeRender = function(renderer2, scene2, camera) {
+            this.matrixWorld.copyPosition(camera.matrixWorld);
           };
           Object.defineProperty(boxMesh.material, "envMap", {
             get: function() {
@@ -51150,11 +51416,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         }
         boxMesh.material.uniforms.envMap.value = background;
         boxMesh.material.uniforms.flipEnvMap.value = background.isCubeTexture && background.isRenderTargetTexture === false ? -1 : 1;
-        if (currentBackground !== background || currentBackgroundVersion !== background.version || currentTonemapping !== renderer2.toneMapping) {
+        if (currentBackground !== background || currentBackgroundVersion !== background.version || currentTonemapping !== renderer.toneMapping) {
           boxMesh.material.needsUpdate = true;
           currentBackground = background;
           currentBackgroundVersion = background.version;
-          currentTonemapping = renderer2.toneMapping;
+          currentTonemapping = renderer.toneMapping;
         }
         renderList.unshift(boxMesh, boxMesh.geometry, boxMesh.material, 0, 0, null);
       } else if (background && background.isTexture) {
@@ -51182,11 +51448,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           background.updateMatrix();
         }
         planeMesh.material.uniforms.uvTransform.value.copy(background.matrix);
-        if (currentBackground !== background || currentBackgroundVersion !== background.version || currentTonemapping !== renderer2.toneMapping) {
+        if (currentBackground !== background || currentBackgroundVersion !== background.version || currentTonemapping !== renderer.toneMapping) {
           planeMesh.material.needsUpdate = true;
           currentBackground = background;
           currentBackgroundVersion = background.version;
-          currentTonemapping = renderer2.toneMapping;
+          currentTonemapping = renderer.toneMapping;
         }
         renderList.unshift(planeMesh, planeMesh.geometry, planeMesh.material, 0, 0, null);
       }
@@ -51220,21 +51486,21 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     const bindingStates = {};
     const defaultState = createBindingState(null);
     let currentState = defaultState;
-    function setup(object, material2, program, geometry2, index) {
+    function setup(object, material, program, geometry, index) {
       let updateBuffers = false;
       if (vaoAvailable) {
-        const state = getBindingState(geometry2, program, material2);
+        const state = getBindingState(geometry, program, material);
         if (currentState !== state) {
           currentState = state;
           bindVertexArrayObject(currentState.object);
         }
-        updateBuffers = needsUpdate(geometry2, index);
+        updateBuffers = needsUpdate(geometry, index);
         if (updateBuffers)
-          saveCache(geometry2, index);
+          saveCache(geometry, index);
       } else {
-        const wireframe = material2.wireframe === true;
-        if (currentState.geometry !== geometry2.id || currentState.program !== program.id || currentState.wireframe !== wireframe) {
-          currentState.geometry = geometry2.id;
+        const wireframe = material.wireframe === true;
+        if (currentState.geometry !== geometry.id || currentState.program !== program.id || currentState.wireframe !== wireframe) {
+          currentState.geometry = geometry.id;
           currentState.program = program.id;
           currentState.wireframe = wireframe;
           updateBuffers = true;
@@ -51247,7 +51513,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         attributes.update(index, 34963);
       }
       if (updateBuffers) {
-        setupVertexAttributes(object, material2, program, geometry2);
+        setupVertexAttributes(object, material, program, geometry);
         if (index !== null) {
           gl.bindBuffer(34963, attributes.get(index).buffer);
         }
@@ -51268,12 +51534,12 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         return gl.deleteVertexArray(vao);
       return extension.deleteVertexArrayOES(vao);
     }
-    function getBindingState(geometry2, program, material2) {
-      const wireframe = material2.wireframe === true;
-      let programMap = bindingStates[geometry2.id];
+    function getBindingState(geometry, program, material) {
+      const wireframe = material.wireframe === true;
+      let programMap = bindingStates[geometry.id];
       if (programMap === void 0) {
         programMap = {};
-        bindingStates[geometry2.id] = programMap;
+        bindingStates[geometry.id] = programMap;
       }
       let stateMap = programMap[program.id];
       if (stateMap === void 0) {
@@ -51308,9 +51574,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         index: null
       };
     }
-    function needsUpdate(geometry2, index) {
+    function needsUpdate(geometry, index) {
       const cachedAttributes = currentState.attributes;
-      const geometryAttributes = geometry2.attributes;
+      const geometryAttributes = geometry.attributes;
       let attributesNum = 0;
       for (const key in geometryAttributes) {
         const cachedAttribute = cachedAttributes[key];
@@ -51329,9 +51595,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         return true;
       return false;
     }
-    function saveCache(geometry2, index) {
+    function saveCache(geometry, index) {
       const cache = {};
-      const attributes2 = geometry2.attributes;
+      const attributes2 = geometry.attributes;
       let attributesNum = 0;
       for (const key in attributes2) {
         const attribute = attributes2[key];
@@ -51388,15 +51654,15 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         gl.vertexAttribPointer(index, size, type, normalized, stride, offset);
       }
     }
-    function setupVertexAttributes(object, material2, program, geometry2) {
-      if (capabilities.isWebGL2 === false && (object.isInstancedMesh || geometry2.isInstancedBufferGeometry)) {
+    function setupVertexAttributes(object, material, program, geometry) {
+      if (capabilities.isWebGL2 === false && (object.isInstancedMesh || geometry.isInstancedBufferGeometry)) {
         if (extensions.get("ANGLE_instanced_arrays") === null)
           return;
       }
       initAttributes();
-      const geometryAttributes = geometry2.attributes;
+      const geometryAttributes = geometry.attributes;
       const programAttributes = program.getAttributes();
-      const materialDefaultAttributeValues = material2.defaultAttributeValues;
+      const materialDefaultAttributeValues = material.defaultAttributeValues;
       for (const name in programAttributes) {
         const programAttribute = programAttributes[name];
         if (programAttribute.location >= 0) {
@@ -51424,8 +51690,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                 for (let i = 0; i < programAttribute.locationSize; i++) {
                   enableAttributeAndDivisor(programAttribute.location + i, data.meshPerAttribute);
                 }
-                if (object.isInstancedMesh !== true && geometry2._maxInstanceCount === void 0) {
-                  geometry2._maxInstanceCount = data.meshPerAttribute * data.count;
+                if (object.isInstancedMesh !== true && geometry._maxInstanceCount === void 0) {
+                  geometry._maxInstanceCount = data.meshPerAttribute * data.count;
                 }
               } else {
                 for (let i = 0; i < programAttribute.locationSize; i++) {
@@ -51441,8 +51707,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                 for (let i = 0; i < programAttribute.locationSize; i++) {
                   enableAttributeAndDivisor(programAttribute.location + i, geometryAttribute.meshPerAttribute);
                 }
-                if (object.isInstancedMesh !== true && geometry2._maxInstanceCount === void 0) {
-                  geometry2._maxInstanceCount = geometryAttribute.meshPerAttribute * geometryAttribute.count;
+                if (object.isInstancedMesh !== true && geometry._maxInstanceCount === void 0) {
+                  geometry._maxInstanceCount = geometryAttribute.meshPerAttribute * geometryAttribute.count;
                 }
               } else {
                 for (let i = 0; i < programAttribute.locationSize; i++) {
@@ -51491,10 +51757,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         delete bindingStates[geometryId];
       }
     }
-    function releaseStatesOfGeometry(geometry2) {
-      if (bindingStates[geometry2.id] === void 0)
+    function releaseStatesOfGeometry(geometry) {
+      if (bindingStates[geometry.id] === void 0)
         return;
-      const programMap = bindingStates[geometry2.id];
+      const programMap = bindingStates[geometry.id];
       for (const programId in programMap) {
         const stateMap = programMap[programId];
         for (const wireframe in stateMap) {
@@ -51503,7 +51769,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         }
         delete programMap[programId];
       }
-      delete bindingStates[geometry2.id];
+      delete bindingStates[geometry.id];
     }
     function releaseStatesOfProgram(program) {
       for (const geometryId in bindingStates) {
@@ -51650,10 +51916,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     this.uniform = uniform;
     this.numPlanes = 0;
     this.numIntersection = 0;
-    this.init = function(planes, enableLocalClipping, camera2) {
+    this.init = function(planes, enableLocalClipping, camera) {
       const enabled = planes.length !== 0 || enableLocalClipping || numGlobalPlanes !== 0 || localClippingEnabled;
       localClippingEnabled = enableLocalClipping;
-      globalState = projectPlanes(planes, camera2, 0);
+      globalState = projectPlanes(planes, camera, 0);
       numGlobalPlanes = planes.length;
       return enabled;
     };
@@ -51665,9 +51931,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       renderingShadows = false;
       resetGlobalState();
     };
-    this.setState = function(material2, camera2, useCache) {
-      const planes = material2.clippingPlanes, clipIntersection = material2.clipIntersection, clipShadows = material2.clipShadows;
-      const materialProperties = properties.get(material2);
+    this.setState = function(material, camera, useCache) {
+      const planes = material.clippingPlanes, clipIntersection = material.clipIntersection, clipShadows = material.clipShadows;
+      const materialProperties = properties.get(material);
       if (!localClippingEnabled || planes === null || planes.length === 0 || renderingShadows && !clipShadows) {
         if (renderingShadows) {
           projectPlanes(null);
@@ -51678,7 +51944,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         const nGlobal = renderingShadows ? 0 : numGlobalPlanes, lGlobal = nGlobal * 4;
         let dstArray = materialProperties.clippingState || null;
         uniform.value = dstArray;
-        dstArray = projectPlanes(planes, camera2, lGlobal, useCache);
+        dstArray = projectPlanes(planes, camera, lGlobal, useCache);
         for (let i = 0; i !== lGlobal; ++i) {
           dstArray[i] = globalState[i];
         }
@@ -51695,13 +51961,13 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       scope.numPlanes = numGlobalPlanes;
       scope.numIntersection = 0;
     }
-    function projectPlanes(planes, camera2, dstOffset, skipTransform) {
+    function projectPlanes(planes, camera, dstOffset, skipTransform) {
       const nPlanes = planes !== null ? planes.length : 0;
       let dstArray = null;
       if (nPlanes !== 0) {
         dstArray = uniform.value;
         if (skipTransform !== true || dstArray === null) {
-          const flatSize = dstOffset + nPlanes * 4, viewMatrix = camera2.matrixWorldInverse;
+          const flatSize = dstOffset + nPlanes * 4, viewMatrix = camera.matrixWorldInverse;
           viewNormalMatrix.getNormalMatrix(viewMatrix);
           if (dstArray === null || dstArray.length < flatSize) {
             dstArray = new Float32Array(flatSize);
@@ -51720,7 +51986,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       return dstArray;
     }
   }
-  function WebGLCubeMaps(renderer2) {
+  function WebGLCubeMaps(renderer) {
     let cubemaps = /* @__PURE__ */ new WeakMap();
     function mapTextureMapping(texture, mapping) {
       if (mapping === EquirectangularReflectionMapping) {
@@ -51741,7 +52007,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             const image = texture.image;
             if (image && image.height > 0) {
               const renderTarget = new WebGLCubeRenderTarget(image.height / 2);
-              renderTarget.fromEquirectangularTexture(renderer2, texture);
+              renderTarget.fromEquirectangularTexture(renderer, texture);
               cubemaps.set(texture, renderTarget);
               texture.addEventListener("dispose", onTextureDispose);
               return mapTextureMapping(renderTarget.texture, texture.mapping);
@@ -51879,8 +52145,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     /* @__PURE__ */ new Vector3(-PHI, INV_PHI, 0)
   ];
   var PMREMGenerator = class {
-    constructor(renderer2) {
-      this._renderer = renderer2;
+    constructor(renderer) {
+      this._renderer = renderer;
       this._pingPongRenderTarget = null;
       this._lodMax = 0;
       this._cubeSize = 0;
@@ -51892,12 +52158,12 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this._equirectMaterial = null;
       this._compileMaterial(this._blurMaterial);
     }
-    fromScene(scene2, sigma = 0, near = 0.1, far = 100) {
+    fromScene(scene, sigma = 0, near = 0.1, far = 100) {
       _oldTarget = this._renderer.getRenderTarget();
       this._setSize(256);
       const cubeUVRenderTarget = this._allocateTargets();
       cubeUVRenderTarget.depthBuffer = true;
-      this._sceneToCubeUV(scene2, near, far, cubeUVRenderTarget);
+      this._sceneToCubeUV(scene, near, far, cubeUVRenderTarget);
       if (sigma > 0) {
         this._blur(cubeUVRenderTarget, 0, 0, sigma);
       }
@@ -51984,22 +52250,22 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       }
       return cubeUVRenderTarget;
     }
-    _compileMaterial(material2) {
-      const tmpMesh = new Mesh(this._lodPlanes[0], material2);
+    _compileMaterial(material) {
+      const tmpMesh = new Mesh(this._lodPlanes[0], material);
       this._renderer.compile(tmpMesh, _flatCamera);
     }
-    _sceneToCubeUV(scene2, near, far, cubeUVRenderTarget) {
+    _sceneToCubeUV(scene, near, far, cubeUVRenderTarget) {
       const fov2 = 90;
       const aspect2 = 1;
       const cubeCamera = new PerspectiveCamera(fov2, aspect2, near, far);
       const upSign = [1, -1, 1, 1, 1, 1];
       const forwardSign = [1, 1, 1, -1, -1, -1];
-      const renderer2 = this._renderer;
-      const originalAutoClear = renderer2.autoClear;
-      const toneMapping = renderer2.toneMapping;
-      renderer2.getClearColor(_clearColor);
-      renderer2.toneMapping = NoToneMapping;
-      renderer2.autoClear = false;
+      const renderer = this._renderer;
+      const originalAutoClear = renderer.autoClear;
+      const toneMapping = renderer.toneMapping;
+      renderer.getClearColor(_clearColor);
+      renderer.toneMapping = NoToneMapping;
+      renderer.autoClear = false;
       const backgroundMaterial = new MeshBasicMaterial({
         name: "PMREM.Background",
         side: BackSide,
@@ -52008,11 +52274,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       });
       const backgroundBox = new Mesh(new BoxGeometry(), backgroundMaterial);
       let useSolidColor = false;
-      const background = scene2.background;
+      const background = scene.background;
       if (background) {
         if (background.isColor) {
           backgroundMaterial.color.copy(background);
-          scene2.background = null;
+          scene.background = null;
           useSolidColor = true;
         }
       } else {
@@ -52033,20 +52299,20 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         }
         const size = this._cubeSize;
         _setViewport(cubeUVRenderTarget, col * size, i > 2 ? size : 0, size, size);
-        renderer2.setRenderTarget(cubeUVRenderTarget);
+        renderer.setRenderTarget(cubeUVRenderTarget);
         if (useSolidColor) {
-          renderer2.render(backgroundBox, cubeCamera);
+          renderer.render(backgroundBox, cubeCamera);
         }
-        renderer2.render(scene2, cubeCamera);
+        renderer.render(scene, cubeCamera);
       }
       backgroundBox.geometry.dispose();
       backgroundBox.material.dispose();
-      renderer2.toneMapping = toneMapping;
-      renderer2.autoClear = originalAutoClear;
-      scene2.background = background;
+      renderer.toneMapping = toneMapping;
+      renderer.autoClear = originalAutoClear;
+      scene.background = background;
     }
     _textureToCubeUV(texture, cubeUVRenderTarget) {
-      const renderer2 = this._renderer;
+      const renderer = this._renderer;
       const isCubeTexture = texture.mapping === CubeReflectionMapping || texture.mapping === CubeRefractionMapping;
       if (isCubeTexture) {
         if (this._cubemapMaterial === null) {
@@ -52058,25 +52324,25 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           this._equirectMaterial = _getEquirectMaterial();
         }
       }
-      const material2 = isCubeTexture ? this._cubemapMaterial : this._equirectMaterial;
-      const mesh = new Mesh(this._lodPlanes[0], material2);
-      const uniforms = material2.uniforms;
+      const material = isCubeTexture ? this._cubemapMaterial : this._equirectMaterial;
+      const mesh = new Mesh(this._lodPlanes[0], material);
+      const uniforms = material.uniforms;
       uniforms["envMap"].value = texture;
       const size = this._cubeSize;
       _setViewport(cubeUVRenderTarget, 0, 0, 3 * size, 2 * size);
-      renderer2.setRenderTarget(cubeUVRenderTarget);
-      renderer2.render(mesh, _flatCamera);
+      renderer.setRenderTarget(cubeUVRenderTarget);
+      renderer.render(mesh, _flatCamera);
     }
     _applyPMREM(cubeUVRenderTarget) {
-      const renderer2 = this._renderer;
-      const autoClear = renderer2.autoClear;
-      renderer2.autoClear = false;
+      const renderer = this._renderer;
+      const autoClear = renderer.autoClear;
+      renderer.autoClear = false;
       for (let i = 1; i < this._lodPlanes.length; i++) {
         const sigma = Math.sqrt(this._sigmas[i] * this._sigmas[i] - this._sigmas[i - 1] * this._sigmas[i - 1]);
         const poleAxis = _axisDirections[(i - 1) % _axisDirections.length];
         this._blur(cubeUVRenderTarget, i - 1, i, sigma, poleAxis);
       }
-      renderer2.autoClear = autoClear;
+      renderer.autoClear = autoClear;
     }
     _blur(cubeUVRenderTarget, lodIn, lodOut, sigma, poleAxis) {
       const pingPongRenderTarget = this._pingPongRenderTarget;
@@ -52084,7 +52350,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this._halfBlur(pingPongRenderTarget, cubeUVRenderTarget, lodOut, lodOut, sigma, "longitudinal", poleAxis);
     }
     _halfBlur(targetIn, targetOut, lodIn, lodOut, sigmaRadians, direction, poleAxis) {
-      const renderer2 = this._renderer;
+      const renderer = this._renderer;
       const blurMaterial = this._blurMaterial;
       if (direction !== "latitudinal" && direction !== "longitudinal") {
         console.error("blur direction must be either latitudinal or longitudinal!");
@@ -52128,8 +52394,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       const x = 3 * outputSize * (lodOut > _lodMax - LOD_MIN ? lodOut - _lodMax + LOD_MIN : 0);
       const y = 4 * (this._cubeSize - outputSize);
       _setViewport(targetOut, x, y, 3 * outputSize, 2 * outputSize);
-      renderer2.setRenderTarget(targetOut);
-      renderer2.render(blurMesh, _flatCamera);
+      renderer.setRenderTarget(targetOut);
+      renderer.render(blurMesh, _flatCamera);
     }
   };
   function _createPlanes(lodMax) {
@@ -52418,7 +52684,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
 		}
 	`;
   }
-  function WebGLCubeUVMaps(renderer2) {
+  function WebGLCubeUVMaps(renderer) {
     let cubeUVmaps = /* @__PURE__ */ new WeakMap();
     let pmremGenerator = null;
     function get2(texture) {
@@ -52431,7 +52697,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             texture.needsPMREMUpdate = false;
             let renderTarget = cubeUVmaps.get(texture);
             if (pmremGenerator === null)
-              pmremGenerator = new PMREMGenerator(renderer2);
+              pmremGenerator = new PMREMGenerator(renderer);
             renderTarget = isEquirectMap ? pmremGenerator.fromEquirectangular(texture, renderTarget) : pmremGenerator.fromCubemap(texture, renderTarget);
             cubeUVmaps.set(texture, renderTarget);
             return renderTarget.texture;
@@ -52442,7 +52708,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
               const image = texture.image;
               if (isEquirectMap && image && image.height > 0 || isCubeMap && image && isCubeTextureComplete(image)) {
                 if (pmremGenerator === null)
-                  pmremGenerator = new PMREMGenerator(renderer2);
+                  pmremGenerator = new PMREMGenerator(renderer);
                 const renderTarget = isEquirectMap ? pmremGenerator.fromEquirectangular(texture) : pmremGenerator.fromCubemap(texture);
                 cubeUVmaps.set(texture, renderTarget);
                 texture.addEventListener("dispose", onTextureDispose);
@@ -52546,40 +52812,40 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     const geometries = {};
     const wireframeAttributes = /* @__PURE__ */ new WeakMap();
     function onGeometryDispose(event) {
-      const geometry2 = event.target;
-      if (geometry2.index !== null) {
-        attributes.remove(geometry2.index);
+      const geometry = event.target;
+      if (geometry.index !== null) {
+        attributes.remove(geometry.index);
       }
-      for (const name in geometry2.attributes) {
-        attributes.remove(geometry2.attributes[name]);
+      for (const name in geometry.attributes) {
+        attributes.remove(geometry.attributes[name]);
       }
-      geometry2.removeEventListener("dispose", onGeometryDispose);
-      delete geometries[geometry2.id];
-      const attribute = wireframeAttributes.get(geometry2);
+      geometry.removeEventListener("dispose", onGeometryDispose);
+      delete geometries[geometry.id];
+      const attribute = wireframeAttributes.get(geometry);
       if (attribute) {
         attributes.remove(attribute);
-        wireframeAttributes.delete(geometry2);
+        wireframeAttributes.delete(geometry);
       }
-      bindingStates.releaseStatesOfGeometry(geometry2);
-      if (geometry2.isInstancedBufferGeometry === true) {
-        delete geometry2._maxInstanceCount;
+      bindingStates.releaseStatesOfGeometry(geometry);
+      if (geometry.isInstancedBufferGeometry === true) {
+        delete geometry._maxInstanceCount;
       }
       info.memory.geometries--;
     }
-    function get2(object, geometry2) {
-      if (geometries[geometry2.id] === true)
-        return geometry2;
-      geometry2.addEventListener("dispose", onGeometryDispose);
-      geometries[geometry2.id] = true;
+    function get2(object, geometry) {
+      if (geometries[geometry.id] === true)
+        return geometry;
+      geometry.addEventListener("dispose", onGeometryDispose);
+      geometries[geometry.id] = true;
       info.memory.geometries++;
-      return geometry2;
+      return geometry;
     }
-    function update(geometry2) {
-      const geometryAttributes = geometry2.attributes;
+    function update(geometry) {
+      const geometryAttributes = geometry.attributes;
       for (const name in geometryAttributes) {
         attributes.update(geometryAttributes[name], 34962);
       }
-      const morphAttributes = geometry2.morphAttributes;
+      const morphAttributes = geometry.morphAttributes;
       for (const name in morphAttributes) {
         const array = morphAttributes[name];
         for (let i = 0, l = array.length; i < l; i++) {
@@ -52587,10 +52853,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         }
       }
     }
-    function updateWireframeAttribute(geometry2) {
+    function updateWireframeAttribute(geometry) {
       const indices = [];
-      const geometryIndex = geometry2.index;
-      const geometryPosition = geometry2.attributes.position;
+      const geometryIndex = geometry.index;
+      const geometryPosition = geometry.attributes.position;
       let version = 0;
       if (geometryIndex !== null) {
         const array = geometryIndex.array;
@@ -52613,24 +52879,24 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       }
       const attribute = new (arrayNeedsUint32(indices) ? Uint32BufferAttribute : Uint16BufferAttribute)(indices, 1);
       attribute.version = version;
-      const previousAttribute = wireframeAttributes.get(geometry2);
+      const previousAttribute = wireframeAttributes.get(geometry);
       if (previousAttribute)
         attributes.remove(previousAttribute);
-      wireframeAttributes.set(geometry2, attribute);
+      wireframeAttributes.set(geometry, attribute);
     }
-    function getWireframeAttribute(geometry2) {
-      const currentAttribute = wireframeAttributes.get(geometry2);
+    function getWireframeAttribute(geometry) {
+      const currentAttribute = wireframeAttributes.get(geometry);
       if (currentAttribute) {
-        const geometryIndex = geometry2.index;
+        const geometryIndex = geometry.index;
         if (geometryIndex !== null) {
           if (currentAttribute.version < geometryIndex.version) {
-            updateWireframeAttribute(geometry2);
+            updateWireframeAttribute(geometry);
           }
         }
       } else {
-        updateWireframeAttribute(geometry2);
+        updateWireframeAttribute(geometry);
       }
-      return wireframeAttributes.get(geometry2);
+      return wireframeAttributes.get(geometry);
     }
     return {
       get: get2,
@@ -52755,26 +53021,26 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     for (let i = 0; i < 8; i++) {
       workInfluences[i] = [i, 0];
     }
-    function update(object, geometry2, material2, program) {
+    function update(object, geometry, material, program) {
       const objectInfluences = object.morphTargetInfluences;
       if (capabilities.isWebGL2 === true) {
-        const morphAttribute = geometry2.morphAttributes.position || geometry2.morphAttributes.normal || geometry2.morphAttributes.color;
+        const morphAttribute = geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color;
         const morphTargetsCount = morphAttribute !== void 0 ? morphAttribute.length : 0;
-        let entry = morphTextures.get(geometry2);
+        let entry = morphTextures.get(geometry);
         if (entry === void 0 || entry.count !== morphTargetsCount) {
           let disposeTexture = function() {
             texture.dispose();
-            morphTextures.delete(geometry2);
-            geometry2.removeEventListener("dispose", disposeTexture);
+            morphTextures.delete(geometry);
+            geometry.removeEventListener("dispose", disposeTexture);
           };
           if (entry !== void 0)
             entry.texture.dispose();
-          const hasMorphPosition = geometry2.morphAttributes.position !== void 0;
-          const hasMorphNormals = geometry2.morphAttributes.normal !== void 0;
-          const hasMorphColors = geometry2.morphAttributes.color !== void 0;
-          const morphTargets = geometry2.morphAttributes.position || [];
-          const morphNormals = geometry2.morphAttributes.normal || [];
-          const morphColors = geometry2.morphAttributes.color || [];
+          const hasMorphPosition = geometry.morphAttributes.position !== void 0;
+          const hasMorphNormals = geometry.morphAttributes.normal !== void 0;
+          const hasMorphColors = geometry.morphAttributes.color !== void 0;
+          const morphTargets = geometry.morphAttributes.position || [];
+          const morphNormals = geometry.morphAttributes.normal || [];
+          const morphColors = geometry.morphAttributes.color || [];
           let vertexDataCount = 0;
           if (hasMorphPosition === true)
             vertexDataCount = 1;
@@ -52782,7 +53048,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             vertexDataCount = 2;
           if (hasMorphColors === true)
             vertexDataCount = 3;
-          let width = geometry2.attributes.position.count * vertexDataCount;
+          let width = geometry.attributes.position.count * vertexDataCount;
           let height = 1;
           if (width > capabilities.maxTextureSize) {
             height = Math.ceil(width / capabilities.maxTextureSize);
@@ -52835,27 +53101,27 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             texture,
             size: new Vector2(width, height)
           };
-          morphTextures.set(geometry2, entry);
-          geometry2.addEventListener("dispose", disposeTexture);
+          morphTextures.set(geometry, entry);
+          geometry.addEventListener("dispose", disposeTexture);
         }
         let morphInfluencesSum = 0;
         for (let i = 0; i < objectInfluences.length; i++) {
           morphInfluencesSum += objectInfluences[i];
         }
-        const morphBaseInfluence = geometry2.morphTargetsRelative ? 1 : 1 - morphInfluencesSum;
+        const morphBaseInfluence = geometry.morphTargetsRelative ? 1 : 1 - morphInfluencesSum;
         program.getUniforms().setValue(gl, "morphTargetBaseInfluence", morphBaseInfluence);
         program.getUniforms().setValue(gl, "morphTargetInfluences", objectInfluences);
         program.getUniforms().setValue(gl, "morphTargetsTexture", entry.texture, textures);
         program.getUniforms().setValue(gl, "morphTargetsTextureSize", entry.size);
       } else {
         const length = objectInfluences === void 0 ? 0 : objectInfluences.length;
-        let influences = influencesList[geometry2.id];
+        let influences = influencesList[geometry.id];
         if (influences === void 0 || influences.length !== length) {
           influences = [];
           for (let i = 0; i < length; i++) {
             influences[i] = [i, 0];
           }
-          influencesList[geometry2.id] = influences;
+          influencesList[geometry.id] = influences;
         }
         for (let i = 0; i < length; i++) {
           const influence = influences[i];
@@ -52873,33 +53139,33 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           }
         }
         workInfluences.sort(numericalSort);
-        const morphTargets = geometry2.morphAttributes.position;
-        const morphNormals = geometry2.morphAttributes.normal;
+        const morphTargets = geometry.morphAttributes.position;
+        const morphNormals = geometry.morphAttributes.normal;
         let morphInfluencesSum = 0;
         for (let i = 0; i < 8; i++) {
           const influence = workInfluences[i];
           const index = influence[0];
           const value = influence[1];
           if (index !== Number.MAX_SAFE_INTEGER && value) {
-            if (morphTargets && geometry2.getAttribute("morphTarget" + i) !== morphTargets[index]) {
-              geometry2.setAttribute("morphTarget" + i, morphTargets[index]);
+            if (morphTargets && geometry.getAttribute("morphTarget" + i) !== morphTargets[index]) {
+              geometry.setAttribute("morphTarget" + i, morphTargets[index]);
             }
-            if (morphNormals && geometry2.getAttribute("morphNormal" + i) !== morphNormals[index]) {
-              geometry2.setAttribute("morphNormal" + i, morphNormals[index]);
+            if (morphNormals && geometry.getAttribute("morphNormal" + i) !== morphNormals[index]) {
+              geometry.setAttribute("morphNormal" + i, morphNormals[index]);
             }
             morphInfluences[i] = value;
             morphInfluencesSum += value;
           } else {
-            if (morphTargets && geometry2.hasAttribute("morphTarget" + i) === true) {
-              geometry2.deleteAttribute("morphTarget" + i);
+            if (morphTargets && geometry.hasAttribute("morphTarget" + i) === true) {
+              geometry.deleteAttribute("morphTarget" + i);
             }
-            if (morphNormals && geometry2.hasAttribute("morphNormal" + i) === true) {
-              geometry2.deleteAttribute("morphNormal" + i);
+            if (morphNormals && geometry.hasAttribute("morphNormal" + i) === true) {
+              geometry.deleteAttribute("morphNormal" + i);
             }
             morphInfluences[i] = 0;
           }
         }
-        const morphBaseInfluence = geometry2.morphTargetsRelative ? 1 : 1 - morphInfluencesSum;
+        const morphBaseInfluence = geometry.morphTargetsRelative ? 1 : 1 - morphInfluencesSum;
         program.getUniforms().setValue(gl, "morphTargetBaseInfluence", morphBaseInfluence);
         program.getUniforms().setValue(gl, "morphTargetInfluences", morphInfluences);
       }
@@ -52912,8 +53178,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     let updateMap = /* @__PURE__ */ new WeakMap();
     function update(object) {
       const frame = info.render.frame;
-      const geometry2 = object.geometry;
-      const buffergeometry = geometries.get(object, geometry2);
+      const geometry = object.geometry;
+      const buffergeometry = geometries.get(object, geometry);
       if (updateMap.get(buffergeometry) !== frame) {
         geometries.update(buffergeometry);
         updateMap.set(buffergeometry, frame);
@@ -53706,8 +53972,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     const texelWidth = 1 / (3 * Math.max(Math.pow(2, maxMip), 7 * 16));
     return { texelWidth, texelHeight, maxMip };
   }
-  function WebGLProgram(renderer2, cacheKey, parameters, bindingStates) {
-    const gl = renderer2.getContext();
+  function WebGLProgram(renderer, cacheKey, parameters, bindingStates) {
+    const gl = renderer.getContext();
     const defines = parameters.defines;
     let vertexShader = parameters.vertexShader;
     let fragmentShader = parameters.fragmentShader;
@@ -53953,7 +54219,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       gl.bindAttribLocation(program, 0, "position");
     }
     gl.linkProgram(program);
-    if (renderer2.debug.checkShaderErrors) {
+    if (renderer.debug.checkShaderErrors) {
       const programLog = gl.getProgramInfoLog(program).trim();
       const vertexLog = gl.getShaderInfoLog(glVertexShader).trim();
       const fragmentLog = gl.getShaderInfoLog(glFragmentShader).trim();
@@ -54020,12 +54286,12 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this.shaderCache = /* @__PURE__ */ new Map();
       this.materialCache = /* @__PURE__ */ new Map();
     }
-    update(material2) {
-      const vertexShader = material2.vertexShader;
-      const fragmentShader = material2.fragmentShader;
+    update(material) {
+      const vertexShader = material.vertexShader;
+      const fragmentShader = material.fragmentShader;
       const vertexShaderStage = this._getShaderStage(vertexShader);
       const fragmentShaderStage = this._getShaderStage(fragmentShader);
-      const materialShaders = this._getShaderCacheForMaterial(material2);
+      const materialShaders = this._getShaderCacheForMaterial(material);
       if (materialShaders.has(vertexShaderStage) === false) {
         materialShaders.add(vertexShaderStage);
         vertexShaderStage.usedTimes++;
@@ -54036,32 +54302,32 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       }
       return this;
     }
-    remove(material2) {
-      const materialShaders = this.materialCache.get(material2);
+    remove(material) {
+      const materialShaders = this.materialCache.get(material);
       for (const shaderStage of materialShaders) {
         shaderStage.usedTimes--;
         if (shaderStage.usedTimes === 0)
           this.shaderCache.delete(shaderStage);
       }
-      this.materialCache.delete(material2);
+      this.materialCache.delete(material);
       return this;
     }
-    getVertexShaderID(material2) {
-      return this._getShaderStage(material2.vertexShader).id;
+    getVertexShaderID(material) {
+      return this._getShaderStage(material.vertexShader).id;
     }
-    getFragmentShaderID(material2) {
-      return this._getShaderStage(material2.fragmentShader).id;
+    getFragmentShaderID(material) {
+      return this._getShaderStage(material.fragmentShader).id;
     }
     dispose() {
       this.shaderCache.clear();
       this.materialCache.clear();
     }
-    _getShaderCacheForMaterial(material2) {
+    _getShaderCacheForMaterial(material) {
       const cache = this.materialCache;
-      if (cache.has(material2) === false) {
-        cache.set(material2, /* @__PURE__ */ new Set());
+      if (cache.has(material) === false) {
+        cache.set(material, /* @__PURE__ */ new Set());
       }
-      return cache.get(material2);
+      return cache.get(material);
     }
     _getShaderStage(code) {
       const cache = this.shaderCache;
@@ -54078,7 +54344,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this.usedTimes = 0;
     }
   };
-  function WebGLPrograms(renderer2, cubemaps, cubeuvmaps, extensions, capabilities, bindingStates, clipping) {
+  function WebGLPrograms(renderer, cubemaps, cubeuvmaps, extensions, capabilities, bindingStates, clipping) {
     const _programLayers = new Layers();
     const _customShaders = new WebGLShaderCache();
     const programs = [];
@@ -54121,28 +54387,28 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         return maxBones;
       }
     }
-    function getParameters(material2, lights, shadows, scene2, object) {
-      const fog = scene2.fog;
-      const geometry2 = object.geometry;
-      const environment = material2.isMeshStandardMaterial ? scene2.environment : null;
-      const envMap = (material2.isMeshStandardMaterial ? cubeuvmaps : cubemaps).get(material2.envMap || environment);
+    function getParameters(material, lights, shadows, scene, object) {
+      const fog = scene.fog;
+      const geometry = object.geometry;
+      const environment = material.isMeshStandardMaterial ? scene.environment : null;
+      const envMap = (material.isMeshStandardMaterial ? cubeuvmaps : cubemaps).get(material.envMap || environment);
       const envMapCubeUVHeight = !!envMap && (envMap.mapping === CubeUVReflectionMapping || envMap.mapping === CubeUVRefractionMapping) ? envMap.image.height : null;
-      const shaderID = shaderIDs[material2.type];
+      const shaderID = shaderIDs[material.type];
       const maxBones = object.isSkinnedMesh ? getMaxBones(object) : 0;
-      if (material2.precision !== null) {
-        precision = capabilities.getMaxPrecision(material2.precision);
-        if (precision !== material2.precision) {
-          console.warn("THREE.WebGLProgram.getParameters:", material2.precision, "not supported, using", precision, "instead.");
+      if (material.precision !== null) {
+        precision = capabilities.getMaxPrecision(material.precision);
+        if (precision !== material.precision) {
+          console.warn("THREE.WebGLProgram.getParameters:", material.precision, "not supported, using", precision, "instead.");
         }
       }
-      const morphAttribute = geometry2.morphAttributes.position || geometry2.morphAttributes.normal || geometry2.morphAttributes.color;
+      const morphAttribute = geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color;
       const morphTargetsCount = morphAttribute !== void 0 ? morphAttribute.length : 0;
       let morphTextureStride = 0;
-      if (geometry2.morphAttributes.position !== void 0)
+      if (geometry.morphAttributes.position !== void 0)
         morphTextureStride = 1;
-      if (geometry2.morphAttributes.normal !== void 0)
+      if (geometry.morphAttributes.normal !== void 0)
         morphTextureStride = 2;
-      if (geometry2.morphAttributes.color !== void 0)
+      if (geometry.morphAttributes.color !== void 0)
         morphTextureStride = 3;
       let vertexShader, fragmentShader;
       let customVertexShaderID, customFragmentShaderID;
@@ -54151,82 +54417,82 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         vertexShader = shader.vertexShader;
         fragmentShader = shader.fragmentShader;
       } else {
-        vertexShader = material2.vertexShader;
-        fragmentShader = material2.fragmentShader;
-        _customShaders.update(material2);
-        customVertexShaderID = _customShaders.getVertexShaderID(material2);
-        customFragmentShaderID = _customShaders.getFragmentShaderID(material2);
+        vertexShader = material.vertexShader;
+        fragmentShader = material.fragmentShader;
+        _customShaders.update(material);
+        customVertexShaderID = _customShaders.getVertexShaderID(material);
+        customFragmentShaderID = _customShaders.getFragmentShaderID(material);
       }
-      const currentRenderTarget = renderer2.getRenderTarget();
-      const useAlphaTest = material2.alphaTest > 0;
-      const useClearcoat = material2.clearcoat > 0;
+      const currentRenderTarget = renderer.getRenderTarget();
+      const useAlphaTest = material.alphaTest > 0;
+      const useClearcoat = material.clearcoat > 0;
       const parameters = {
         isWebGL2,
         shaderID,
-        shaderName: material2.type,
+        shaderName: material.type,
         vertexShader,
         fragmentShader,
-        defines: material2.defines,
+        defines: material.defines,
         customVertexShaderID,
         customFragmentShaderID,
-        isRawShaderMaterial: material2.isRawShaderMaterial === true,
-        glslVersion: material2.glslVersion,
+        isRawShaderMaterial: material.isRawShaderMaterial === true,
+        glslVersion: material.glslVersion,
         precision,
         instancing: object.isInstancedMesh === true,
         instancingColor: object.isInstancedMesh === true && object.instanceColor !== null,
         supportsVertexTextures: vertexTextures,
-        outputEncoding: currentRenderTarget === null ? renderer2.outputEncoding : currentRenderTarget.isXRRenderTarget === true ? currentRenderTarget.texture.encoding : LinearEncoding,
-        map: !!material2.map,
-        matcap: !!material2.matcap,
+        outputEncoding: currentRenderTarget === null ? renderer.outputEncoding : currentRenderTarget.isXRRenderTarget === true ? currentRenderTarget.texture.encoding : LinearEncoding,
+        map: !!material.map,
+        matcap: !!material.matcap,
         envMap: !!envMap,
         envMapMode: envMap && envMap.mapping,
         envMapCubeUVHeight,
-        lightMap: !!material2.lightMap,
-        aoMap: !!material2.aoMap,
-        emissiveMap: !!material2.emissiveMap,
-        bumpMap: !!material2.bumpMap,
-        normalMap: !!material2.normalMap,
-        objectSpaceNormalMap: material2.normalMapType === ObjectSpaceNormalMap,
-        tangentSpaceNormalMap: material2.normalMapType === TangentSpaceNormalMap,
-        decodeVideoTexture: !!material2.map && material2.map.isVideoTexture === true && material2.map.encoding === sRGBEncoding,
+        lightMap: !!material.lightMap,
+        aoMap: !!material.aoMap,
+        emissiveMap: !!material.emissiveMap,
+        bumpMap: !!material.bumpMap,
+        normalMap: !!material.normalMap,
+        objectSpaceNormalMap: material.normalMapType === ObjectSpaceNormalMap,
+        tangentSpaceNormalMap: material.normalMapType === TangentSpaceNormalMap,
+        decodeVideoTexture: !!material.map && material.map.isVideoTexture === true && material.map.encoding === sRGBEncoding,
         clearcoat: useClearcoat,
-        clearcoatMap: useClearcoat && !!material2.clearcoatMap,
-        clearcoatRoughnessMap: useClearcoat && !!material2.clearcoatRoughnessMap,
-        clearcoatNormalMap: useClearcoat && !!material2.clearcoatNormalMap,
-        displacementMap: !!material2.displacementMap,
-        roughnessMap: !!material2.roughnessMap,
-        metalnessMap: !!material2.metalnessMap,
-        specularMap: !!material2.specularMap,
-        specularIntensityMap: !!material2.specularIntensityMap,
-        specularColorMap: !!material2.specularColorMap,
-        opaque: material2.transparent === false && material2.blending === NormalBlending,
-        alphaMap: !!material2.alphaMap,
+        clearcoatMap: useClearcoat && !!material.clearcoatMap,
+        clearcoatRoughnessMap: useClearcoat && !!material.clearcoatRoughnessMap,
+        clearcoatNormalMap: useClearcoat && !!material.clearcoatNormalMap,
+        displacementMap: !!material.displacementMap,
+        roughnessMap: !!material.roughnessMap,
+        metalnessMap: !!material.metalnessMap,
+        specularMap: !!material.specularMap,
+        specularIntensityMap: !!material.specularIntensityMap,
+        specularColorMap: !!material.specularColorMap,
+        opaque: material.transparent === false && material.blending === NormalBlending,
+        alphaMap: !!material.alphaMap,
         alphaTest: useAlphaTest,
-        gradientMap: !!material2.gradientMap,
-        sheen: material2.sheen > 0,
-        sheenColorMap: !!material2.sheenColorMap,
-        sheenRoughnessMap: !!material2.sheenRoughnessMap,
-        transmission: material2.transmission > 0,
-        transmissionMap: !!material2.transmissionMap,
-        thicknessMap: !!material2.thicknessMap,
-        combine: material2.combine,
-        vertexTangents: !!material2.normalMap && !!geometry2.attributes.tangent,
-        vertexColors: material2.vertexColors,
-        vertexAlphas: material2.vertexColors === true && !!geometry2.attributes.color && geometry2.attributes.color.itemSize === 4,
-        vertexUvs: !!material2.map || !!material2.bumpMap || !!material2.normalMap || !!material2.specularMap || !!material2.alphaMap || !!material2.emissiveMap || !!material2.roughnessMap || !!material2.metalnessMap || !!material2.clearcoatMap || !!material2.clearcoatRoughnessMap || !!material2.clearcoatNormalMap || !!material2.displacementMap || !!material2.transmissionMap || !!material2.thicknessMap || !!material2.specularIntensityMap || !!material2.specularColorMap || !!material2.sheenColorMap || !!material2.sheenRoughnessMap,
-        uvsVertexOnly: !(!!material2.map || !!material2.bumpMap || !!material2.normalMap || !!material2.specularMap || !!material2.alphaMap || !!material2.emissiveMap || !!material2.roughnessMap || !!material2.metalnessMap || !!material2.clearcoatNormalMap || material2.transmission > 0 || !!material2.transmissionMap || !!material2.thicknessMap || !!material2.specularIntensityMap || !!material2.specularColorMap || material2.sheen > 0 || !!material2.sheenColorMap || !!material2.sheenRoughnessMap) && !!material2.displacementMap,
+        gradientMap: !!material.gradientMap,
+        sheen: material.sheen > 0,
+        sheenColorMap: !!material.sheenColorMap,
+        sheenRoughnessMap: !!material.sheenRoughnessMap,
+        transmission: material.transmission > 0,
+        transmissionMap: !!material.transmissionMap,
+        thicknessMap: !!material.thicknessMap,
+        combine: material.combine,
+        vertexTangents: !!material.normalMap && !!geometry.attributes.tangent,
+        vertexColors: material.vertexColors,
+        vertexAlphas: material.vertexColors === true && !!geometry.attributes.color && geometry.attributes.color.itemSize === 4,
+        vertexUvs: !!material.map || !!material.bumpMap || !!material.normalMap || !!material.specularMap || !!material.alphaMap || !!material.emissiveMap || !!material.roughnessMap || !!material.metalnessMap || !!material.clearcoatMap || !!material.clearcoatRoughnessMap || !!material.clearcoatNormalMap || !!material.displacementMap || !!material.transmissionMap || !!material.thicknessMap || !!material.specularIntensityMap || !!material.specularColorMap || !!material.sheenColorMap || !!material.sheenRoughnessMap,
+        uvsVertexOnly: !(!!material.map || !!material.bumpMap || !!material.normalMap || !!material.specularMap || !!material.alphaMap || !!material.emissiveMap || !!material.roughnessMap || !!material.metalnessMap || !!material.clearcoatNormalMap || material.transmission > 0 || !!material.transmissionMap || !!material.thicknessMap || !!material.specularIntensityMap || !!material.specularColorMap || material.sheen > 0 || !!material.sheenColorMap || !!material.sheenRoughnessMap) && !!material.displacementMap,
         fog: !!fog,
-        useFog: material2.fog,
+        useFog: material.fog,
         fogExp2: fog && fog.isFogExp2,
-        flatShading: !!material2.flatShading,
-        sizeAttenuation: material2.sizeAttenuation,
+        flatShading: !!material.flatShading,
+        sizeAttenuation: material.sizeAttenuation,
         logarithmicDepthBuffer,
         skinning: object.isSkinnedMesh === true && maxBones > 0,
         maxBones,
         useVertexTexture: floatVertexTextures,
-        morphTargets: geometry2.morphAttributes.position !== void 0,
-        morphNormals: geometry2.morphAttributes.normal !== void 0,
-        morphColors: geometry2.morphAttributes.color !== void 0,
+        morphTargets: geometry.morphAttributes.position !== void 0,
+        morphNormals: geometry.morphAttributes.normal !== void 0,
+        morphColors: geometry.morphAttributes.color !== void 0,
         morphTargetsCount,
         morphTextureStride,
         numDirLights: lights.directional.length,
@@ -54239,24 +54505,24 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         numSpotLightShadows: lights.spotShadowMap.length,
         numClippingPlanes: clipping.numPlanes,
         numClipIntersection: clipping.numIntersection,
-        dithering: material2.dithering,
-        shadowMapEnabled: renderer2.shadowMap.enabled && shadows.length > 0,
-        shadowMapType: renderer2.shadowMap.type,
-        toneMapping: material2.toneMapped ? renderer2.toneMapping : NoToneMapping,
-        physicallyCorrectLights: renderer2.physicallyCorrectLights,
-        premultipliedAlpha: material2.premultipliedAlpha,
-        doubleSided: material2.side === DoubleSide,
-        flipSided: material2.side === BackSide,
-        depthPacking: material2.depthPacking !== void 0 ? material2.depthPacking : false,
-        index0AttributeName: material2.index0AttributeName,
-        extensionDerivatives: material2.extensions && material2.extensions.derivatives,
-        extensionFragDepth: material2.extensions && material2.extensions.fragDepth,
-        extensionDrawBuffers: material2.extensions && material2.extensions.drawBuffers,
-        extensionShaderTextureLOD: material2.extensions && material2.extensions.shaderTextureLOD,
+        dithering: material.dithering,
+        shadowMapEnabled: renderer.shadowMap.enabled && shadows.length > 0,
+        shadowMapType: renderer.shadowMap.type,
+        toneMapping: material.toneMapped ? renderer.toneMapping : NoToneMapping,
+        physicallyCorrectLights: renderer.physicallyCorrectLights,
+        premultipliedAlpha: material.premultipliedAlpha,
+        doubleSided: material.side === DoubleSide,
+        flipSided: material.side === BackSide,
+        depthPacking: material.depthPacking !== void 0 ? material.depthPacking : false,
+        index0AttributeName: material.index0AttributeName,
+        extensionDerivatives: material.extensions && material.extensions.derivatives,
+        extensionFragDepth: material.extensions && material.extensions.fragDepth,
+        extensionDrawBuffers: material.extensions && material.extensions.drawBuffers,
+        extensionShaderTextureLOD: material.extensions && material.extensions.shaderTextureLOD,
         rendererExtensionFragDepth: isWebGL2 || extensions.has("EXT_frag_depth"),
         rendererExtensionDrawBuffers: isWebGL2 || extensions.has("WEBGL_draw_buffers"),
         rendererExtensionShaderTextureLod: isWebGL2 || extensions.has("EXT_shader_texture_lod"),
-        customProgramCacheKey: material2.customProgramCacheKey()
+        customProgramCacheKey: material.customProgramCacheKey()
       };
       return parameters;
     }
@@ -54277,7 +54543,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       if (parameters.isRawShaderMaterial === false) {
         getProgramCacheKeyParameters(array, parameters);
         getProgramCacheKeyBooleans(array, parameters);
-        array.push(renderer2.outputEncoding);
+        array.push(renderer.outputEncoding);
       }
       array.push(parameters.customProgramCacheKey);
       return array.join();
@@ -54425,14 +54691,14 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         _programLayers.enable(24);
       array.push(_programLayers.mask);
     }
-    function getUniforms(material2) {
-      const shaderID = shaderIDs[material2.type];
+    function getUniforms(material) {
+      const shaderID = shaderIDs[material.type];
       let uniforms;
       if (shaderID) {
         const shader = ShaderLib[shaderID];
         uniforms = UniformsUtils.clone(shader.uniforms);
       } else {
-        uniforms = material2.uniforms;
+        uniforms = material.uniforms;
       }
       return uniforms;
     }
@@ -54447,7 +54713,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         }
       }
       if (program === void 0) {
-        program = new WebGLProgram(renderer2, cacheKey, parameters, bindingStates);
+        program = new WebGLProgram(renderer, cacheKey, parameters, bindingStates);
         programs.push(program);
       }
       return program;
@@ -54460,8 +54726,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         program.destroy();
       }
     }
-    function releaseShaderCache(material2) {
-      _customShaders.remove(material2);
+    function releaseShaderCache(material) {
+      _customShaders.remove(material);
     }
     function dispose() {
       _customShaders.dispose();
@@ -54539,14 +54805,14 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       transmissive.length = 0;
       transparent.length = 0;
     }
-    function getNextRenderItem(object, geometry2, material2, groupOrder, z, group) {
+    function getNextRenderItem(object, geometry, material, groupOrder, z, group) {
       let renderItem = renderItems[renderItemsIndex];
       if (renderItem === void 0) {
         renderItem = {
           id: object.id,
           object,
-          geometry: geometry2,
-          material: material2,
+          geometry,
+          material,
           groupOrder,
           renderOrder: object.renderOrder,
           z,
@@ -54556,8 +54822,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       } else {
         renderItem.id = object.id;
         renderItem.object = object;
-        renderItem.geometry = geometry2;
-        renderItem.material = material2;
+        renderItem.geometry = geometry;
+        renderItem.material = material;
         renderItem.groupOrder = groupOrder;
         renderItem.renderOrder = object.renderOrder;
         renderItem.z = z;
@@ -54566,21 +54832,21 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       renderItemsIndex++;
       return renderItem;
     }
-    function push(object, geometry2, material2, groupOrder, z, group) {
-      const renderItem = getNextRenderItem(object, geometry2, material2, groupOrder, z, group);
-      if (material2.transmission > 0) {
+    function push(object, geometry, material, groupOrder, z, group) {
+      const renderItem = getNextRenderItem(object, geometry, material, groupOrder, z, group);
+      if (material.transmission > 0) {
         transmissive.push(renderItem);
-      } else if (material2.transparent === true) {
+      } else if (material.transparent === true) {
         transparent.push(renderItem);
       } else {
         opaque.push(renderItem);
       }
     }
-    function unshift(object, geometry2, material2, groupOrder, z, group) {
-      const renderItem = getNextRenderItem(object, geometry2, material2, groupOrder, z, group);
-      if (material2.transmission > 0) {
+    function unshift(object, geometry, material, groupOrder, z, group) {
+      const renderItem = getNextRenderItem(object, geometry, material, groupOrder, z, group);
+      if (material.transmission > 0) {
         transmissive.unshift(renderItem);
-      } else if (material2.transparent === true) {
+      } else if (material.transparent === true) {
         transparent.unshift(renderItem);
       } else {
         opaque.unshift(renderItem);
@@ -54619,17 +54885,17 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   }
   function WebGLRenderLists() {
     let lists = /* @__PURE__ */ new WeakMap();
-    function get2(scene2, renderCallDepth) {
+    function get2(scene, renderCallDepth) {
       let list;
-      if (lists.has(scene2) === false) {
+      if (lists.has(scene) === false) {
         list = new WebGLRenderList();
-        lists.set(scene2, [list]);
+        lists.set(scene, [list]);
       } else {
-        if (renderCallDepth >= lists.get(scene2).length) {
+        if (renderCallDepth >= lists.get(scene).length) {
           list = new WebGLRenderList();
-          lists.get(scene2).push(list);
+          lists.get(scene).push(list);
         } else {
-          list = lists.get(scene2)[renderCallDepth];
+          list = lists.get(scene)[renderCallDepth];
         }
       }
       return list;
@@ -54930,13 +55196,13 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         state.version = nextVersion++;
       }
     }
-    function setupView(lights, camera2) {
+    function setupView(lights, camera) {
       let directionalLength = 0;
       let pointLength = 0;
       let spotLength = 0;
       let rectAreaLength = 0;
       let hemiLength = 0;
-      const viewMatrix = camera2.matrixWorldInverse;
+      const viewMatrix = camera.matrixWorldInverse;
       for (let i = 0, l = lights.length; i < l; i++) {
         const light = lights[i];
         if (light.isDirectionalLight) {
@@ -55005,8 +55271,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     function setupLights(physicallyCorrectLights) {
       lights.setup(lightsArray, physicallyCorrectLights);
     }
-    function setupLightsView(camera2) {
-      lights.setupView(lightsArray, camera2);
+    function setupLightsView(camera) {
+      lights.setupView(lightsArray, camera);
     }
     const state = {
       lightsArray,
@@ -55024,17 +55290,17 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   }
   function WebGLRenderStates(extensions, capabilities) {
     let renderStates = /* @__PURE__ */ new WeakMap();
-    function get2(scene2, renderCallDepth = 0) {
+    function get2(scene, renderCallDepth = 0) {
       let renderState;
-      if (renderStates.has(scene2) === false) {
+      if (renderStates.has(scene) === false) {
         renderState = new WebGLRenderState(extensions, capabilities);
-        renderStates.set(scene2, [renderState]);
+        renderStates.set(scene, [renderState]);
       } else {
-        if (renderCallDepth >= renderStates.get(scene2).length) {
+        if (renderCallDepth >= renderStates.get(scene).length) {
           renderState = new WebGLRenderState(extensions, capabilities);
-          renderStates.get(scene2).push(renderState);
+          renderStates.get(scene).push(renderState);
         } else {
-          renderState = renderStates.get(scene2)[renderCallDepth];
+          renderState = renderStates.get(scene)[renderCallDepth];
         }
       }
       return renderState;
@@ -55133,7 +55399,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     this.autoUpdate = true;
     this.needsUpdate = false;
     this.type = PCFShadowMap;
-    this.render = function(lights, scene2, camera2) {
+    this.render = function(lights, scene, camera) {
       if (scope.enabled === false)
         return;
       if (scope.autoUpdate === false && scope.needsUpdate === false)
@@ -55195,18 +55461,18 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           _state.viewport(_viewport);
           shadow.updateMatrices(light, vp);
           _frustum = shadow.getFrustum();
-          renderObject(scene2, camera2, shadow.camera, light, this.type);
+          renderObject(scene, camera, shadow.camera, light, this.type);
         }
         if (!shadow.isPointLightShadow && this.type === VSMShadowMap) {
-          VSMPass(shadow, camera2);
+          VSMPass(shadow, camera);
         }
         shadow.needsUpdate = false;
       }
       scope.needsUpdate = false;
       _renderer.setRenderTarget(currentRenderTarget, activeCubeFace, activeMipmapLevel);
     };
-    function VSMPass(shadow, camera2) {
-      const geometry2 = _objects.update(fullScreenMesh);
+    function VSMPass(shadow, camera) {
+      const geometry = _objects.update(fullScreenMesh);
       if (shadowMaterialVertical.defines.VSM_SAMPLES !== shadow.blurSamples) {
         shadowMaterialVertical.defines.VSM_SAMPLES = shadow.blurSamples;
         shadowMaterialHorizontal.defines.VSM_SAMPLES = shadow.blurSamples;
@@ -55218,15 +55484,15 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       shadowMaterialVertical.uniforms.radius.value = shadow.radius;
       _renderer.setRenderTarget(shadow.mapPass);
       _renderer.clear();
-      _renderer.renderBufferDirect(camera2, null, geometry2, shadowMaterialVertical, fullScreenMesh, null);
+      _renderer.renderBufferDirect(camera, null, geometry, shadowMaterialVertical, fullScreenMesh, null);
       shadowMaterialHorizontal.uniforms.shadow_pass.value = shadow.mapPass.texture;
       shadowMaterialHorizontal.uniforms.resolution.value = shadow.mapSize;
       shadowMaterialHorizontal.uniforms.radius.value = shadow.radius;
       _renderer.setRenderTarget(shadow.map);
       _renderer.clear();
-      _renderer.renderBufferDirect(camera2, null, geometry2, shadowMaterialHorizontal, fullScreenMesh, null);
+      _renderer.renderBufferDirect(camera, null, geometry, shadowMaterialHorizontal, fullScreenMesh, null);
     }
-    function getDepthMaterial(object, material2, light, shadowCameraNear, shadowCameraFar, type) {
+    function getDepthMaterial(object, material, light, shadowCameraNear, shadowCameraFar, type) {
       let result = null;
       const customMaterial = light.isPointLight === true ? object.customDistanceMaterial : object.customDepthMaterial;
       if (customMaterial !== void 0) {
@@ -55234,8 +55500,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       } else {
         result = light.isPointLight === true ? _distanceMaterial : _depthMaterial;
       }
-      if (_renderer.localClippingEnabled && material2.clipShadows === true && material2.clippingPlanes.length !== 0 || material2.displacementMap && material2.displacementScale !== 0 || material2.alphaMap && material2.alphaTest > 0) {
-        const keyA = result.uuid, keyB = material2.uuid;
+      if (_renderer.localClippingEnabled && material.clipShadows === true && material.clippingPlanes.length !== 0 || material.displacementMap && material.displacementScale !== 0 || material.alphaMap && material.alphaTest > 0) {
+        const keyA = result.uuid, keyB = material.uuid;
         let materialsForVariant = _materialCache[keyA];
         if (materialsForVariant === void 0) {
           materialsForVariant = {};
@@ -55248,23 +55514,23 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         }
         result = cachedMaterial;
       }
-      result.visible = material2.visible;
-      result.wireframe = material2.wireframe;
+      result.visible = material.visible;
+      result.wireframe = material.wireframe;
       if (type === VSMShadowMap) {
-        result.side = material2.shadowSide !== null ? material2.shadowSide : material2.side;
+        result.side = material.shadowSide !== null ? material.shadowSide : material.side;
       } else {
-        result.side = material2.shadowSide !== null ? material2.shadowSide : shadowSide[material2.side];
+        result.side = material.shadowSide !== null ? material.shadowSide : shadowSide[material.side];
       }
-      result.alphaMap = material2.alphaMap;
-      result.alphaTest = material2.alphaTest;
-      result.clipShadows = material2.clipShadows;
-      result.clippingPlanes = material2.clippingPlanes;
-      result.clipIntersection = material2.clipIntersection;
-      result.displacementMap = material2.displacementMap;
-      result.displacementScale = material2.displacementScale;
-      result.displacementBias = material2.displacementBias;
-      result.wireframeLinewidth = material2.wireframeLinewidth;
-      result.linewidth = material2.linewidth;
+      result.alphaMap = material.alphaMap;
+      result.alphaTest = material.alphaTest;
+      result.clipShadows = material.clipShadows;
+      result.clippingPlanes = material.clippingPlanes;
+      result.clipIntersection = material.clipIntersection;
+      result.displacementMap = material.displacementMap;
+      result.displacementScale = material.displacementScale;
+      result.displacementBias = material.displacementBias;
+      result.wireframeLinewidth = material.wireframeLinewidth;
+      result.linewidth = material.linewidth;
       if (light.isPointLight === true && result.isMeshDistanceMaterial === true) {
         result.referencePosition.setFromMatrixPosition(light.matrixWorld);
         result.nearDistance = shadowCameraNear;
@@ -55272,34 +55538,34 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       }
       return result;
     }
-    function renderObject(object, camera2, shadowCamera, light, type) {
+    function renderObject(object, camera, shadowCamera, light, type) {
       if (object.visible === false)
         return;
-      const visible = object.layers.test(camera2.layers);
+      const visible = object.layers.test(camera.layers);
       if (visible && (object.isMesh || object.isLine || object.isPoints)) {
         if ((object.castShadow || object.receiveShadow && type === VSMShadowMap) && (!object.frustumCulled || _frustum.intersectsObject(object))) {
           object.modelViewMatrix.multiplyMatrices(shadowCamera.matrixWorldInverse, object.matrixWorld);
-          const geometry2 = _objects.update(object);
-          const material2 = object.material;
-          if (Array.isArray(material2)) {
-            const groups = geometry2.groups;
+          const geometry = _objects.update(object);
+          const material = object.material;
+          if (Array.isArray(material)) {
+            const groups = geometry.groups;
             for (let k = 0, kl = groups.length; k < kl; k++) {
               const group = groups[k];
-              const groupMaterial = material2[group.materialIndex];
+              const groupMaterial = material[group.materialIndex];
               if (groupMaterial && groupMaterial.visible) {
                 const depthMaterial = getDepthMaterial(object, groupMaterial, light, shadowCamera.near, shadowCamera.far, type);
-                _renderer.renderBufferDirect(shadowCamera, null, geometry2, depthMaterial, object, group);
+                _renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, object, group);
               }
             }
-          } else if (material2.visible) {
-            const depthMaterial = getDepthMaterial(object, material2, light, shadowCamera.near, shadowCamera.far, type);
-            _renderer.renderBufferDirect(shadowCamera, null, geometry2, depthMaterial, object, null);
+          } else if (material.visible) {
+            const depthMaterial = getDepthMaterial(object, material, light, shadowCamera.near, shadowCamera.far, type);
+            _renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, object, null);
           }
         }
       }
       const children = object.children;
       for (let i = 0, l = children.length; i < l; i++) {
-        renderObject(children[i], camera2, shadowCamera, light, type);
+        renderObject(children[i], camera, shadowCamera, light, type);
       }
     }
   }
@@ -55723,26 +55989,26 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       currentBlending = blending;
       currentPremultipledAlpha = null;
     }
-    function setMaterial(material2, frontFaceCW) {
-      material2.side === DoubleSide ? disable(2884) : enable(2884);
-      let flipSided = material2.side === BackSide;
+    function setMaterial(material, frontFaceCW) {
+      material.side === DoubleSide ? disable(2884) : enable(2884);
+      let flipSided = material.side === BackSide;
       if (frontFaceCW)
         flipSided = !flipSided;
       setFlipSided(flipSided);
-      material2.blending === NormalBlending && material2.transparent === false ? setBlending(NoBlending) : setBlending(material2.blending, material2.blendEquation, material2.blendSrc, material2.blendDst, material2.blendEquationAlpha, material2.blendSrcAlpha, material2.blendDstAlpha, material2.premultipliedAlpha);
-      depthBuffer.setFunc(material2.depthFunc);
-      depthBuffer.setTest(material2.depthTest);
-      depthBuffer.setMask(material2.depthWrite);
-      colorBuffer.setMask(material2.colorWrite);
-      const stencilWrite = material2.stencilWrite;
+      material.blending === NormalBlending && material.transparent === false ? setBlending(NoBlending) : setBlending(material.blending, material.blendEquation, material.blendSrc, material.blendDst, material.blendEquationAlpha, material.blendSrcAlpha, material.blendDstAlpha, material.premultipliedAlpha);
+      depthBuffer.setFunc(material.depthFunc);
+      depthBuffer.setTest(material.depthTest);
+      depthBuffer.setMask(material.depthWrite);
+      colorBuffer.setMask(material.colorWrite);
+      const stencilWrite = material.stencilWrite;
       stencilBuffer.setTest(stencilWrite);
       if (stencilWrite) {
-        stencilBuffer.setMask(material2.stencilWriteMask);
-        stencilBuffer.setFunc(material2.stencilFunc, material2.stencilRef, material2.stencilFuncMask);
-        stencilBuffer.setOp(material2.stencilFail, material2.stencilZFail, material2.stencilZPass);
+        stencilBuffer.setMask(material.stencilWriteMask);
+        stencilBuffer.setFunc(material.stencilFunc, material.stencilRef, material.stencilFuncMask);
+        stencilBuffer.setOp(material.stencilFail, material.stencilZFail, material.stencilZPass);
       }
-      setPolygonOffset(material2.polygonOffset, material2.polygonOffsetFactor, material2.polygonOffsetUnits);
-      material2.alphaToCoverage === true ? enable(32926) : disable(32926);
+      setPolygonOffset(material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits);
+      material.alphaToCoverage === true ? enable(32926) : disable(32926);
     }
     function setFlipSided(flipSided) {
       if (currentFlipSided !== flipSided) {
@@ -57340,7 +57606,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   };
   DepthTexture.prototype.isDepthTexture = true;
   var WebXRManager = class extends EventDispatcher {
-    constructor(renderer2, gl) {
+    constructor(renderer, gl) {
       super();
       const scope = this;
       let session = null;
@@ -57409,7 +57675,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         inputSourcesMap.clear();
         _currentDepthNear = null;
         _currentDepthFar = null;
-        renderer2.setRenderTarget(initialRenderTarget);
+        renderer.setRenderTarget(initialRenderTarget);
         glBaseLayer = null;
         glProjLayer = null;
         glBinding = null;
@@ -57449,7 +57715,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this.setSession = async function(value) {
         session = value;
         if (session !== null) {
-          initialRenderTarget = renderer2.getRenderTarget();
+          initialRenderTarget = renderer.getRenderTarget();
           session.addEventListener("select", onSessionEvent);
           session.addEventListener("selectstart", onSessionEvent);
           session.addEventListener("selectend", onSessionEvent);
@@ -57461,7 +57727,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           if (attributes.xrCompatible !== true) {
             await gl.makeXRCompatible();
           }
-          if (session.renderState.layers === void 0 || renderer2.capabilities.isWebGL2 === false) {
+          if (session.renderState.layers === void 0 || renderer.capabilities.isWebGL2 === false) {
             const layerInit = {
               antialias: session.renderState.layers === void 0 ? attributes.antialias : true,
               alpha: attributes.alpha,
@@ -57474,7 +57740,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             newRenderTarget = new WebGLRenderTarget(glBaseLayer.framebufferWidth, glBaseLayer.framebufferHeight, {
               format: RGBAFormat,
               type: UnsignedByteType,
-              encoding: renderer2.outputEncoding
+              encoding: renderer.outputEncoding
             });
           } else {
             let depthFormat = null;
@@ -57486,7 +57752,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
               depthType = attributes.stencil ? UnsignedInt248Type : UnsignedShortType;
             }
             const projectionlayerInit = {
-              colorFormat: renderer2.outputEncoding === sRGBEncoding ? 35907 : 32856,
+              colorFormat: renderer.outputEncoding === sRGBEncoding ? 35907 : 32856,
               depthFormat: glDepthFormat,
               scaleFactor: framebufferScaleFactor
             };
@@ -57498,10 +57764,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
               type: UnsignedByteType,
               depthTexture: new DepthTexture(glProjLayer.textureWidth, glProjLayer.textureHeight, depthType, void 0, void 0, void 0, void 0, void 0, void 0, depthFormat),
               stencilBuffer: attributes.stencil,
-              encoding: renderer2.outputEncoding,
+              encoding: renderer.outputEncoding,
               samples: attributes.antialias ? 4 : 0
             });
-            const renderTargetProperties = renderer2.properties.get(newRenderTarget);
+            const renderTargetProperties = renderer.properties.get(newRenderTarget);
             renderTargetProperties.__ignoreDepthValues = glProjLayer.ignoreDepthValues;
           }
           newRenderTarget.isXRRenderTarget = true;
@@ -57536,7 +57802,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       }
       const cameraLPos = new Vector3();
       const cameraRPos = new Vector3();
-      function setProjectionFromUnion(camera2, cameraL2, cameraR2) {
+      function setProjectionFromUnion(camera, cameraL2, cameraR2) {
         cameraLPos.setFromMatrixPosition(cameraL2.matrixWorld);
         cameraRPos.setFromMatrixPosition(cameraR2.matrixWorld);
         const ipd = cameraLPos.distanceTo(cameraRPos);
@@ -57552,32 +57818,32 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         const right = near * rightFov;
         const zOffset = ipd / (-leftFov + rightFov);
         const xOffset = zOffset * -leftFov;
-        cameraL2.matrixWorld.decompose(camera2.position, camera2.quaternion, camera2.scale);
-        camera2.translateX(xOffset);
-        camera2.translateZ(zOffset);
-        camera2.matrixWorld.compose(camera2.position, camera2.quaternion, camera2.scale);
-        camera2.matrixWorldInverse.copy(camera2.matrixWorld).invert();
+        cameraL2.matrixWorld.decompose(camera.position, camera.quaternion, camera.scale);
+        camera.translateX(xOffset);
+        camera.translateZ(zOffset);
+        camera.matrixWorld.compose(camera.position, camera.quaternion, camera.scale);
+        camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
         const near2 = near + zOffset;
         const far2 = far + zOffset;
         const left2 = left - xOffset;
         const right2 = right + (ipd - xOffset);
         const top2 = topFov * far / far2 * near2;
         const bottom2 = bottomFov * far / far2 * near2;
-        camera2.projectionMatrix.makePerspective(left2, right2, top2, bottom2, near2, far2);
+        camera.projectionMatrix.makePerspective(left2, right2, top2, bottom2, near2, far2);
       }
-      function updateCamera(camera2, parent) {
+      function updateCamera(camera, parent) {
         if (parent === null) {
-          camera2.matrixWorld.copy(camera2.matrix);
+          camera.matrixWorld.copy(camera.matrix);
         } else {
-          camera2.matrixWorld.multiplyMatrices(parent.matrixWorld, camera2.matrix);
+          camera.matrixWorld.multiplyMatrices(parent.matrixWorld, camera.matrix);
         }
-        camera2.matrixWorldInverse.copy(camera2.matrixWorld).invert();
+        camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
       }
-      this.updateCamera = function(camera2) {
+      this.updateCamera = function(camera) {
         if (session === null)
           return;
-        cameraVR.near = cameraR.near = cameraL.near = camera2.near;
-        cameraVR.far = cameraR.far = cameraL.far = camera2.far;
+        cameraVR.near = cameraR.near = cameraL.near = camera.near;
+        cameraVR.far = cameraR.far = cameraL.far = camera.far;
         if (_currentDepthNear !== cameraVR.near || _currentDepthFar !== cameraVR.far) {
           session.updateRenderState({
             depthNear: cameraVR.near,
@@ -57586,19 +57852,19 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           _currentDepthNear = cameraVR.near;
           _currentDepthFar = cameraVR.far;
         }
-        const parent = camera2.parent;
+        const parent = camera.parent;
         const cameras2 = cameraVR.cameras;
         updateCamera(cameraVR, parent);
         for (let i = 0; i < cameras2.length; i++) {
           updateCamera(cameras2[i], parent);
         }
         cameraVR.matrixWorld.decompose(cameraVR.position, cameraVR.quaternion, cameraVR.scale);
-        camera2.position.copy(cameraVR.position);
-        camera2.quaternion.copy(cameraVR.quaternion);
-        camera2.scale.copy(cameraVR.scale);
-        camera2.matrix.copy(cameraVR.matrix);
-        camera2.matrixWorld.copy(cameraVR.matrixWorld);
-        const children = camera2.children;
+        camera.position.copy(cameraVR.position);
+        camera.quaternion.copy(cameraVR.quaternion);
+        camera.scale.copy(cameraVR.scale);
+        camera.matrix.copy(cameraVR.matrix);
+        camera.matrixWorld.copy(cameraVR.matrixWorld);
+        const children = camera.children;
         for (let i = 0, l = children.length; i < l; i++) {
           children[i].updateMatrixWorld(true);
         }
@@ -57635,8 +57901,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         if (pose !== null) {
           const views = pose.views;
           if (glBaseLayer !== null) {
-            renderer2.setRenderTargetFramebuffer(newRenderTarget, glBaseLayer.framebuffer);
-            renderer2.setRenderTarget(newRenderTarget);
+            renderer.setRenderTargetFramebuffer(newRenderTarget, glBaseLayer.framebuffer);
+            renderer.setRenderTarget(newRenderTarget);
           }
           let cameraVRNeedsUpdate = false;
           if (views.length !== cameraVR.cameras.length) {
@@ -57652,19 +57918,19 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
               const glSubImage = glBinding.getViewSubImage(glProjLayer, view);
               viewport = glSubImage.viewport;
               if (i === 0) {
-                renderer2.setRenderTargetTextures(newRenderTarget, glSubImage.colorTexture, glProjLayer.ignoreDepthValues ? void 0 : glSubImage.depthStencilTexture);
-                renderer2.setRenderTarget(newRenderTarget);
+                renderer.setRenderTargetTextures(newRenderTarget, glSubImage.colorTexture, glProjLayer.ignoreDepthValues ? void 0 : glSubImage.depthStencilTexture);
+                renderer.setRenderTarget(newRenderTarget);
               }
             }
-            const camera2 = cameras[i];
-            camera2.matrix.fromArray(view.transform.matrix);
-            camera2.projectionMatrix.fromArray(view.projectionMatrix);
-            camera2.viewport.set(viewport.x, viewport.y, viewport.width, viewport.height);
+            const camera = cameras[i];
+            camera.matrix.fromArray(view.transform.matrix);
+            camera.projectionMatrix.fromArray(view.projectionMatrix);
+            camera.viewport.set(viewport.x, viewport.y, viewport.width, viewport.height);
             if (i === 0) {
-              cameraVR.matrix.copy(camera2.matrix);
+              cameraVR.matrix.copy(camera.matrix);
             }
             if (cameraVRNeedsUpdate === true) {
-              cameraVR.cameras.push(camera2);
+              cameraVR.cameras.push(camera);
             }
           }
         }
@@ -57697,126 +57963,126 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         uniforms.fogDensity.value = fog.density;
       }
     }
-    function refreshMaterialUniforms(uniforms, material2, pixelRatio, height, transmissionRenderTarget) {
-      if (material2.isMeshBasicMaterial) {
-        refreshUniformsCommon(uniforms, material2);
-      } else if (material2.isMeshLambertMaterial) {
-        refreshUniformsCommon(uniforms, material2);
-        refreshUniformsLambert(uniforms, material2);
-      } else if (material2.isMeshToonMaterial) {
-        refreshUniformsCommon(uniforms, material2);
-        refreshUniformsToon(uniforms, material2);
-      } else if (material2.isMeshPhongMaterial) {
-        refreshUniformsCommon(uniforms, material2);
-        refreshUniformsPhong(uniforms, material2);
-      } else if (material2.isMeshStandardMaterial) {
-        refreshUniformsCommon(uniforms, material2);
-        if (material2.isMeshPhysicalMaterial) {
-          refreshUniformsPhysical(uniforms, material2, transmissionRenderTarget);
+    function refreshMaterialUniforms(uniforms, material, pixelRatio, height, transmissionRenderTarget) {
+      if (material.isMeshBasicMaterial) {
+        refreshUniformsCommon(uniforms, material);
+      } else if (material.isMeshLambertMaterial) {
+        refreshUniformsCommon(uniforms, material);
+        refreshUniformsLambert(uniforms, material);
+      } else if (material.isMeshToonMaterial) {
+        refreshUniformsCommon(uniforms, material);
+        refreshUniformsToon(uniforms, material);
+      } else if (material.isMeshPhongMaterial) {
+        refreshUniformsCommon(uniforms, material);
+        refreshUniformsPhong(uniforms, material);
+      } else if (material.isMeshStandardMaterial) {
+        refreshUniformsCommon(uniforms, material);
+        if (material.isMeshPhysicalMaterial) {
+          refreshUniformsPhysical(uniforms, material, transmissionRenderTarget);
         } else {
-          refreshUniformsStandard(uniforms, material2);
+          refreshUniformsStandard(uniforms, material);
         }
-      } else if (material2.isMeshMatcapMaterial) {
-        refreshUniformsCommon(uniforms, material2);
-        refreshUniformsMatcap(uniforms, material2);
-      } else if (material2.isMeshDepthMaterial) {
-        refreshUniformsCommon(uniforms, material2);
-        refreshUniformsDepth(uniforms, material2);
-      } else if (material2.isMeshDistanceMaterial) {
-        refreshUniformsCommon(uniforms, material2);
-        refreshUniformsDistance(uniforms, material2);
-      } else if (material2.isMeshNormalMaterial) {
-        refreshUniformsCommon(uniforms, material2);
-        refreshUniformsNormal(uniforms, material2);
-      } else if (material2.isLineBasicMaterial) {
-        refreshUniformsLine(uniforms, material2);
-        if (material2.isLineDashedMaterial) {
-          refreshUniformsDash(uniforms, material2);
+      } else if (material.isMeshMatcapMaterial) {
+        refreshUniformsCommon(uniforms, material);
+        refreshUniformsMatcap(uniforms, material);
+      } else if (material.isMeshDepthMaterial) {
+        refreshUniformsCommon(uniforms, material);
+        refreshUniformsDepth(uniforms, material);
+      } else if (material.isMeshDistanceMaterial) {
+        refreshUniformsCommon(uniforms, material);
+        refreshUniformsDistance(uniforms, material);
+      } else if (material.isMeshNormalMaterial) {
+        refreshUniformsCommon(uniforms, material);
+        refreshUniformsNormal(uniforms, material);
+      } else if (material.isLineBasicMaterial) {
+        refreshUniformsLine(uniforms, material);
+        if (material.isLineDashedMaterial) {
+          refreshUniformsDash(uniforms, material);
         }
-      } else if (material2.isPointsMaterial) {
-        refreshUniformsPoints(uniforms, material2, pixelRatio, height);
-      } else if (material2.isSpriteMaterial) {
-        refreshUniformsSprites(uniforms, material2);
-      } else if (material2.isShadowMaterial) {
-        uniforms.color.value.copy(material2.color);
-        uniforms.opacity.value = material2.opacity;
-      } else if (material2.isShaderMaterial) {
-        material2.uniformsNeedUpdate = false;
+      } else if (material.isPointsMaterial) {
+        refreshUniformsPoints(uniforms, material, pixelRatio, height);
+      } else if (material.isSpriteMaterial) {
+        refreshUniformsSprites(uniforms, material);
+      } else if (material.isShadowMaterial) {
+        uniforms.color.value.copy(material.color);
+        uniforms.opacity.value = material.opacity;
+      } else if (material.isShaderMaterial) {
+        material.uniformsNeedUpdate = false;
       }
     }
-    function refreshUniformsCommon(uniforms, material2) {
-      uniforms.opacity.value = material2.opacity;
-      if (material2.color) {
-        uniforms.diffuse.value.copy(material2.color);
+    function refreshUniformsCommon(uniforms, material) {
+      uniforms.opacity.value = material.opacity;
+      if (material.color) {
+        uniforms.diffuse.value.copy(material.color);
       }
-      if (material2.emissive) {
-        uniforms.emissive.value.copy(material2.emissive).multiplyScalar(material2.emissiveIntensity);
+      if (material.emissive) {
+        uniforms.emissive.value.copy(material.emissive).multiplyScalar(material.emissiveIntensity);
       }
-      if (material2.map) {
-        uniforms.map.value = material2.map;
+      if (material.map) {
+        uniforms.map.value = material.map;
       }
-      if (material2.alphaMap) {
-        uniforms.alphaMap.value = material2.alphaMap;
+      if (material.alphaMap) {
+        uniforms.alphaMap.value = material.alphaMap;
       }
-      if (material2.specularMap) {
-        uniforms.specularMap.value = material2.specularMap;
+      if (material.specularMap) {
+        uniforms.specularMap.value = material.specularMap;
       }
-      if (material2.alphaTest > 0) {
-        uniforms.alphaTest.value = material2.alphaTest;
+      if (material.alphaTest > 0) {
+        uniforms.alphaTest.value = material.alphaTest;
       }
-      const envMap = properties.get(material2).envMap;
+      const envMap = properties.get(material).envMap;
       if (envMap) {
         uniforms.envMap.value = envMap;
         uniforms.flipEnvMap.value = envMap.isCubeTexture && envMap.isRenderTargetTexture === false ? -1 : 1;
-        uniforms.reflectivity.value = material2.reflectivity;
-        uniforms.ior.value = material2.ior;
-        uniforms.refractionRatio.value = material2.refractionRatio;
+        uniforms.reflectivity.value = material.reflectivity;
+        uniforms.ior.value = material.ior;
+        uniforms.refractionRatio.value = material.refractionRatio;
       }
-      if (material2.lightMap) {
-        uniforms.lightMap.value = material2.lightMap;
-        uniforms.lightMapIntensity.value = material2.lightMapIntensity;
+      if (material.lightMap) {
+        uniforms.lightMap.value = material.lightMap;
+        uniforms.lightMapIntensity.value = material.lightMapIntensity;
       }
-      if (material2.aoMap) {
-        uniforms.aoMap.value = material2.aoMap;
-        uniforms.aoMapIntensity.value = material2.aoMapIntensity;
+      if (material.aoMap) {
+        uniforms.aoMap.value = material.aoMap;
+        uniforms.aoMapIntensity.value = material.aoMapIntensity;
       }
       let uvScaleMap;
-      if (material2.map) {
-        uvScaleMap = material2.map;
-      } else if (material2.specularMap) {
-        uvScaleMap = material2.specularMap;
-      } else if (material2.displacementMap) {
-        uvScaleMap = material2.displacementMap;
-      } else if (material2.normalMap) {
-        uvScaleMap = material2.normalMap;
-      } else if (material2.bumpMap) {
-        uvScaleMap = material2.bumpMap;
-      } else if (material2.roughnessMap) {
-        uvScaleMap = material2.roughnessMap;
-      } else if (material2.metalnessMap) {
-        uvScaleMap = material2.metalnessMap;
-      } else if (material2.alphaMap) {
-        uvScaleMap = material2.alphaMap;
-      } else if (material2.emissiveMap) {
-        uvScaleMap = material2.emissiveMap;
-      } else if (material2.clearcoatMap) {
-        uvScaleMap = material2.clearcoatMap;
-      } else if (material2.clearcoatNormalMap) {
-        uvScaleMap = material2.clearcoatNormalMap;
-      } else if (material2.clearcoatRoughnessMap) {
-        uvScaleMap = material2.clearcoatRoughnessMap;
-      } else if (material2.specularIntensityMap) {
-        uvScaleMap = material2.specularIntensityMap;
-      } else if (material2.specularColorMap) {
-        uvScaleMap = material2.specularColorMap;
-      } else if (material2.transmissionMap) {
-        uvScaleMap = material2.transmissionMap;
-      } else if (material2.thicknessMap) {
-        uvScaleMap = material2.thicknessMap;
-      } else if (material2.sheenColorMap) {
-        uvScaleMap = material2.sheenColorMap;
-      } else if (material2.sheenRoughnessMap) {
-        uvScaleMap = material2.sheenRoughnessMap;
+      if (material.map) {
+        uvScaleMap = material.map;
+      } else if (material.specularMap) {
+        uvScaleMap = material.specularMap;
+      } else if (material.displacementMap) {
+        uvScaleMap = material.displacementMap;
+      } else if (material.normalMap) {
+        uvScaleMap = material.normalMap;
+      } else if (material.bumpMap) {
+        uvScaleMap = material.bumpMap;
+      } else if (material.roughnessMap) {
+        uvScaleMap = material.roughnessMap;
+      } else if (material.metalnessMap) {
+        uvScaleMap = material.metalnessMap;
+      } else if (material.alphaMap) {
+        uvScaleMap = material.alphaMap;
+      } else if (material.emissiveMap) {
+        uvScaleMap = material.emissiveMap;
+      } else if (material.clearcoatMap) {
+        uvScaleMap = material.clearcoatMap;
+      } else if (material.clearcoatNormalMap) {
+        uvScaleMap = material.clearcoatNormalMap;
+      } else if (material.clearcoatRoughnessMap) {
+        uvScaleMap = material.clearcoatRoughnessMap;
+      } else if (material.specularIntensityMap) {
+        uvScaleMap = material.specularIntensityMap;
+      } else if (material.specularColorMap) {
+        uvScaleMap = material.specularColorMap;
+      } else if (material.transmissionMap) {
+        uvScaleMap = material.transmissionMap;
+      } else if (material.thicknessMap) {
+        uvScaleMap = material.thicknessMap;
+      } else if (material.sheenColorMap) {
+        uvScaleMap = material.sheenColorMap;
+      } else if (material.sheenRoughnessMap) {
+        uvScaleMap = material.sheenRoughnessMap;
       }
       if (uvScaleMap !== void 0) {
         if (uvScaleMap.isWebGLRenderTarget) {
@@ -57828,10 +58094,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         uniforms.uvTransform.value.copy(uvScaleMap.matrix);
       }
       let uv2ScaleMap;
-      if (material2.aoMap) {
-        uv2ScaleMap = material2.aoMap;
-      } else if (material2.lightMap) {
-        uv2ScaleMap = material2.lightMap;
+      if (material.aoMap) {
+        uv2ScaleMap = material.aoMap;
+      } else if (material.lightMap) {
+        uv2ScaleMap = material.lightMap;
       }
       if (uv2ScaleMap !== void 0) {
         if (uv2ScaleMap.isWebGLRenderTarget) {
@@ -57843,34 +58109,34 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         uniforms.uv2Transform.value.copy(uv2ScaleMap.matrix);
       }
     }
-    function refreshUniformsLine(uniforms, material2) {
-      uniforms.diffuse.value.copy(material2.color);
-      uniforms.opacity.value = material2.opacity;
+    function refreshUniformsLine(uniforms, material) {
+      uniforms.diffuse.value.copy(material.color);
+      uniforms.opacity.value = material.opacity;
     }
-    function refreshUniformsDash(uniforms, material2) {
-      uniforms.dashSize.value = material2.dashSize;
-      uniforms.totalSize.value = material2.dashSize + material2.gapSize;
-      uniforms.scale.value = material2.scale;
+    function refreshUniformsDash(uniforms, material) {
+      uniforms.dashSize.value = material.dashSize;
+      uniforms.totalSize.value = material.dashSize + material.gapSize;
+      uniforms.scale.value = material.scale;
     }
-    function refreshUniformsPoints(uniforms, material2, pixelRatio, height) {
-      uniforms.diffuse.value.copy(material2.color);
-      uniforms.opacity.value = material2.opacity;
-      uniforms.size.value = material2.size * pixelRatio;
+    function refreshUniformsPoints(uniforms, material, pixelRatio, height) {
+      uniforms.diffuse.value.copy(material.color);
+      uniforms.opacity.value = material.opacity;
+      uniforms.size.value = material.size * pixelRatio;
       uniforms.scale.value = height * 0.5;
-      if (material2.map) {
-        uniforms.map.value = material2.map;
+      if (material.map) {
+        uniforms.map.value = material.map;
       }
-      if (material2.alphaMap) {
-        uniforms.alphaMap.value = material2.alphaMap;
+      if (material.alphaMap) {
+        uniforms.alphaMap.value = material.alphaMap;
       }
-      if (material2.alphaTest > 0) {
-        uniforms.alphaTest.value = material2.alphaTest;
+      if (material.alphaTest > 0) {
+        uniforms.alphaTest.value = material.alphaTest;
       }
       let uvScaleMap;
-      if (material2.map) {
-        uvScaleMap = material2.map;
-      } else if (material2.alphaMap) {
-        uvScaleMap = material2.alphaMap;
+      if (material.map) {
+        uvScaleMap = material.map;
+      } else if (material.alphaMap) {
+        uvScaleMap = material.alphaMap;
       }
       if (uvScaleMap !== void 0) {
         if (uvScaleMap.matrixAutoUpdate === true) {
@@ -57879,24 +58145,24 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         uniforms.uvTransform.value.copy(uvScaleMap.matrix);
       }
     }
-    function refreshUniformsSprites(uniforms, material2) {
-      uniforms.diffuse.value.copy(material2.color);
-      uniforms.opacity.value = material2.opacity;
-      uniforms.rotation.value = material2.rotation;
-      if (material2.map) {
-        uniforms.map.value = material2.map;
+    function refreshUniformsSprites(uniforms, material) {
+      uniforms.diffuse.value.copy(material.color);
+      uniforms.opacity.value = material.opacity;
+      uniforms.rotation.value = material.rotation;
+      if (material.map) {
+        uniforms.map.value = material.map;
       }
-      if (material2.alphaMap) {
-        uniforms.alphaMap.value = material2.alphaMap;
+      if (material.alphaMap) {
+        uniforms.alphaMap.value = material.alphaMap;
       }
-      if (material2.alphaTest > 0) {
-        uniforms.alphaTest.value = material2.alphaTest;
+      if (material.alphaTest > 0) {
+        uniforms.alphaTest.value = material.alphaTest;
       }
       let uvScaleMap;
-      if (material2.map) {
-        uvScaleMap = material2.map;
-      } else if (material2.alphaMap) {
-        uvScaleMap = material2.alphaMap;
+      if (material.map) {
+        uvScaleMap = material.map;
+      } else if (material.alphaMap) {
+        uvScaleMap = material.alphaMap;
       }
       if (uvScaleMap !== void 0) {
         if (uvScaleMap.matrixAutoUpdate === true) {
@@ -57905,203 +58171,203 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         uniforms.uvTransform.value.copy(uvScaleMap.matrix);
       }
     }
-    function refreshUniformsLambert(uniforms, material2) {
-      if (material2.emissiveMap) {
-        uniforms.emissiveMap.value = material2.emissiveMap;
+    function refreshUniformsLambert(uniforms, material) {
+      if (material.emissiveMap) {
+        uniforms.emissiveMap.value = material.emissiveMap;
       }
     }
-    function refreshUniformsPhong(uniforms, material2) {
-      uniforms.specular.value.copy(material2.specular);
-      uniforms.shininess.value = Math.max(material2.shininess, 1e-4);
-      if (material2.emissiveMap) {
-        uniforms.emissiveMap.value = material2.emissiveMap;
+    function refreshUniformsPhong(uniforms, material) {
+      uniforms.specular.value.copy(material.specular);
+      uniforms.shininess.value = Math.max(material.shininess, 1e-4);
+      if (material.emissiveMap) {
+        uniforms.emissiveMap.value = material.emissiveMap;
       }
-      if (material2.bumpMap) {
-        uniforms.bumpMap.value = material2.bumpMap;
-        uniforms.bumpScale.value = material2.bumpScale;
-        if (material2.side === BackSide)
+      if (material.bumpMap) {
+        uniforms.bumpMap.value = material.bumpMap;
+        uniforms.bumpScale.value = material.bumpScale;
+        if (material.side === BackSide)
           uniforms.bumpScale.value *= -1;
       }
-      if (material2.normalMap) {
-        uniforms.normalMap.value = material2.normalMap;
-        uniforms.normalScale.value.copy(material2.normalScale);
-        if (material2.side === BackSide)
+      if (material.normalMap) {
+        uniforms.normalMap.value = material.normalMap;
+        uniforms.normalScale.value.copy(material.normalScale);
+        if (material.side === BackSide)
           uniforms.normalScale.value.negate();
       }
-      if (material2.displacementMap) {
-        uniforms.displacementMap.value = material2.displacementMap;
-        uniforms.displacementScale.value = material2.displacementScale;
-        uniforms.displacementBias.value = material2.displacementBias;
+      if (material.displacementMap) {
+        uniforms.displacementMap.value = material.displacementMap;
+        uniforms.displacementScale.value = material.displacementScale;
+        uniforms.displacementBias.value = material.displacementBias;
       }
     }
-    function refreshUniformsToon(uniforms, material2) {
-      if (material2.gradientMap) {
-        uniforms.gradientMap.value = material2.gradientMap;
+    function refreshUniformsToon(uniforms, material) {
+      if (material.gradientMap) {
+        uniforms.gradientMap.value = material.gradientMap;
       }
-      if (material2.emissiveMap) {
-        uniforms.emissiveMap.value = material2.emissiveMap;
+      if (material.emissiveMap) {
+        uniforms.emissiveMap.value = material.emissiveMap;
       }
-      if (material2.bumpMap) {
-        uniforms.bumpMap.value = material2.bumpMap;
-        uniforms.bumpScale.value = material2.bumpScale;
-        if (material2.side === BackSide)
+      if (material.bumpMap) {
+        uniforms.bumpMap.value = material.bumpMap;
+        uniforms.bumpScale.value = material.bumpScale;
+        if (material.side === BackSide)
           uniforms.bumpScale.value *= -1;
       }
-      if (material2.normalMap) {
-        uniforms.normalMap.value = material2.normalMap;
-        uniforms.normalScale.value.copy(material2.normalScale);
-        if (material2.side === BackSide)
+      if (material.normalMap) {
+        uniforms.normalMap.value = material.normalMap;
+        uniforms.normalScale.value.copy(material.normalScale);
+        if (material.side === BackSide)
           uniforms.normalScale.value.negate();
       }
-      if (material2.displacementMap) {
-        uniforms.displacementMap.value = material2.displacementMap;
-        uniforms.displacementScale.value = material2.displacementScale;
-        uniforms.displacementBias.value = material2.displacementBias;
+      if (material.displacementMap) {
+        uniforms.displacementMap.value = material.displacementMap;
+        uniforms.displacementScale.value = material.displacementScale;
+        uniforms.displacementBias.value = material.displacementBias;
       }
     }
-    function refreshUniformsStandard(uniforms, material2) {
-      uniforms.roughness.value = material2.roughness;
-      uniforms.metalness.value = material2.metalness;
-      if (material2.roughnessMap) {
-        uniforms.roughnessMap.value = material2.roughnessMap;
+    function refreshUniformsStandard(uniforms, material) {
+      uniforms.roughness.value = material.roughness;
+      uniforms.metalness.value = material.metalness;
+      if (material.roughnessMap) {
+        uniforms.roughnessMap.value = material.roughnessMap;
       }
-      if (material2.metalnessMap) {
-        uniforms.metalnessMap.value = material2.metalnessMap;
+      if (material.metalnessMap) {
+        uniforms.metalnessMap.value = material.metalnessMap;
       }
-      if (material2.emissiveMap) {
-        uniforms.emissiveMap.value = material2.emissiveMap;
+      if (material.emissiveMap) {
+        uniforms.emissiveMap.value = material.emissiveMap;
       }
-      if (material2.bumpMap) {
-        uniforms.bumpMap.value = material2.bumpMap;
-        uniforms.bumpScale.value = material2.bumpScale;
-        if (material2.side === BackSide)
+      if (material.bumpMap) {
+        uniforms.bumpMap.value = material.bumpMap;
+        uniforms.bumpScale.value = material.bumpScale;
+        if (material.side === BackSide)
           uniforms.bumpScale.value *= -1;
       }
-      if (material2.normalMap) {
-        uniforms.normalMap.value = material2.normalMap;
-        uniforms.normalScale.value.copy(material2.normalScale);
-        if (material2.side === BackSide)
+      if (material.normalMap) {
+        uniforms.normalMap.value = material.normalMap;
+        uniforms.normalScale.value.copy(material.normalScale);
+        if (material.side === BackSide)
           uniforms.normalScale.value.negate();
       }
-      if (material2.displacementMap) {
-        uniforms.displacementMap.value = material2.displacementMap;
-        uniforms.displacementScale.value = material2.displacementScale;
-        uniforms.displacementBias.value = material2.displacementBias;
+      if (material.displacementMap) {
+        uniforms.displacementMap.value = material.displacementMap;
+        uniforms.displacementScale.value = material.displacementScale;
+        uniforms.displacementBias.value = material.displacementBias;
       }
-      const envMap = properties.get(material2).envMap;
+      const envMap = properties.get(material).envMap;
       if (envMap) {
-        uniforms.envMapIntensity.value = material2.envMapIntensity;
+        uniforms.envMapIntensity.value = material.envMapIntensity;
       }
     }
-    function refreshUniformsPhysical(uniforms, material2, transmissionRenderTarget) {
-      refreshUniformsStandard(uniforms, material2);
-      uniforms.ior.value = material2.ior;
-      if (material2.sheen > 0) {
-        uniforms.sheenColor.value.copy(material2.sheenColor).multiplyScalar(material2.sheen);
-        uniforms.sheenRoughness.value = material2.sheenRoughness;
-        if (material2.sheenColorMap) {
-          uniforms.sheenColorMap.value = material2.sheenColorMap;
+    function refreshUniformsPhysical(uniforms, material, transmissionRenderTarget) {
+      refreshUniformsStandard(uniforms, material);
+      uniforms.ior.value = material.ior;
+      if (material.sheen > 0) {
+        uniforms.sheenColor.value.copy(material.sheenColor).multiplyScalar(material.sheen);
+        uniforms.sheenRoughness.value = material.sheenRoughness;
+        if (material.sheenColorMap) {
+          uniforms.sheenColorMap.value = material.sheenColorMap;
         }
-        if (material2.sheenRoughnessMap) {
-          uniforms.sheenRoughnessMap.value = material2.sheenRoughnessMap;
+        if (material.sheenRoughnessMap) {
+          uniforms.sheenRoughnessMap.value = material.sheenRoughnessMap;
         }
       }
-      if (material2.clearcoat > 0) {
-        uniforms.clearcoat.value = material2.clearcoat;
-        uniforms.clearcoatRoughness.value = material2.clearcoatRoughness;
-        if (material2.clearcoatMap) {
-          uniforms.clearcoatMap.value = material2.clearcoatMap;
+      if (material.clearcoat > 0) {
+        uniforms.clearcoat.value = material.clearcoat;
+        uniforms.clearcoatRoughness.value = material.clearcoatRoughness;
+        if (material.clearcoatMap) {
+          uniforms.clearcoatMap.value = material.clearcoatMap;
         }
-        if (material2.clearcoatRoughnessMap) {
-          uniforms.clearcoatRoughnessMap.value = material2.clearcoatRoughnessMap;
+        if (material.clearcoatRoughnessMap) {
+          uniforms.clearcoatRoughnessMap.value = material.clearcoatRoughnessMap;
         }
-        if (material2.clearcoatNormalMap) {
-          uniforms.clearcoatNormalScale.value.copy(material2.clearcoatNormalScale);
-          uniforms.clearcoatNormalMap.value = material2.clearcoatNormalMap;
-          if (material2.side === BackSide) {
+        if (material.clearcoatNormalMap) {
+          uniforms.clearcoatNormalScale.value.copy(material.clearcoatNormalScale);
+          uniforms.clearcoatNormalMap.value = material.clearcoatNormalMap;
+          if (material.side === BackSide) {
             uniforms.clearcoatNormalScale.value.negate();
           }
         }
       }
-      if (material2.transmission > 0) {
-        uniforms.transmission.value = material2.transmission;
+      if (material.transmission > 0) {
+        uniforms.transmission.value = material.transmission;
         uniforms.transmissionSamplerMap.value = transmissionRenderTarget.texture;
         uniforms.transmissionSamplerSize.value.set(transmissionRenderTarget.width, transmissionRenderTarget.height);
-        if (material2.transmissionMap) {
-          uniforms.transmissionMap.value = material2.transmissionMap;
+        if (material.transmissionMap) {
+          uniforms.transmissionMap.value = material.transmissionMap;
         }
-        uniforms.thickness.value = material2.thickness;
-        if (material2.thicknessMap) {
-          uniforms.thicknessMap.value = material2.thicknessMap;
+        uniforms.thickness.value = material.thickness;
+        if (material.thicknessMap) {
+          uniforms.thicknessMap.value = material.thicknessMap;
         }
-        uniforms.attenuationDistance.value = material2.attenuationDistance;
-        uniforms.attenuationColor.value.copy(material2.attenuationColor);
+        uniforms.attenuationDistance.value = material.attenuationDistance;
+        uniforms.attenuationColor.value.copy(material.attenuationColor);
       }
-      uniforms.specularIntensity.value = material2.specularIntensity;
-      uniforms.specularColor.value.copy(material2.specularColor);
-      if (material2.specularIntensityMap) {
-        uniforms.specularIntensityMap.value = material2.specularIntensityMap;
+      uniforms.specularIntensity.value = material.specularIntensity;
+      uniforms.specularColor.value.copy(material.specularColor);
+      if (material.specularIntensityMap) {
+        uniforms.specularIntensityMap.value = material.specularIntensityMap;
       }
-      if (material2.specularColorMap) {
-        uniforms.specularColorMap.value = material2.specularColorMap;
+      if (material.specularColorMap) {
+        uniforms.specularColorMap.value = material.specularColorMap;
       }
     }
-    function refreshUniformsMatcap(uniforms, material2) {
-      if (material2.matcap) {
-        uniforms.matcap.value = material2.matcap;
+    function refreshUniformsMatcap(uniforms, material) {
+      if (material.matcap) {
+        uniforms.matcap.value = material.matcap;
       }
-      if (material2.bumpMap) {
-        uniforms.bumpMap.value = material2.bumpMap;
-        uniforms.bumpScale.value = material2.bumpScale;
-        if (material2.side === BackSide)
+      if (material.bumpMap) {
+        uniforms.bumpMap.value = material.bumpMap;
+        uniforms.bumpScale.value = material.bumpScale;
+        if (material.side === BackSide)
           uniforms.bumpScale.value *= -1;
       }
-      if (material2.normalMap) {
-        uniforms.normalMap.value = material2.normalMap;
-        uniforms.normalScale.value.copy(material2.normalScale);
-        if (material2.side === BackSide)
+      if (material.normalMap) {
+        uniforms.normalMap.value = material.normalMap;
+        uniforms.normalScale.value.copy(material.normalScale);
+        if (material.side === BackSide)
           uniforms.normalScale.value.negate();
       }
-      if (material2.displacementMap) {
-        uniforms.displacementMap.value = material2.displacementMap;
-        uniforms.displacementScale.value = material2.displacementScale;
-        uniforms.displacementBias.value = material2.displacementBias;
+      if (material.displacementMap) {
+        uniforms.displacementMap.value = material.displacementMap;
+        uniforms.displacementScale.value = material.displacementScale;
+        uniforms.displacementBias.value = material.displacementBias;
       }
     }
-    function refreshUniformsDepth(uniforms, material2) {
-      if (material2.displacementMap) {
-        uniforms.displacementMap.value = material2.displacementMap;
-        uniforms.displacementScale.value = material2.displacementScale;
-        uniforms.displacementBias.value = material2.displacementBias;
+    function refreshUniformsDepth(uniforms, material) {
+      if (material.displacementMap) {
+        uniforms.displacementMap.value = material.displacementMap;
+        uniforms.displacementScale.value = material.displacementScale;
+        uniforms.displacementBias.value = material.displacementBias;
       }
     }
-    function refreshUniformsDistance(uniforms, material2) {
-      if (material2.displacementMap) {
-        uniforms.displacementMap.value = material2.displacementMap;
-        uniforms.displacementScale.value = material2.displacementScale;
-        uniforms.displacementBias.value = material2.displacementBias;
+    function refreshUniformsDistance(uniforms, material) {
+      if (material.displacementMap) {
+        uniforms.displacementMap.value = material.displacementMap;
+        uniforms.displacementScale.value = material.displacementScale;
+        uniforms.displacementBias.value = material.displacementBias;
       }
-      uniforms.referencePosition.value.copy(material2.referencePosition);
-      uniforms.nearDistance.value = material2.nearDistance;
-      uniforms.farDistance.value = material2.farDistance;
+      uniforms.referencePosition.value.copy(material.referencePosition);
+      uniforms.nearDistance.value = material.nearDistance;
+      uniforms.farDistance.value = material.farDistance;
     }
-    function refreshUniformsNormal(uniforms, material2) {
-      if (material2.bumpMap) {
-        uniforms.bumpMap.value = material2.bumpMap;
-        uniforms.bumpScale.value = material2.bumpScale;
-        if (material2.side === BackSide)
+    function refreshUniformsNormal(uniforms, material) {
+      if (material.bumpMap) {
+        uniforms.bumpMap.value = material.bumpMap;
+        uniforms.bumpScale.value = material.bumpScale;
+        if (material.side === BackSide)
           uniforms.bumpScale.value *= -1;
       }
-      if (material2.normalMap) {
-        uniforms.normalMap.value = material2.normalMap;
-        uniforms.normalScale.value.copy(material2.normalScale);
-        if (material2.side === BackSide)
+      if (material.normalMap) {
+        uniforms.normalMap.value = material.normalMap;
+        uniforms.normalScale.value.copy(material.normalScale);
+        if (material.side === BackSide)
           uniforms.normalScale.value.negate();
       }
-      if (material2.displacementMap) {
-        uniforms.displacementMap.value = material2.displacementMap;
-        uniforms.displacementScale.value = material2.displacementScale;
-        uniforms.displacementBias.value = material2.displacementBias;
+      if (material.displacementMap) {
+        uniforms.displacementMap.value = material.displacementMap;
+        uniforms.displacementScale.value = material.displacementScale;
+        uniforms.displacementBias.value = material.displacementBias;
       }
     }
     return {
@@ -58423,33 +58689,33 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       shadowMap.type = shadowMapType;
     }
     function onMaterialDispose(event) {
-      const material2 = event.target;
-      material2.removeEventListener("dispose", onMaterialDispose);
-      deallocateMaterial(material2);
+      const material = event.target;
+      material.removeEventListener("dispose", onMaterialDispose);
+      deallocateMaterial(material);
     }
-    function deallocateMaterial(material2) {
-      releaseMaterialProgramReferences(material2);
-      properties.remove(material2);
+    function deallocateMaterial(material) {
+      releaseMaterialProgramReferences(material);
+      properties.remove(material);
     }
-    function releaseMaterialProgramReferences(material2) {
-      const programs = properties.get(material2).programs;
+    function releaseMaterialProgramReferences(material) {
+      const programs = properties.get(material).programs;
       if (programs !== void 0) {
         programs.forEach(function(program) {
           programCache.releaseProgram(program);
         });
-        if (material2.isShaderMaterial) {
-          programCache.releaseShaderCache(material2);
+        if (material.isShaderMaterial) {
+          programCache.releaseShaderCache(material);
         }
       }
     }
-    this.renderBufferDirect = function(camera2, scene2, geometry2, material2, object, group) {
-      if (scene2 === null)
-        scene2 = _emptyScene;
+    this.renderBufferDirect = function(camera, scene, geometry, material, object, group) {
+      if (scene === null)
+        scene = _emptyScene;
       const frontFaceCW = object.isMesh && object.matrixWorld.determinant() < 0;
-      const program = setProgram(camera2, scene2, geometry2, material2, object);
-      state.setMaterial(material2, frontFaceCW);
-      let index = geometry2.index;
-      const position = geometry2.attributes.position;
+      const program = setProgram(camera, scene, geometry, material, object);
+      state.setMaterial(material, frontFaceCW);
+      let index = geometry.index;
+      const position = geometry.attributes.position;
       if (index === null) {
         if (position === void 0 || position.count === 0)
           return;
@@ -58457,21 +58723,21 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         return;
       }
       let rangeFactor = 1;
-      if (material2.wireframe === true) {
-        index = geometries.getWireframeAttribute(geometry2);
+      if (material.wireframe === true) {
+        index = geometries.getWireframeAttribute(geometry);
         rangeFactor = 2;
       }
-      bindingStates.setup(object, material2, program, geometry2, index);
+      bindingStates.setup(object, material, program, geometry, index);
       let attribute;
-      let renderer2 = bufferRenderer;
+      let renderer = bufferRenderer;
       if (index !== null) {
         attribute = attributes.get(index);
-        renderer2 = indexedBufferRenderer;
-        renderer2.setIndex(attribute);
+        renderer = indexedBufferRenderer;
+        renderer.setIndex(attribute);
       }
       const dataCount = index !== null ? index.count : position.count;
-      const rangeStart = geometry2.drawRange.start * rangeFactor;
-      const rangeCount = geometry2.drawRange.count * rangeFactor;
+      const rangeStart = geometry.drawRange.start * rangeFactor;
+      const rangeCount = geometry.drawRange.count * rangeFactor;
       const groupStart = group !== null ? group.start * rangeFactor : 0;
       const groupCount = group !== null ? group.count * rangeFactor : Infinity;
       const drawStart = Math.max(rangeStart, groupStart);
@@ -58480,44 +58746,44 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       if (drawCount === 0)
         return;
       if (object.isMesh) {
-        if (material2.wireframe === true) {
-          state.setLineWidth(material2.wireframeLinewidth * getTargetPixelRatio());
-          renderer2.setMode(1);
+        if (material.wireframe === true) {
+          state.setLineWidth(material.wireframeLinewidth * getTargetPixelRatio());
+          renderer.setMode(1);
         } else {
-          renderer2.setMode(4);
+          renderer.setMode(4);
         }
       } else if (object.isLine) {
-        let lineWidth = material2.linewidth;
+        let lineWidth = material.linewidth;
         if (lineWidth === void 0)
           lineWidth = 1;
         state.setLineWidth(lineWidth * getTargetPixelRatio());
         if (object.isLineSegments) {
-          renderer2.setMode(1);
+          renderer.setMode(1);
         } else if (object.isLineLoop) {
-          renderer2.setMode(2);
+          renderer.setMode(2);
         } else {
-          renderer2.setMode(3);
+          renderer.setMode(3);
         }
       } else if (object.isPoints) {
-        renderer2.setMode(0);
+        renderer.setMode(0);
       } else if (object.isSprite) {
-        renderer2.setMode(4);
+        renderer.setMode(4);
       }
       if (object.isInstancedMesh) {
-        renderer2.renderInstances(drawStart, drawCount, object.count);
-      } else if (geometry2.isInstancedBufferGeometry) {
-        const instanceCount = Math.min(geometry2.instanceCount, geometry2._maxInstanceCount);
-        renderer2.renderInstances(drawStart, drawCount, instanceCount);
+        renderer.renderInstances(drawStart, drawCount, object.count);
+      } else if (geometry.isInstancedBufferGeometry) {
+        const instanceCount = Math.min(geometry.instanceCount, geometry._maxInstanceCount);
+        renderer.renderInstances(drawStart, drawCount, instanceCount);
       } else {
-        renderer2.render(drawStart, drawCount);
+        renderer.render(drawStart, drawCount);
       }
     };
-    this.compile = function(scene2, camera2) {
-      currentRenderState = renderStates.get(scene2);
+    this.compile = function(scene, camera) {
+      currentRenderState = renderStates.get(scene);
       currentRenderState.init();
       renderStateStack.push(currentRenderState);
-      scene2.traverseVisible(function(object) {
-        if (object.isLight && object.layers.test(camera2.layers)) {
+      scene.traverseVisible(function(object) {
+        if (object.isLight && object.layers.test(camera.layers)) {
           currentRenderState.pushLight(object);
           if (object.castShadow) {
             currentRenderState.pushShadow(object);
@@ -58525,16 +58791,16 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         }
       });
       currentRenderState.setupLights(_this.physicallyCorrectLights);
-      scene2.traverse(function(object) {
-        const material2 = object.material;
-        if (material2) {
-          if (Array.isArray(material2)) {
-            for (let i = 0; i < material2.length; i++) {
-              const material22 = material2[i];
-              getProgram(material22, scene2, object);
+      scene.traverse(function(object) {
+        const material = object.material;
+        if (material) {
+          if (Array.isArray(material)) {
+            for (let i = 0; i < material.length; i++) {
+              const material2 = material[i];
+              getProgram(material2, scene, object);
             }
           } else {
-            getProgram(material2, scene2, object);
+            getProgram(material, scene, object);
           }
         }
       });
@@ -58563,35 +58829,35 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     };
     xr.addEventListener("sessionstart", onXRSessionStart);
     xr.addEventListener("sessionend", onXRSessionEnd);
-    this.render = function(scene2, camera2) {
-      if (camera2 !== void 0 && camera2.isCamera !== true) {
+    this.render = function(scene, camera) {
+      if (camera !== void 0 && camera.isCamera !== true) {
         console.error("THREE.WebGLRenderer.render: camera is not an instance of THREE.Camera.");
         return;
       }
       if (_isContextLost === true)
         return;
-      if (scene2.autoUpdate === true)
-        scene2.updateMatrixWorld();
-      if (camera2.parent === null)
-        camera2.updateMatrixWorld();
+      if (scene.autoUpdate === true)
+        scene.updateMatrixWorld();
+      if (camera.parent === null)
+        camera.updateMatrixWorld();
       if (xr.enabled === true && xr.isPresenting === true) {
         if (xr.cameraAutoUpdate === true)
-          xr.updateCamera(camera2);
-        camera2 = xr.getCamera();
+          xr.updateCamera(camera);
+        camera = xr.getCamera();
       }
-      if (scene2.isScene === true)
-        scene2.onBeforeRender(_this, scene2, camera2, _currentRenderTarget);
-      currentRenderState = renderStates.get(scene2, renderStateStack.length);
+      if (scene.isScene === true)
+        scene.onBeforeRender(_this, scene, camera, _currentRenderTarget);
+      currentRenderState = renderStates.get(scene, renderStateStack.length);
       currentRenderState.init();
       renderStateStack.push(currentRenderState);
-      _projScreenMatrix2.multiplyMatrices(camera2.projectionMatrix, camera2.matrixWorldInverse);
+      _projScreenMatrix2.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
       _frustum.setFromProjectionMatrix(_projScreenMatrix2);
       _localClippingEnabled = this.localClippingEnabled;
-      _clippingEnabled = clipping.init(this.clippingPlanes, _localClippingEnabled, camera2);
-      currentRenderList = renderLists.get(scene2, renderListStack.length);
+      _clippingEnabled = clipping.init(this.clippingPlanes, _localClippingEnabled, camera);
+      currentRenderList = renderLists.get(scene, renderListStack.length);
       currentRenderList.init();
       renderListStack.push(currentRenderList);
-      projectObject(scene2, camera2, 0, _this.sortObjects);
+      projectObject(scene, camera, 0, _this.sortObjects);
       currentRenderList.finish();
       if (_this.sortObjects === true) {
         currentRenderList.sort(_opaqueSort, _transparentSort);
@@ -58599,28 +58865,28 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       if (_clippingEnabled === true)
         clipping.beginShadows();
       const shadowsArray = currentRenderState.state.shadowsArray;
-      shadowMap.render(shadowsArray, scene2, camera2);
+      shadowMap.render(shadowsArray, scene, camera);
       if (_clippingEnabled === true)
         clipping.endShadows();
       if (this.info.autoReset === true)
         this.info.reset();
-      background.render(currentRenderList, scene2);
+      background.render(currentRenderList, scene);
       currentRenderState.setupLights(_this.physicallyCorrectLights);
-      if (camera2.isArrayCamera) {
-        const cameras = camera2.cameras;
+      if (camera.isArrayCamera) {
+        const cameras = camera.cameras;
         for (let i = 0, l = cameras.length; i < l; i++) {
-          const camera22 = cameras[i];
-          renderScene(currentRenderList, scene2, camera22, camera22.viewport);
+          const camera2 = cameras[i];
+          renderScene(currentRenderList, scene, camera2, camera2.viewport);
         }
       } else {
-        renderScene(currentRenderList, scene2, camera2);
+        renderScene(currentRenderList, scene, camera);
       }
       if (_currentRenderTarget !== null) {
         textures.updateMultisampleRenderTarget(_currentRenderTarget);
         textures.updateRenderTargetMipmap(_currentRenderTarget);
       }
-      if (scene2.isScene === true)
-        scene2.onAfterRender(_this, scene2, camera2);
+      if (scene.isScene === true)
+        scene.onAfterRender(_this, scene, camera);
       bindingStates.resetDefaultState();
       _currentMaterialId = -1;
       _currentCamera = null;
@@ -58637,16 +58903,16 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         currentRenderList = null;
       }
     };
-    function projectObject(object, camera2, groupOrder, sortObjects) {
+    function projectObject(object, camera, groupOrder, sortObjects) {
       if (object.visible === false)
         return;
-      const visible = object.layers.test(camera2.layers);
+      const visible = object.layers.test(camera.layers);
       if (visible) {
         if (object.isGroup) {
           groupOrder = object.renderOrder;
         } else if (object.isLOD) {
           if (object.autoUpdate === true)
-            object.update(camera2);
+            object.update(camera);
         } else if (object.isLight) {
           currentRenderState.pushLight(object);
           if (object.castShadow) {
@@ -58657,10 +58923,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             if (sortObjects) {
               _vector3.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix2);
             }
-            const geometry2 = objects.update(object);
-            const material2 = object.material;
-            if (material2.visible) {
-              currentRenderList.push(object, geometry2, material2, groupOrder, _vector3.z, null);
+            const geometry = objects.update(object);
+            const material = object.material;
+            if (material.visible) {
+              currentRenderList.push(object, geometry, material, groupOrder, _vector3.z, null);
             }
           }
         } else if (object.isMesh || object.isLine || object.isPoints) {
@@ -58674,49 +58940,49 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             if (sortObjects) {
               _vector3.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix2);
             }
-            const geometry2 = objects.update(object);
-            const material2 = object.material;
-            if (Array.isArray(material2)) {
-              const groups = geometry2.groups;
+            const geometry = objects.update(object);
+            const material = object.material;
+            if (Array.isArray(material)) {
+              const groups = geometry.groups;
               for (let i = 0, l = groups.length; i < l; i++) {
                 const group = groups[i];
-                const groupMaterial = material2[group.materialIndex];
+                const groupMaterial = material[group.materialIndex];
                 if (groupMaterial && groupMaterial.visible) {
-                  currentRenderList.push(object, geometry2, groupMaterial, groupOrder, _vector3.z, group);
+                  currentRenderList.push(object, geometry, groupMaterial, groupOrder, _vector3.z, group);
                 }
               }
-            } else if (material2.visible) {
-              currentRenderList.push(object, geometry2, material2, groupOrder, _vector3.z, null);
+            } else if (material.visible) {
+              currentRenderList.push(object, geometry, material, groupOrder, _vector3.z, null);
             }
           }
         }
       }
       const children = object.children;
       for (let i = 0, l = children.length; i < l; i++) {
-        projectObject(children[i], camera2, groupOrder, sortObjects);
+        projectObject(children[i], camera, groupOrder, sortObjects);
       }
     }
-    function renderScene(currentRenderList2, scene2, camera2, viewport) {
+    function renderScene(currentRenderList2, scene, camera, viewport) {
       const opaqueObjects = currentRenderList2.opaque;
       const transmissiveObjects = currentRenderList2.transmissive;
       const transparentObjects = currentRenderList2.transparent;
-      currentRenderState.setupLightsView(camera2);
+      currentRenderState.setupLightsView(camera);
       if (transmissiveObjects.length > 0)
-        renderTransmissionPass(opaqueObjects, scene2, camera2);
+        renderTransmissionPass(opaqueObjects, scene, camera);
       if (viewport)
         state.viewport(_currentViewport.copy(viewport));
       if (opaqueObjects.length > 0)
-        renderObjects(opaqueObjects, scene2, camera2);
+        renderObjects(opaqueObjects, scene, camera);
       if (transmissiveObjects.length > 0)
-        renderObjects(transmissiveObjects, scene2, camera2);
+        renderObjects(transmissiveObjects, scene, camera);
       if (transparentObjects.length > 0)
-        renderObjects(transparentObjects, scene2, camera2);
+        renderObjects(transparentObjects, scene, camera);
       state.buffers.depth.setTest(true);
       state.buffers.depth.setMask(true);
       state.buffers.color.setMask(true);
       state.setPolygonOffset(false);
     }
-    function renderTransmissionPass(opaqueObjects, scene2, camera2) {
+    function renderTransmissionPass(opaqueObjects, scene, camera) {
       const isWebGL2 = capabilities.isWebGL2;
       if (_transmissionRenderTarget === null) {
         _transmissionRenderTarget = new WebGLRenderTarget(1, 1, {
@@ -58737,81 +59003,81 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       _this.clear();
       const currentToneMapping = _this.toneMapping;
       _this.toneMapping = NoToneMapping;
-      renderObjects(opaqueObjects, scene2, camera2);
+      renderObjects(opaqueObjects, scene, camera);
       _this.toneMapping = currentToneMapping;
       textures.updateMultisampleRenderTarget(_transmissionRenderTarget);
       textures.updateRenderTargetMipmap(_transmissionRenderTarget);
       _this.setRenderTarget(currentRenderTarget);
     }
-    function renderObjects(renderList, scene2, camera2) {
-      const overrideMaterial = scene2.isScene === true ? scene2.overrideMaterial : null;
+    function renderObjects(renderList, scene, camera) {
+      const overrideMaterial = scene.isScene === true ? scene.overrideMaterial : null;
       for (let i = 0, l = renderList.length; i < l; i++) {
         const renderItem = renderList[i];
         const object = renderItem.object;
-        const geometry2 = renderItem.geometry;
-        const material2 = overrideMaterial === null ? renderItem.material : overrideMaterial;
+        const geometry = renderItem.geometry;
+        const material = overrideMaterial === null ? renderItem.material : overrideMaterial;
         const group = renderItem.group;
-        if (object.layers.test(camera2.layers)) {
-          renderObject(object, scene2, camera2, geometry2, material2, group);
+        if (object.layers.test(camera.layers)) {
+          renderObject(object, scene, camera, geometry, material, group);
         }
       }
     }
-    function renderObject(object, scene2, camera2, geometry2, material2, group) {
-      object.onBeforeRender(_this, scene2, camera2, geometry2, material2, group);
-      object.modelViewMatrix.multiplyMatrices(camera2.matrixWorldInverse, object.matrixWorld);
+    function renderObject(object, scene, camera, geometry, material, group) {
+      object.onBeforeRender(_this, scene, camera, geometry, material, group);
+      object.modelViewMatrix.multiplyMatrices(camera.matrixWorldInverse, object.matrixWorld);
       object.normalMatrix.getNormalMatrix(object.modelViewMatrix);
-      material2.onBeforeRender(_this, scene2, camera2, geometry2, object, group);
-      if (material2.transparent === true && material2.side === DoubleSide) {
-        material2.side = BackSide;
-        material2.needsUpdate = true;
-        _this.renderBufferDirect(camera2, scene2, geometry2, material2, object, group);
-        material2.side = FrontSide;
-        material2.needsUpdate = true;
-        _this.renderBufferDirect(camera2, scene2, geometry2, material2, object, group);
-        material2.side = DoubleSide;
+      material.onBeforeRender(_this, scene, camera, geometry, object, group);
+      if (material.transparent === true && material.side === DoubleSide) {
+        material.side = BackSide;
+        material.needsUpdate = true;
+        _this.renderBufferDirect(camera, scene, geometry, material, object, group);
+        material.side = FrontSide;
+        material.needsUpdate = true;
+        _this.renderBufferDirect(camera, scene, geometry, material, object, group);
+        material.side = DoubleSide;
       } else {
-        _this.renderBufferDirect(camera2, scene2, geometry2, material2, object, group);
+        _this.renderBufferDirect(camera, scene, geometry, material, object, group);
       }
-      object.onAfterRender(_this, scene2, camera2, geometry2, material2, group);
+      object.onAfterRender(_this, scene, camera, geometry, material, group);
     }
-    function getProgram(material2, scene2, object) {
-      if (scene2.isScene !== true)
-        scene2 = _emptyScene;
-      const materialProperties = properties.get(material2);
+    function getProgram(material, scene, object) {
+      if (scene.isScene !== true)
+        scene = _emptyScene;
+      const materialProperties = properties.get(material);
       const lights = currentRenderState.state.lights;
       const shadowsArray = currentRenderState.state.shadowsArray;
       const lightsStateVersion = lights.state.version;
-      const parameters2 = programCache.getParameters(material2, lights.state, shadowsArray, scene2, object);
+      const parameters2 = programCache.getParameters(material, lights.state, shadowsArray, scene, object);
       const programCacheKey = programCache.getProgramCacheKey(parameters2);
       let programs = materialProperties.programs;
-      materialProperties.environment = material2.isMeshStandardMaterial ? scene2.environment : null;
-      materialProperties.fog = scene2.fog;
-      materialProperties.envMap = (material2.isMeshStandardMaterial ? cubeuvmaps : cubemaps).get(material2.envMap || materialProperties.environment);
+      materialProperties.environment = material.isMeshStandardMaterial ? scene.environment : null;
+      materialProperties.fog = scene.fog;
+      materialProperties.envMap = (material.isMeshStandardMaterial ? cubeuvmaps : cubemaps).get(material.envMap || materialProperties.environment);
       if (programs === void 0) {
-        material2.addEventListener("dispose", onMaterialDispose);
+        material.addEventListener("dispose", onMaterialDispose);
         programs = /* @__PURE__ */ new Map();
         materialProperties.programs = programs;
       }
       let program = programs.get(programCacheKey);
       if (program !== void 0) {
         if (materialProperties.currentProgram === program && materialProperties.lightsStateVersion === lightsStateVersion) {
-          updateCommonMaterialProperties(material2, parameters2);
+          updateCommonMaterialProperties(material, parameters2);
           return program;
         }
       } else {
-        parameters2.uniforms = programCache.getUniforms(material2);
-        material2.onBuild(object, parameters2, _this);
-        material2.onBeforeCompile(parameters2, _this);
+        parameters2.uniforms = programCache.getUniforms(material);
+        material.onBuild(object, parameters2, _this);
+        material.onBeforeCompile(parameters2, _this);
         program = programCache.acquireProgram(parameters2, programCacheKey);
         programs.set(programCacheKey, program);
         materialProperties.uniforms = parameters2.uniforms;
       }
       const uniforms = materialProperties.uniforms;
-      if (!material2.isShaderMaterial && !material2.isRawShaderMaterial || material2.clipping === true) {
+      if (!material.isShaderMaterial && !material.isRawShaderMaterial || material.clipping === true) {
         uniforms.clippingPlanes = clipping.uniform;
       }
-      updateCommonMaterialProperties(material2, parameters2);
-      materialProperties.needsLights = materialNeedsLights(material2);
+      updateCommonMaterialProperties(material, parameters2);
+      materialProperties.needsLights = materialNeedsLights(material);
       materialProperties.lightsStateVersion = lightsStateVersion;
       if (materialProperties.needsLights) {
         uniforms.ambientLightColor.value = lights.state.ambient;
@@ -58839,8 +59105,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       materialProperties.uniformsList = uniformsList;
       return program;
     }
-    function updateCommonMaterialProperties(material2, parameters2) {
-      const materialProperties = properties.get(material2);
+    function updateCommonMaterialProperties(material, parameters2) {
+      const materialProperties = properties.get(material);
       materialProperties.outputEncoding = parameters2.outputEncoding;
       materialProperties.instancing = parameters2.instancing;
       materialProperties.skinning = parameters2.skinning;
@@ -58854,32 +59120,32 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       materialProperties.vertexTangents = parameters2.vertexTangents;
       materialProperties.toneMapping = parameters2.toneMapping;
     }
-    function setProgram(camera2, scene2, geometry2, material2, object) {
-      if (scene2.isScene !== true)
-        scene2 = _emptyScene;
+    function setProgram(camera, scene, geometry, material, object) {
+      if (scene.isScene !== true)
+        scene = _emptyScene;
       textures.resetTextureUnits();
-      const fog = scene2.fog;
-      const environment = material2.isMeshStandardMaterial ? scene2.environment : null;
+      const fog = scene.fog;
+      const environment = material.isMeshStandardMaterial ? scene.environment : null;
       const encoding = _currentRenderTarget === null ? _this.outputEncoding : _currentRenderTarget.isXRRenderTarget === true ? _currentRenderTarget.texture.encoding : LinearEncoding;
-      const envMap = (material2.isMeshStandardMaterial ? cubeuvmaps : cubemaps).get(material2.envMap || environment);
-      const vertexAlphas = material2.vertexColors === true && !!geometry2.attributes.color && geometry2.attributes.color.itemSize === 4;
-      const vertexTangents = !!material2.normalMap && !!geometry2.attributes.tangent;
-      const morphTargets = !!geometry2.morphAttributes.position;
-      const morphNormals = !!geometry2.morphAttributes.normal;
-      const morphColors = !!geometry2.morphAttributes.color;
-      const toneMapping = material2.toneMapped ? _this.toneMapping : NoToneMapping;
-      const morphAttribute = geometry2.morphAttributes.position || geometry2.morphAttributes.normal || geometry2.morphAttributes.color;
+      const envMap = (material.isMeshStandardMaterial ? cubeuvmaps : cubemaps).get(material.envMap || environment);
+      const vertexAlphas = material.vertexColors === true && !!geometry.attributes.color && geometry.attributes.color.itemSize === 4;
+      const vertexTangents = !!material.normalMap && !!geometry.attributes.tangent;
+      const morphTargets = !!geometry.morphAttributes.position;
+      const morphNormals = !!geometry.morphAttributes.normal;
+      const morphColors = !!geometry.morphAttributes.color;
+      const toneMapping = material.toneMapped ? _this.toneMapping : NoToneMapping;
+      const morphAttribute = geometry.morphAttributes.position || geometry.morphAttributes.normal || geometry.morphAttributes.color;
       const morphTargetsCount = morphAttribute !== void 0 ? morphAttribute.length : 0;
-      const materialProperties = properties.get(material2);
+      const materialProperties = properties.get(material);
       const lights = currentRenderState.state.lights;
       if (_clippingEnabled === true) {
-        if (_localClippingEnabled === true || camera2 !== _currentCamera) {
-          const useCache = camera2 === _currentCamera && material2.id === _currentMaterialId;
-          clipping.setState(material2, camera2, useCache);
+        if (_localClippingEnabled === true || camera !== _currentCamera) {
+          const useCache = camera === _currentCamera && material.id === _currentMaterialId;
+          clipping.setState(material, camera, useCache);
         }
       }
       let needsProgramChange = false;
-      if (material2.version === materialProperties.__version) {
+      if (material.version === materialProperties.__version) {
         if (materialProperties.needsLights && materialProperties.lightsStateVersion !== lights.state.version) {
           needsProgramChange = true;
         } else if (materialProperties.outputEncoding !== encoding) {
@@ -58894,7 +59160,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           needsProgramChange = true;
         } else if (materialProperties.envMap !== envMap) {
           needsProgramChange = true;
-        } else if (material2.fog && materialProperties.fog !== fog) {
+        } else if (material.fog && materialProperties.fog !== fog) {
           needsProgramChange = true;
         } else if (materialProperties.numClippingPlanes !== void 0 && (materialProperties.numClippingPlanes !== clipping.numPlanes || materialProperties.numIntersection !== clipping.numIntersection)) {
           needsProgramChange = true;
@@ -58915,11 +59181,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         }
       } else {
         needsProgramChange = true;
-        materialProperties.__version = material2.version;
+        materialProperties.__version = material.version;
       }
       let program = materialProperties.currentProgram;
       if (needsProgramChange === true) {
-        program = getProgram(material2, scene2, object);
+        program = getProgram(material, scene, object);
       }
       let refreshProgram = false;
       let refreshMaterial = false;
@@ -58930,31 +59196,31 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         refreshMaterial = true;
         refreshLights = true;
       }
-      if (material2.id !== _currentMaterialId) {
-        _currentMaterialId = material2.id;
+      if (material.id !== _currentMaterialId) {
+        _currentMaterialId = material.id;
         refreshMaterial = true;
       }
-      if (refreshProgram || _currentCamera !== camera2) {
-        p_uniforms.setValue(_gl, "projectionMatrix", camera2.projectionMatrix);
+      if (refreshProgram || _currentCamera !== camera) {
+        p_uniforms.setValue(_gl, "projectionMatrix", camera.projectionMatrix);
         if (capabilities.logarithmicDepthBuffer) {
-          p_uniforms.setValue(_gl, "logDepthBufFC", 2 / (Math.log(camera2.far + 1) / Math.LN2));
+          p_uniforms.setValue(_gl, "logDepthBufFC", 2 / (Math.log(camera.far + 1) / Math.LN2));
         }
-        if (_currentCamera !== camera2) {
-          _currentCamera = camera2;
+        if (_currentCamera !== camera) {
+          _currentCamera = camera;
           refreshMaterial = true;
           refreshLights = true;
         }
-        if (material2.isShaderMaterial || material2.isMeshPhongMaterial || material2.isMeshToonMaterial || material2.isMeshStandardMaterial || material2.envMap) {
+        if (material.isShaderMaterial || material.isMeshPhongMaterial || material.isMeshToonMaterial || material.isMeshStandardMaterial || material.envMap) {
           const uCamPos = p_uniforms.map.cameraPosition;
           if (uCamPos !== void 0) {
-            uCamPos.setValue(_gl, _vector3.setFromMatrixPosition(camera2.matrixWorld));
+            uCamPos.setValue(_gl, _vector3.setFromMatrixPosition(camera.matrixWorld));
           }
         }
-        if (material2.isMeshPhongMaterial || material2.isMeshToonMaterial || material2.isMeshLambertMaterial || material2.isMeshBasicMaterial || material2.isMeshStandardMaterial || material2.isShaderMaterial) {
-          p_uniforms.setValue(_gl, "isOrthographic", camera2.isOrthographicCamera === true);
+        if (material.isMeshPhongMaterial || material.isMeshToonMaterial || material.isMeshLambertMaterial || material.isMeshBasicMaterial || material.isMeshStandardMaterial || material.isShaderMaterial) {
+          p_uniforms.setValue(_gl, "isOrthographic", camera.isOrthographicCamera === true);
         }
-        if (material2.isMeshPhongMaterial || material2.isMeshToonMaterial || material2.isMeshLambertMaterial || material2.isMeshBasicMaterial || material2.isMeshStandardMaterial || material2.isShaderMaterial || material2.isShadowMaterial || object.isSkinnedMesh) {
-          p_uniforms.setValue(_gl, "viewMatrix", camera2.matrixWorldInverse);
+        if (material.isMeshPhongMaterial || material.isMeshToonMaterial || material.isMeshLambertMaterial || material.isMeshBasicMaterial || material.isMeshStandardMaterial || material.isShaderMaterial || material.isShadowMaterial || object.isSkinnedMesh) {
+          p_uniforms.setValue(_gl, "viewMatrix", camera.matrixWorldInverse);
         }
       }
       if (object.isSkinnedMesh) {
@@ -58972,9 +59238,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           }
         }
       }
-      const morphAttributes = geometry2.morphAttributes;
+      const morphAttributes = geometry.morphAttributes;
       if (morphAttributes.position !== void 0 || morphAttributes.normal !== void 0 || morphAttributes.color !== void 0 && capabilities.isWebGL2 === true) {
-        morphtargets.update(object, geometry2, material2, program);
+        morphtargets.update(object, geometry, material, program);
       }
       if (refreshMaterial || materialProperties.receiveShadow !== object.receiveShadow) {
         materialProperties.receiveShadow = object.receiveShadow;
@@ -58985,17 +59251,17 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         if (materialProperties.needsLights) {
           markUniformsLightsNeedsUpdate(m_uniforms, refreshLights);
         }
-        if (fog && material2.fog) {
+        if (fog && material.fog) {
           materials.refreshFogUniforms(m_uniforms, fog);
         }
-        materials.refreshMaterialUniforms(m_uniforms, material2, _pixelRatio, _height, _transmissionRenderTarget);
+        materials.refreshMaterialUniforms(m_uniforms, material, _pixelRatio, _height, _transmissionRenderTarget);
         WebGLUniforms.upload(_gl, materialProperties.uniformsList, m_uniforms, textures);
       }
-      if (material2.isShaderMaterial && material2.uniformsNeedUpdate === true) {
+      if (material.isShaderMaterial && material.uniformsNeedUpdate === true) {
         WebGLUniforms.upload(_gl, materialProperties.uniformsList, m_uniforms, textures);
-        material2.uniformsNeedUpdate = false;
+        material.uniformsNeedUpdate = false;
       }
-      if (material2.isSpriteMaterial) {
+      if (material.isSpriteMaterial) {
         p_uniforms.setValue(_gl, "center", object.center);
       }
       p_uniforms.setValue(_gl, "modelViewMatrix", object.modelViewMatrix);
@@ -59015,8 +59281,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       uniforms.rectAreaLights.needsUpdate = value;
       uniforms.hemisphereLights.needsUpdate = value;
     }
-    function materialNeedsLights(material2) {
-      return material2.isMeshLambertMaterial || material2.isMeshToonMaterial || material2.isMeshPhongMaterial || material2.isMeshStandardMaterial || material2.isShadowMaterial || material2.isShaderMaterial && material2.lights === true;
+    function materialNeedsLights(material) {
+      return material.isMeshLambertMaterial || material.isMeshToonMaterial || material.isMeshPhongMaterial || material.isMeshStandardMaterial || material.isShadowMaterial || material.isShaderMaterial && material.lights === true;
     }
     this.getActiveCubeFace = function() {
       return _currentActiveCubeFace;
@@ -59588,7 +59854,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var _uvB = /* @__PURE__ */ new Vector2();
   var _uvC = /* @__PURE__ */ new Vector2();
   var Sprite = class extends Object3D {
-    constructor(material2) {
+    constructor(material) {
       super();
       this.type = "Sprite";
       if (_geometry === void 0) {
@@ -59621,7 +59887,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         _geometry.setAttribute("uv", new InterleavedBufferAttribute(interleavedBuffer, 2, 3, false));
       }
       this.geometry = _geometry;
-      this.material = material2 !== void 0 ? material2 : new SpriteMaterial();
+      this.material = material !== void 0 ? material : new SpriteMaterial();
       this.center = new Vector2(0.5, 0.5);
     }
     raycast(raycaster, intersects2) {
@@ -59696,8 +59962,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var _vector$5 = /* @__PURE__ */ new Vector3();
   var _matrix = /* @__PURE__ */ new Matrix4();
   var SkinnedMesh = class extends Mesh {
-    constructor(geometry2, material2) {
-      super(geometry2, material2);
+    constructor(geometry, material) {
+      super(geometry, material);
       this.type = "SkinnedMesh";
       this.bindMode = "attached";
       this.bindMatrix = new Matrix4();
@@ -59753,9 +60019,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     }
     boneTransform(index, target) {
       const skeleton = this.skeleton;
-      const geometry2 = this.geometry;
-      _skinIndex.fromBufferAttribute(geometry2.attributes.skinIndex, index);
-      _skinWeight.fromBufferAttribute(geometry2.attributes.skinWeight, index);
+      const geometry = this.geometry;
+      _skinIndex.fromBufferAttribute(geometry.attributes.skinIndex, index);
+      _skinWeight.fromBufferAttribute(geometry.attributes.skinWeight, index);
       _basePosition.copy(target).applyMatrix4(this.bindMatrix);
       target.set(0, 0, 0);
       for (let i = 0; i < 4; i++) {
@@ -59815,8 +60081,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var _instanceIntersects = [];
   var _mesh = /* @__PURE__ */ new Mesh();
   var InstancedMesh = class extends Mesh {
-    constructor(geometry2, material2, count) {
-      super(geometry2, material2);
+    constructor(geometry, material, count) {
+      super(geometry, material);
       this.instanceMatrix = new InstancedBufferAttribute(new Float32Array(count * 16), 16);
       this.instanceColor = null;
       this.count = count;
@@ -59899,11 +60165,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var _ray$1 = /* @__PURE__ */ new Ray();
   var _sphere$1 = /* @__PURE__ */ new Sphere();
   var Line = class extends Object3D {
-    constructor(geometry2 = new BufferGeometry(), material2 = new LineBasicMaterial()) {
+    constructor(geometry = new BufferGeometry(), material = new LineBasicMaterial()) {
       super();
       this.type = "Line";
-      this.geometry = geometry2;
-      this.material = material2;
+      this.geometry = geometry;
+      this.material = material;
       this.updateMorphTargets();
     }
     copy(source) {
@@ -59913,10 +60179,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       return this;
     }
     computeLineDistances() {
-      const geometry2 = this.geometry;
-      if (geometry2.isBufferGeometry) {
-        if (geometry2.index === null) {
-          const positionAttribute = geometry2.attributes.position;
+      const geometry = this.geometry;
+      if (geometry.isBufferGeometry) {
+        if (geometry.index === null) {
+          const positionAttribute = geometry.attributes.position;
           const lineDistances = [0];
           for (let i = 1, l = positionAttribute.count; i < l; i++) {
             _start$1.fromBufferAttribute(positionAttribute, i - 1);
@@ -59924,23 +60190,23 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             lineDistances[i] = lineDistances[i - 1];
             lineDistances[i] += _start$1.distanceTo(_end$1);
           }
-          geometry2.setAttribute("lineDistance", new Float32BufferAttribute(lineDistances, 1));
+          geometry.setAttribute("lineDistance", new Float32BufferAttribute(lineDistances, 1));
         } else {
           console.warn("THREE.Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.");
         }
-      } else if (geometry2.isGeometry) {
+      } else if (geometry.isGeometry) {
         console.error("THREE.Line.computeLineDistances() no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.");
       }
       return this;
     }
     raycast(raycaster, intersects2) {
-      const geometry2 = this.geometry;
+      const geometry = this.geometry;
       const matrixWorld = this.matrixWorld;
       const threshold = raycaster.params.Line.threshold;
-      const drawRange = geometry2.drawRange;
-      if (geometry2.boundingSphere === null)
-        geometry2.computeBoundingSphere();
-      _sphere$1.copy(geometry2.boundingSphere);
+      const drawRange = geometry.drawRange;
+      if (geometry.boundingSphere === null)
+        geometry.computeBoundingSphere();
+      _sphere$1.copy(geometry.boundingSphere);
       _sphere$1.applyMatrix4(matrixWorld);
       _sphere$1.radius += threshold;
       if (raycaster.ray.intersectsSphere(_sphere$1) === false)
@@ -59954,9 +60220,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       const interSegment = new Vector3();
       const interRay = new Vector3();
       const step = this.isLineSegments ? 2 : 1;
-      if (geometry2.isBufferGeometry) {
-        const index = geometry2.index;
-        const attributes = geometry2.attributes;
+      if (geometry.isBufferGeometry) {
+        const index = geometry.index;
+        const attributes = geometry.attributes;
         const positionAttribute = attributes.position;
         if (index !== null) {
           const start = Math.max(0, drawRange.start);
@@ -60005,14 +60271,14 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             });
           }
         }
-      } else if (geometry2.isGeometry) {
+      } else if (geometry.isGeometry) {
         console.error("THREE.Line.raycast() no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.");
       }
     }
     updateMorphTargets() {
-      const geometry2 = this.geometry;
-      if (geometry2.isBufferGeometry) {
-        const morphAttributes = geometry2.morphAttributes;
+      const geometry = this.geometry;
+      if (geometry.isBufferGeometry) {
+        const morphAttributes = geometry.morphAttributes;
         const keys = Object.keys(morphAttributes);
         if (keys.length > 0) {
           const morphAttribute = morphAttributes[keys[0]];
@@ -60027,7 +60293,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           }
         }
       } else {
-        const morphTargets = geometry2.morphTargets;
+        const morphTargets = geometry.morphTargets;
         if (morphTargets !== void 0 && morphTargets.length > 0) {
           console.error("THREE.Line.updateMorphTargets() does not support THREE.Geometry. Use THREE.BufferGeometry instead.");
         }
@@ -60038,15 +60304,15 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var _start = /* @__PURE__ */ new Vector3();
   var _end = /* @__PURE__ */ new Vector3();
   var LineSegments = class extends Line {
-    constructor(geometry2, material2) {
-      super(geometry2, material2);
+    constructor(geometry, material) {
+      super(geometry, material);
       this.type = "LineSegments";
     }
     computeLineDistances() {
-      const geometry2 = this.geometry;
-      if (geometry2.isBufferGeometry) {
-        if (geometry2.index === null) {
-          const positionAttribute = geometry2.attributes.position;
+      const geometry = this.geometry;
+      if (geometry.isBufferGeometry) {
+        if (geometry.index === null) {
+          const positionAttribute = geometry.attributes.position;
           const lineDistances = [];
           for (let i = 0, l = positionAttribute.count; i < l; i += 2) {
             _start.fromBufferAttribute(positionAttribute, i);
@@ -60054,11 +60320,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             lineDistances[i] = i === 0 ? 0 : lineDistances[i - 1];
             lineDistances[i + 1] = lineDistances[i] + _start.distanceTo(_end);
           }
-          geometry2.setAttribute("lineDistance", new Float32BufferAttribute(lineDistances, 1));
+          geometry.setAttribute("lineDistance", new Float32BufferAttribute(lineDistances, 1));
         } else {
           console.warn("THREE.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.");
         }
-      } else if (geometry2.isGeometry) {
+      } else if (geometry.isGeometry) {
         console.error("THREE.LineSegments.computeLineDistances() no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.");
       }
       return this;
@@ -60066,8 +60332,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   };
   LineSegments.prototype.isLineSegments = true;
   var LineLoop = class extends Line {
-    constructor(geometry2, material2) {
-      super(geometry2, material2);
+    constructor(geometry, material) {
+      super(geometry, material);
       this.type = "LineLoop";
     }
   };
@@ -60099,11 +60365,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var _sphere = /* @__PURE__ */ new Sphere();
   var _position$2 = /* @__PURE__ */ new Vector3();
   var Points = class extends Object3D {
-    constructor(geometry2 = new BufferGeometry(), material2 = new PointsMaterial()) {
+    constructor(geometry = new BufferGeometry(), material = new PointsMaterial()) {
       super();
       this.type = "Points";
-      this.geometry = geometry2;
-      this.material = material2;
+      this.geometry = geometry;
+      this.material = material;
       this.updateMorphTargets();
     }
     copy(source) {
@@ -60113,13 +60379,13 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       return this;
     }
     raycast(raycaster, intersects2) {
-      const geometry2 = this.geometry;
+      const geometry = this.geometry;
       const matrixWorld = this.matrixWorld;
       const threshold = raycaster.params.Points.threshold;
-      const drawRange = geometry2.drawRange;
-      if (geometry2.boundingSphere === null)
-        geometry2.computeBoundingSphere();
-      _sphere.copy(geometry2.boundingSphere);
+      const drawRange = geometry.drawRange;
+      if (geometry.boundingSphere === null)
+        geometry.computeBoundingSphere();
+      _sphere.copy(geometry.boundingSphere);
       _sphere.applyMatrix4(matrixWorld);
       _sphere.radius += threshold;
       if (raycaster.ray.intersectsSphere(_sphere) === false)
@@ -60128,9 +60394,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);
       const localThreshold = threshold / ((this.scale.x + this.scale.y + this.scale.z) / 3);
       const localThresholdSq = localThreshold * localThreshold;
-      if (geometry2.isBufferGeometry) {
-        const index = geometry2.index;
-        const attributes = geometry2.attributes;
+      if (geometry.isBufferGeometry) {
+        const index = geometry.index;
+        const attributes = geometry.attributes;
         const positionAttribute = attributes.position;
         if (index !== null) {
           const start = Math.max(0, drawRange.start);
@@ -60153,9 +60419,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       }
     }
     updateMorphTargets() {
-      const geometry2 = this.geometry;
-      if (geometry2.isBufferGeometry) {
-        const morphAttributes = geometry2.morphAttributes;
+      const geometry = this.geometry;
+      if (geometry.isBufferGeometry) {
+        const morphAttributes = geometry.morphAttributes;
         const keys = Object.keys(morphAttributes);
         if (keys.length > 0) {
           const morphAttribute = morphAttributes[keys[0]];
@@ -60170,7 +60436,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           }
         }
       } else {
-        const morphTargets = geometry2.morphTargets;
+        const morphTargets = geometry.morphTargets;
         if (morphTargets !== void 0 && morphTargets.length > 0) {
           console.error("THREE.Points.updateMorphTargets() does not support THREE.Geometry. Use THREE.BufferGeometry instead.");
         }
@@ -62067,7 +62333,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     }
   };
   var WorldUVGenerator = {
-    generateTopUV: function(geometry2, vertices, indexA, indexB, indexC) {
+    generateTopUV: function(geometry, vertices, indexA, indexB, indexC) {
       const a_x = vertices[indexA * 3];
       const a_y = vertices[indexA * 3 + 1];
       const b_x = vertices[indexB * 3];
@@ -62080,7 +62346,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         new Vector2(c_x, c_y)
       ];
     },
-    generateSideWallUV: function(geometry2, vertices, indexA, indexB, indexC, indexD) {
+    generateSideWallUV: function(geometry, vertices, indexA, indexB, indexC, indexD) {
       const a_x = vertices[indexA * 3];
       const a_y = vertices[indexA * 3 + 1];
       const a_z = vertices[indexA * 3 + 2];
@@ -62213,6 +62479,73 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     }
     return data;
   }
+  var SphereGeometry = class extends BufferGeometry {
+    constructor(radius = 1, widthSegments = 32, heightSegments = 16, phiStart = 0, phiLength = Math.PI * 2, thetaStart = 0, thetaLength = Math.PI) {
+      super();
+      this.type = "SphereGeometry";
+      this.parameters = {
+        radius,
+        widthSegments,
+        heightSegments,
+        phiStart,
+        phiLength,
+        thetaStart,
+        thetaLength
+      };
+      widthSegments = Math.max(3, Math.floor(widthSegments));
+      heightSegments = Math.max(2, Math.floor(heightSegments));
+      const thetaEnd = Math.min(thetaStart + thetaLength, Math.PI);
+      let index = 0;
+      const grid = [];
+      const vertex2 = new Vector3();
+      const normal = new Vector3();
+      const indices = [];
+      const vertices = [];
+      const normals = [];
+      const uvs = [];
+      for (let iy = 0; iy <= heightSegments; iy++) {
+        const verticesRow = [];
+        const v = iy / heightSegments;
+        let uOffset = 0;
+        if (iy == 0 && thetaStart == 0) {
+          uOffset = 0.5 / widthSegments;
+        } else if (iy == heightSegments && thetaEnd == Math.PI) {
+          uOffset = -0.5 / widthSegments;
+        }
+        for (let ix = 0; ix <= widthSegments; ix++) {
+          const u = ix / widthSegments;
+          vertex2.x = -radius * Math.cos(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
+          vertex2.y = radius * Math.cos(thetaStart + v * thetaLength);
+          vertex2.z = radius * Math.sin(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
+          vertices.push(vertex2.x, vertex2.y, vertex2.z);
+          normal.copy(vertex2).normalize();
+          normals.push(normal.x, normal.y, normal.z);
+          uvs.push(u + uOffset, 1 - v);
+          verticesRow.push(index++);
+        }
+        grid.push(verticesRow);
+      }
+      for (let iy = 0; iy < heightSegments; iy++) {
+        for (let ix = 0; ix < widthSegments; ix++) {
+          const a = grid[iy][ix + 1];
+          const b = grid[iy][ix];
+          const c = grid[iy + 1][ix];
+          const d = grid[iy + 1][ix + 1];
+          if (iy !== 0 || thetaStart > 0)
+            indices.push(a, b, d);
+          if (iy !== heightSegments - 1 || thetaEnd < Math.PI)
+            indices.push(b, c, d);
+        }
+      }
+      this.setIndex(indices);
+      this.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+      this.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+      this.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+    }
+    static fromJSON(data) {
+      return new SphereGeometry(data.radius, data.widthSegments, data.heightSegments, data.phiStart, data.phiLength, data.thetaStart, data.thetaLength);
+    }
+  };
   var ShadowMaterial = class extends Material {
     constructor(parameters) {
       super();
@@ -63989,8 +64322,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var _lightPositionWorld$1 = /* @__PURE__ */ new Vector3();
   var _lookTarget$1 = /* @__PURE__ */ new Vector3();
   var LightShadow = class {
-    constructor(camera2) {
-      this.camera = camera2;
+    constructor(camera) {
+      this.camera = camera;
       this.bias = 0;
       this.normalBias = 0;
       this.radius = 1;
@@ -64073,15 +64406,15 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this.focus = 1;
     }
     updateMatrices(light) {
-      const camera2 = this.camera;
+      const camera = this.camera;
       const fov2 = RAD2DEG * 2 * light.angle * this.focus;
       const aspect2 = this.mapSize.width / this.mapSize.height;
-      const far = light.distance || camera2.far;
-      if (fov2 !== camera2.fov || aspect2 !== camera2.aspect || far !== camera2.far) {
-        camera2.fov = fov2;
-        camera2.aspect = aspect2;
-        camera2.far = far;
-        camera2.updateProjectionMatrix();
+      const far = light.distance || camera.far;
+      if (fov2 !== camera.fov || aspect2 !== camera.aspect || far !== camera.far) {
+        camera.fov = fov2;
+        camera.aspect = aspect2;
+        camera.far = far;
+        camera.updateProjectionMatrix();
       }
       super.updateMatrices(light);
     }
@@ -64160,22 +64493,22 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       ];
     }
     updateMatrices(light, viewportIndex = 0) {
-      const camera2 = this.camera;
+      const camera = this.camera;
       const shadowMatrix = this.matrix;
-      const far = light.distance || camera2.far;
-      if (far !== camera2.far) {
-        camera2.far = far;
-        camera2.updateProjectionMatrix();
+      const far = light.distance || camera.far;
+      if (far !== camera.far) {
+        camera.far = far;
+        camera.updateProjectionMatrix();
       }
       _lightPositionWorld.setFromMatrixPosition(light.matrixWorld);
-      camera2.position.copy(_lightPositionWorld);
-      _lookTarget.copy(camera2.position);
+      camera.position.copy(_lightPositionWorld);
+      _lookTarget.copy(camera.position);
       _lookTarget.add(this._cubeDirections[viewportIndex]);
-      camera2.up.copy(this._cubeUps[viewportIndex]);
-      camera2.lookAt(_lookTarget);
-      camera2.updateMatrixWorld();
+      camera.up.copy(this._cubeUps[viewportIndex]);
+      camera.lookAt(_lookTarget);
+      camera.updateMatrixWorld();
       shadowMatrix.makeTranslation(-_lightPositionWorld.x, -_lightPositionWorld.y, -_lightPositionWorld.z);
-      _projScreenMatrix.multiplyMatrices(camera2.projectionMatrix, camera2.matrixWorldInverse);
+      _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
       this._frustum.setFromProjectionMatrix(_projScreenMatrix);
     }
   };
@@ -66370,7 +66703,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var SkeletonHelper = class extends LineSegments {
     constructor(object) {
       const bones = getBoneList(object);
-      const geometry2 = new BufferGeometry();
+      const geometry = new BufferGeometry();
       const vertices = [];
       const colors = [];
       const color1 = new Color(0, 0, 1);
@@ -66384,10 +66717,10 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           colors.push(color2.r, color2.g, color2.b);
         }
       }
-      geometry2.setAttribute("position", new Float32BufferAttribute(vertices, 3));
-      geometry2.setAttribute("color", new Float32BufferAttribute(colors, 3));
-      const material2 = new LineBasicMaterial({ vertexColors: true, depthTest: false, depthWrite: false, toneMapped: false, transparent: true });
-      super(geometry2, material2);
+      geometry.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+      geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
+      const material = new LineBasicMaterial({ vertexColors: true, depthTest: false, depthWrite: false, toneMapped: false, transparent: true });
+      super(geometry, material);
       this.type = "SkeletonHelper";
       this.isSkeletonHelper = true;
       this.root = object;
@@ -66397,8 +66730,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     }
     updateMatrixWorld(force) {
       const bones = this.bones;
-      const geometry2 = this.geometry;
-      const position = geometry2.getAttribute("position");
+      const geometry = this.geometry;
+      const position = geometry.getAttribute("position");
       _matrixWorldInv.copy(this.root.matrixWorld).invert();
       for (let i = 0, j = 0; i < bones.length; i++) {
         const bone = bones[i];
@@ -66412,7 +66745,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           j += 2;
         }
       }
-      geometry2.getAttribute("position").needsUpdate = true;
+      geometry.getAttribute("position").needsUpdate = true;
       super.updateMatrixWorld(force);
     }
   };
@@ -66447,11 +66780,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
         color.toArray(colors, j);
         j += 3;
       }
-      const geometry2 = new BufferGeometry();
-      geometry2.setAttribute("position", new Float32BufferAttribute(vertices, 3));
-      geometry2.setAttribute("color", new Float32BufferAttribute(colors, 3));
-      const material2 = new LineBasicMaterial({ vertexColors: true, toneMapped: false });
-      super(geometry2, material2);
+      const geometry = new BufferGeometry();
+      geometry.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+      geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
+      const material = new LineBasicMaterial({ vertexColors: true, toneMapped: false });
+      super(geometry, material);
       this.type = "GridHelper";
     }
   };
@@ -67365,13 +67698,13 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     console.warn("THREE.AudioAnalyser: .getData() is now .getFrequencyData().");
     return this.getFrequencyData();
   };
-  CubeCamera.prototype.updateCubeMap = function(renderer2, scene2) {
+  CubeCamera.prototype.updateCubeMap = function(renderer, scene) {
     console.warn("THREE.CubeCamera: .updateCubeMap() is now .update().");
-    return this.update(renderer2, scene2);
+    return this.update(renderer, scene);
   };
-  CubeCamera.prototype.clear = function(renderer2, color, depth, stencil) {
+  CubeCamera.prototype.clear = function(renderer, color, depth, stencil) {
     console.warn("THREE.CubeCamera: .clear() is now .renderTarget.clear().");
-    return this.renderTarget.clear(renderer2, color, depth, stencil);
+    return this.renderTarget.clear(renderer, color, depth, stencil);
   };
   ImageUtils.crossOrigin = void 0;
   ImageUtils.loadTexture = function(url, mapping, onLoad, onError) {
@@ -67411,32 +67744,1371 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     }
   }
 
-  // main.js
+  // components/World.js
   var import_core = __toESM(require_dist2());
+
+  // components/God.js
+  var import_shortid = __toESM(require_shortid());
+
+  // components/WorldObject.js
+  var WorldObject = class {
+    constructor(name, mesh, motionState) {
+      this.name = name;
+      this.mesh = mesh;
+      this.motionState = motionState;
+      this.motionState.onValuesChange(this.onChange.bind(this));
+    }
+    onChange(newValue) {
+      const { x: xp, y: yp, z: zp } = newValue.position;
+      this.mesh.position.set(xp, yp, zp);
+      const { x: xr, y: yr, z: zr } = newValue.rotation;
+      this.mesh.rotation.set(xr, yr, zr);
+    }
+  };
+
+  // components/God.js
+  var God = class {
+    constructor(world, options) {
+      Object.assign(this, {
+        defaultMaterialColor: 14540253
+      }, options);
+      this.world = world;
+    }
+    addBox(name = "box", settings, material) {
+      const params = {};
+      Object.assign(params, { width: 1, height: 1, depth: 1, widthSegments: 1, heightSegments: 1 }, settings);
+      this.addWorldObject(name, new BoxGeometry(params.width, params.height, params.depth, params.widthSegments, params.heightSegments), material);
+    }
+    addSphere(name = "sphere", settings, material) {
+      const params = {};
+      Object.assign(params, { radius: 1, widthSegments: 10, heightSegments: 10 }, settings);
+      this.addWorldObject(name, new SphereGeometry(params.radius, params.widthSegments, params.heightSegments), material);
+    }
+    addWorldObject(name, geometry, material = new MeshBasicMaterial({ color: this.defaultMaterialColor })) {
+      const mesh = new Mesh(geometry, material);
+      const motionState = this.world.currentMotionScene.object(name, {
+        position: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        rotation: {
+          x: 0,
+          y: 0,
+          z: 0
+        }
+      });
+      const object = new WorldObject(name, mesh, motionState);
+      this.world.objects.push(object);
+      this.world.scene.add(object.mesh);
+    }
+    addPointLight(options) {
+      const params = {};
+      Object.assign(params, {
+        color: 16777215,
+        intensity: 1,
+        distance: 0,
+        decay: 1,
+        position: {
+          x: 50,
+          y: 50,
+          z: 50
+        }
+      }, options);
+      const { color, intensity, distance, decay } = params;
+      const { x, y, z } = params.position;
+      const light = new PointLight(color, intensity, distance, decay);
+      light.position.set(x, y, z);
+      this.world.scene.add(light);
+    }
+  };
+
+  // components/World.js
   var import_studio = __toESM(require_dist3());
-  import_studio.default.initialize();
-  var proj = (0, import_core.getProject)("First project");
-  var sheet = proj.sheet("Scene");
-  var obj = sheet.object("First object", {
-    foo: 0,
-    bar: true,
-    baz: "A string"
+
+  // motion/state.json
+  var sheetsById = {
+    "Main Scene": {
+      staticOverrides: {
+        byObject: {
+          "First object": {
+            bar: true,
+            baz: "YESSIJFLSAKDJFSDLKFJDSLKFJdkkdkdkd"
+          },
+          "box-eMe68uMgY": {
+            position: {
+              x: -4
+            }
+          },
+          "sphere-HSV3I9ybM": {
+            position: {
+              x: 22,
+              y: 15
+            }
+          },
+          "sphere-i-nwg5SC8": {
+            rotation: {
+              x: 2
+            },
+            position: {
+              x: 21
+            }
+          },
+          "sphere-EoWPA3mh9": {
+            position: {
+              x: 66,
+              y: 13,
+              z: -99
+            },
+            rotation: {
+              x: 87,
+              y: 27
+            }
+          },
+          "box-wYpV59al0": {
+            position: {
+              x: 21,
+              y: 10,
+              z: 11
+            },
+            rotation: {
+              x: 28,
+              y: 23,
+              z: 14
+            }
+          },
+          "box-Xuxvk-37v": {
+            position: {
+              x: 3
+            }
+          },
+          "box-zw7pwLoxo": {
+            rotation: {
+              x: 23
+            }
+          },
+          "box-4lGyegFkV": {
+            position: {
+              y: 32
+            }
+          },
+          "box-jtgjINa1h": {
+            position: {
+              x: -4,
+              y: -1
+            }
+          },
+          "box--tboyEF0y": {
+            rotation: {
+              y: 1,
+              z: 3
+            }
+          },
+          box: {
+            position: {
+              x: 0
+            }
+          }
+        }
+      },
+      sequence: {
+        subUnitsPerUnit: 30,
+        length: 10,
+        type: "PositionalSequence",
+        tracksByObject: {
+          "First object": {
+            trackData: {},
+            trackIdByPropPath: {}
+          },
+          "box-4SB_K9qUm": {
+            trackData: {
+              Lqt1gSxSRz: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "dS6OmmYEgT",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "OyBIBwCMD8",
+                    position: 2,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 2
+                  }
+                ]
+              },
+              J1FvVKyuZk: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "MrbuGwxiaW",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "9mwnGnCZND",
+                    position: 2,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 3
+                  }
+                ]
+              },
+              cqoYsPu0GD: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "auaZzDOVZB",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 1
+                  },
+                  {
+                    id: "hxvi0yqpb8",
+                    position: 2,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              "DK6-igCbpN": {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "s1lBC961aj",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "dKoSGvJ7Y-",
+                    position: 2,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 3
+                  }
+                ]
+              },
+              "i3H-NjejMn": {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "b9op_3SwEh",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "TgGirVJJBZ",
+                    position: 2,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 4
+                  }
+                ]
+              },
+              fZej7novU9: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "EAej4A6jhK",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "U-F74kyI8L",
+                    position: 2,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 2
+                  }
+                ]
+              }
+            },
+            trackIdByPropPath: {
+              '["position","x"]': "Lqt1gSxSRz",
+              '["position","y"]': "J1FvVKyuZk",
+              '["position","z"]': "cqoYsPu0GD",
+              '["rotation","x"]': "DK6-igCbpN",
+              '["rotation","y"]': "i3H-NjejMn",
+              '["rotation","z"]': "fZej7novU9"
+            }
+          },
+          "box-VODDRCkG8": {
+            trackData: {
+              "415ErAgpUZ": {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "fgGhp6zk_N",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "TNq2InCxwN",
+                    position: 0.4,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -5
+                  },
+                  {
+                    id: "sZTnMTJ__h",
+                    position: 2.533,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 5
+                  },
+                  {
+                    id: "NmwMGOFyGn",
+                    position: 3.667,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              DrOK0aEZMv: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "l6wWysOO_G",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "D3-c0Pqsrj",
+                    position: 2.533,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 1
+                  },
+                  {
+                    id: "4s0vN5Fopf",
+                    position: 3.733,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              hzOKq6jZ40: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "BxHh3Cp2Af",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "QDcO3Et6t6",
+                    position: 2.533,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -3
+                  },
+                  {
+                    id: "x7vHylCtPl",
+                    position: 3.733,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              nEtOQkl4ae: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "D97HHTZ28N",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "ylma2kfPLx",
+                    position: 0.8,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 10
+                  },
+                  {
+                    id: "jhaz0eViyb",
+                    position: 3.733,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              aMggKnsrfd: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "DHhVlgOVse",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "xNYXtUd3zl",
+                    position: 1.333,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 15
+                  },
+                  {
+                    id: "dPdHbPsX1W",
+                    position: 3.733,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              "ZVsfreSR-w": {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "0gb2pqW2U-",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "5WYjPt40zV",
+                    position: 3.5,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 17
+                  },
+                  {
+                    id: "jVxtWuv5jz",
+                    position: 3.733,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              }
+            },
+            trackIdByPropPath: {
+              '["position","x"]': "415ErAgpUZ",
+              '["position","y"]': "DrOK0aEZMv",
+              '["position","z"]': "hzOKq6jZ40",
+              '["rotation","x"]': "nEtOQkl4ae",
+              '["rotation","y"]': "aMggKnsrfd",
+              '["rotation","z"]': "ZVsfreSR-w"
+            }
+          },
+          "box-lE0DqLhw8": {
+            trackData: {
+              gEYF1bZ3Qt: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "3ODEBVNRLP",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "GqAKeMeV3P",
+                    position: 0.867,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 5
+                  },
+                  {
+                    id: "hYOZEe29p6",
+                    position: 2.233,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 17
+                  },
+                  {
+                    id: "VYPU05AgXh",
+                    position: 3.9,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              b0g96dtXvk: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "MmY5BwWCK4",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "xtM0fBPrFX",
+                    position: 0.867,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 9
+                  },
+                  {
+                    id: "ae_9aamwao",
+                    position: 2.233,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 18
+                  },
+                  {
+                    id: "2WXbE_Z7o3",
+                    position: 3.9,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              R_UFnoM2cd: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "ddQc-i9GPS",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "OBRjA0sUJ-",
+                    position: 0.867,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -11
+                  },
+                  {
+                    id: "IFhax3NrdN",
+                    position: 2.233,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -70
+                  },
+                  {
+                    id: "u8ROaLaYkA",
+                    position: 3.9,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              Jg_i5n37zw: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "_GAy1kCM-g",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "44bCrbzog8",
+                    position: 1.333,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 10
+                  },
+                  {
+                    id: "4UEub-Fkhc",
+                    position: 3.467,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 8
+                  },
+                  {
+                    id: "A737AVRv-b",
+                    position: 3.9,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              "cwZ1moH-NQ": {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "4Rf6sbgEfp",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "Me9k7wjikp",
+                    position: 1.333,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 3
+                  },
+                  {
+                    id: "I1CMBqDgoT",
+                    position: 3.467,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 5
+                  },
+                  {
+                    id: "ZCMJvn0qk1",
+                    position: 3.9,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              kPQHQkRe3i: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "o4biayqXPg",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "nDea4TVMq2",
+                    position: 2.5,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 1
+                  },
+                  {
+                    id: "NJRGY9NcY_",
+                    position: 3.9,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              }
+            },
+            trackIdByPropPath: {
+              '["position","x"]': "gEYF1bZ3Qt",
+              '["position","y"]': "b0g96dtXvk",
+              '["position","z"]': "R_UFnoM2cd",
+              '["rotation","x"]': "Jg_i5n37zw",
+              '["rotation","y"]': "cwZ1moH-NQ",
+              '["rotation","z"]': "kPQHQkRe3i"
+            }
+          },
+          box: {
+            trackData: {
+              nDFiKx8OaI: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "NElyKO0Zpx",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "Gzk9CbpuFw",
+                    position: 1.4,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 2
+                  },
+                  {
+                    id: "iILy3V2PDN",
+                    position: 2.2,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -5
+                  },
+                  {
+                    id: "YYHKxeLoKj",
+                    position: 3.4,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              WAPk7P9tcB: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "0ZQniJIWkw",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "96QuTJZ4sH",
+                    position: 1.733,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 3
+                  },
+                  {
+                    id: "aSXxkoyWoZ",
+                    position: 2.2,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -2
+                  },
+                  {
+                    id: "1My0x6yCVN",
+                    position: 3.4,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              YwreCoOHTK: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "NNkt1tsQ7x",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "-HaRGE_XxO",
+                    position: 2.2,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "3WOmsTl0hl",
+                    position: 3,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -32
+                  },
+                  {
+                    id: "5eYYpaXt2v",
+                    position: 3.4,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              w5vvzePDxN: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "ePg-Fe8IFE",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "IGc9pqD7zk",
+                    position: 1.233,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 9
+                  },
+                  {
+                    id: "v1FFvfGjHu",
+                    position: 2.333,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 17
+                  },
+                  {
+                    id: "DLIxi_cJfg",
+                    position: 2.8,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 11
+                  },
+                  {
+                    id: "vTpSquJY5J",
+                    position: 3.667,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              BdgDKJaJDV: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "R1L3OY5Mbe",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "UMYvkPEp3R",
+                    position: 1.233,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 3
+                  },
+                  {
+                    id: "_b_4hN7Q5d",
+                    position: 2.333,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 8
+                  },
+                  {
+                    id: "Bp5zvpiEWg",
+                    position: 3.667,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              OMq94qGzVq: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "SJ32jS1Rv6",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "PIUBwjI0Rs",
+                    position: 1.233,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 4
+                  },
+                  {
+                    id: "EPrkh0u8eG",
+                    position: 2.333,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 11
+                  },
+                  {
+                    id: "3hGoeowVok",
+                    position: 2.8,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 2
+                  }
+                ]
+              }
+            },
+            trackIdByPropPath: {
+              '["position","x"]': "nDFiKx8OaI",
+              '["position","y"]': "WAPk7P9tcB",
+              '["position","z"]': "YwreCoOHTK",
+              '["rotation","x"]': "w5vvzePDxN",
+              '["rotation","y"]': "BdgDKJaJDV",
+              '["rotation","z"]': "OMq94qGzVq"
+            }
+          }
+        }
+      }
+    }
+  };
+  var definitionVersion = "0.4.0";
+  var revisionHistory = [
+    "anyaYskRAc3QiDIj",
+    "A56qtOOBuvRITEaB"
+  ];
+  var state_default = {
+    sheetsById,
+    definitionVersion,
+    revisionHistory
+  };
+
+  // components/World.js
+  var World = class {
+    constructor(options) {
+      if (true) {
+        import_studio.default.initialize();
+      }
+      Object.assign(this, {
+        theatreProjectName: "Project",
+        animating: false
+      }, options);
+      this.objects = [];
+      const config = { state: state_default };
+      this.theatre = {};
+      this.theatre.project = (0, import_core.getProject)(this.theatreProjectName, config);
+      this.theatre.sheets = {
+        mainScene: this.theatre.project.sheet("Main Scene")
+      };
+      this.currentMotionScene = this.theatre.sheets.mainScene;
+      this.three = {};
+      this.camera = this.three.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1e3);
+      this.camera.position.z = 5;
+      this.scene = this.three.scene = new Scene();
+      this.renderer = this.three.renderer = new WebGLRenderer();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      window.addEventListener("resize", (e) => {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+      this.god = new God(this);
+      document.body.appendChild(this.renderer.domElement);
+      if (this.animating) {
+        this.animate();
+      } else {
+        this.renderFrame();
+      }
+    }
+    setScene(motionScene, worldScene) {
+      this.currentMotionScene = this.theatre.sheets[motionScene];
+      this.scene = this.three.scene = worldScene;
+    }
+    animate() {
+      requestAnimationFrame(this.animate.bind(this));
+      this.renderer.render(this.scene, this.camera);
+    }
+    renderFrame() {
+      this.renderer.render(this.scene, this.camera);
+    }
+  };
+
+  // main.js
+  var MainWorld = new World({
+    theatreProjectName: "NEO",
+    animating: true
   });
-  var scene = new Scene();
-  var camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1e3);
-  var renderer = new WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-  var geometry = new BoxGeometry();
-  var material = new MeshBasicMaterial({ color: 65280 });
-  var cube = new Mesh(geometry, material);
-  scene.add(cube);
-  camera.position.z = 5;
-  function animate() {
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-  }
-  animate();
+  MainWorld.god.addBox();
+  MainWorld.theatre.project.ready.then(() => {
+    MainWorld.currentMotionScene.sequence.play({ range: [0, 4], iterationCount: Infinity, direction: "alternateReverse" });
+  });
 })();
 /*
 object-assign

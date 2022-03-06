@@ -11,7 +11,27 @@
 :root {
 }
 
+canvas {
+  position: fixed;
+  inset: 0;
+
+  z-index: 0;
+}
+
+body > *:not(canvas) {
+  position: relative;
+
+  z-index: 10;
+}
+
 h1 {
+  color: white;
   font-family: "East Lift";
   font-weight: normal;
+  font-size: 12rem;
+  max-width: 10ch;
+  margin: auto;
+  margin-top: 12rem;
+
+  display: block;
 }
