@@ -1,5 +1,5 @@
 import { getProject } from "@theatre/core"
-import { Scene, PerspectiveCamera, WebGLRenderer } from "three";
+import { Scene, PerspectiveCamera, WebGLRenderer, Color } from "three";
 import God from "./God";
 import studio from "@theatre/studio"
 import state from "../motion/state.json";
@@ -31,6 +31,7 @@ export default class World {
         this.camera.position.z = 5;
 
         this.scene = this.three.scene = new Scene();
+        this.scene.background = new Color(this.colors.activeBackgroundColor);
 
         this.renderer = this.three.renderer = new WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -40,7 +41,9 @@ export default class World {
             this.renderer.setSize(window.innerWidth, window.innerHeight);
         })
 
-        this.god = new God(this);
+        this.god = new God(this, {
+            defaultMaterialColor: this.colors.accent
+        });
 
         document.body.appendChild(this.renderer.domElement);
 

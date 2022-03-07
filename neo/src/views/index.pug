@@ -7,7 +7,16 @@ html(lang="en")
         link(rel="stylesheet", href="/styles/styles.css")
         title NEO
     body
-       h1 Heyo, there are a lot of words 
-       p The words are #{words} 
+       div.neo-console-container
+        section.neo-console
+            div 
+            div 
+            .prompt-container
+                .prompt 
+                    .console-text-container#console-text
+                    .prompt-input
+                        .prompt-box
+                        input(type="text", name="")#neo-console-prompt
+                        .prompt-input-instructions Type your destiny
 
        script(type="module" src="/js/main.js") 

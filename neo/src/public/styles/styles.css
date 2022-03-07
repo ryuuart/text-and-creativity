@@ -9,6 +9,24 @@
 }
 
 :root {
+  /* Colors */
+  --active-background-color: #f6fffd;
+  --active-content-color: #2a5f90;
+  --accent-color: #fb627e;
+}
+
+* {
+  box-sizing: border-box;
+
+  color: var(--active-content-color);
+}
+
+body {
+  background: var(--active-background-color);
+
+  margin: 0;
+
+  overflow-x: hidden;
 }
 
 canvas {
@@ -24,14 +42,122 @@ body > *:not(canvas) {
   z-index: 10;
 }
 
-h1 {
-  color: white;
-  font-family: "East Lift";
-  font-weight: normal;
-  font-size: 12rem;
-  max-width: 10ch;
-  margin: auto;
-  margin-top: 12rem;
+.neo-console-container {
+  --text-size: 4rem;
+  --text-font: "Zero Hour";
+  --text-offset: 3rem;
 
-  display: block;
+  width: 100vw;
+  height: 100vh;
+
+  font-family: var(--text-font);
+
+  overflow-y: hidden;
+}
+
+.neo-console {
+  margin: 2vw;
+
+  min-height: 90vh;
+
+  display: flex;
+
+  border: 1px solid var(--active-content-color);
+}
+
+.neo-console > * {
+  flex: 1;
+}
+
+.console-text-container {
+  position: relative;
+  margin: auto var(--text-offset);
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  word-break: break-all;
+
+  overflow-y: visible;
+
+  font-size: var(--text-size);
+}
+
+.prompt-container {
+  flex: 4;
+  padding: 0 15vw;
+
+  position: relative;
+}
+
+.prompt {
+  position: absolute;
+  bottom: 0;
+
+  font-size: var(--text-size);
+  max-width: 11ch;
+}
+
+.prompt-input {
+  margin-bottom: calc(var(--text-offset) * 1.25);
+  position: relative;
+
+  border-bottom: 1px solid var(--active-content-color);
+}
+
+.prompt-input > * {
+  transition: color, background-color 0.15s cubic-bezier(1, 0, 0, 1);
+}
+
+.prompt-box {
+  content: "";
+  display: inline-block;
+
+  position: absolute;
+  right: calc(var(--text-offset) * 0.65);
+  bottom: calc(var(--text-offset) * 0.35);
+
+  background-color: var(--active-content-color);
+
+  height: calc(var(--text-offset) * 0.65);
+  width: calc(var(--text-offset) * 2.5);
+}
+
+.prompt-input > input {
+  font-size: var(--text-size);
+  font-family: var(--text-font);
+
+  background: none;
+  border: none;
+
+  width: 100%;
+  padding-left: var(--text-offset);
+  padding-right: calc(var(--text-offset) * 4);
+}
+
+.prompt-input > input:focus {
+  outline: none;
+}
+
+.prompt-input:focus-within {
+  border-color: var(--accent-color);
+}
+.prompt-input:focus-within > .prompt-input-instructions {
+  color: var(--accent-color);
+}
+.prompt-input:focus-within > .prompt-box {
+  background-color: var(--accent-color);
+}
+
+.prompt-input-instructions {
+  display: inline-block;
+  position: absolute;
+  bottom: calc(var(--text-offset) * -0.55);
+  left: var(--text-offset);
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  text-transform: uppercase;
+
+  font-size: 0.5rem;
 }

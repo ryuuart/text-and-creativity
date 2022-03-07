@@ -1,4 +1,4 @@
-import { Mesh, SphereGeometry, BoxGeometry, MeshBasicMaterial } from "three";
+import { Mesh, SphereGeometry, BoxGeometry, MeshBasicMaterial, AmbientLight } from "three";
 import { PointLight } from "three";
 import shortid from "shortid";
 
@@ -13,16 +13,16 @@ export default class God {
         this.world = world;
     }
 
-    addBox(name = "box", settings, material) {
+    addBox(name = "box", settings) {
         const params = {};
         Object.assign(params, { width: 1, height: 1, depth: 1, widthSegments: 1, heightSegments: 1 }, settings);
-        this.addWorldObject(name, new BoxGeometry(params.width, params.height, params.depth, params.widthSegments, params.heightSegments), material);
+        this.addWorldObject(name, new BoxGeometry(params.width, params.height, params.depth, params.widthSegments, params.heightSegments), params.material);
     }
 
     addSphere(name = "sphere", settings, material) {
         const params = {};
         Object.assign(params, { radius: 1, widthSegments: 10, heightSegments: 10 }, settings)
-        this.addWorldObject(name, new SphereGeometry(params.radius, params.widthSegments, params.heightSegments), material);
+        this.addWorldObject(name, new SphereGeometry(params.radius, params.widthSegments, params.heightSegments), params.material);
     }
 
     addWorldObject(name, geometry, material = new MeshBasicMaterial({ color: this.defaultMaterialColor })) {
@@ -43,6 +43,10 @@ export default class God {
         this.world.objects.push(object);
 
         this.world.scene.add(object.mesh)
+    }
+
+    addAmbientLight(color, intensity) {
+        this.world.scene.add(new AmbientLight(color, intensity));
     }
 
     addPointLight(options) {

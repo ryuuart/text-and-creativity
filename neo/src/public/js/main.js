@@ -67774,15 +67774,15 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       }, options);
       this.world = world;
     }
-    addBox(name = "box", settings, material) {
+    addBox(name = "box", settings) {
       const params = {};
       Object.assign(params, { width: 1, height: 1, depth: 1, widthSegments: 1, heightSegments: 1 }, settings);
-      this.addWorldObject(name, new BoxGeometry(params.width, params.height, params.depth, params.widthSegments, params.heightSegments), material);
+      this.addWorldObject(name, new BoxGeometry(params.width, params.height, params.depth, params.widthSegments, params.heightSegments), params.material);
     }
     addSphere(name = "sphere", settings, material) {
       const params = {};
       Object.assign(params, { radius: 1, widthSegments: 10, heightSegments: 10 }, settings);
-      this.addWorldObject(name, new SphereGeometry(params.radius, params.widthSegments, params.heightSegments), material);
+      this.addWorldObject(name, new SphereGeometry(params.radius, params.widthSegments, params.heightSegments), params.material);
     }
     addWorldObject(name, geometry, material = new MeshBasicMaterial({ color: this.defaultMaterialColor })) {
       const mesh = new Mesh(geometry, material);
@@ -67801,6 +67801,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       const object = new WorldObject(name, mesh, motionState);
       this.world.objects.push(object);
       this.world.scene.add(object.mesh);
+    }
+    addAmbientLight(color, intensity) {
+      this.world.scene.add(new AmbientLight(color, intensity));
     }
     addPointLight(options) {
       const params = {};
@@ -67906,7 +67909,41 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
           },
           box: {
             position: {
-              x: 0
+              y: 0,
+              x: 1
+            }
+          },
+          sphere: {
+            position: {
+              x: -1,
+              z: -4
+            },
+            rotation: {
+              z: -6
+            }
+          },
+          "transparent cube": {
+            position: {
+              z: 2,
+              x: 1,
+              y: 0
+            },
+            rotation: {
+              x: 0,
+              y: 0,
+              z: 0
+            }
+          },
+          "transparent cube 2": {
+            position: {
+              z: 3,
+              y: 0,
+              x: 1
+            },
+            rotation: {
+              x: 2,
+              y: 3,
+              z: 2
             }
           }
         }
@@ -68695,12 +68732,16 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
             }
           },
           box: {
+            trackData: {},
+            trackIdByPropPath: {}
+          },
+          "transparent cube": {
             trackData: {
-              nDFiKx8OaI: {
+              "lp-mpPcxQn": {
                 type: "BasicKeyframedTrack",
                 keyframes: [
                   {
-                    id: "NElyKO0Zpx",
+                    id: "01eYuY68Nj",
                     position: 0,
                     connectedRight: true,
                     handles: [
@@ -68712,8 +68753,177 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                     value: 0
                   },
                   {
-                    id: "Gzk9CbpuFw",
-                    position: 1.4,
+                    id: "FITLZKUILi",
+                    position: 3.967,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 6.28318530718
+                  }
+                ]
+              },
+              v2C6y5TSNJ: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "OP1PYqAUJB",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "ZCB5LZ1iWf",
+                    position: 3.967,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 6.28318530718
+                  }
+                ]
+              },
+              F9YR7TQfrF: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "BqLzxUnhya",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "mgm6RN4HjD",
+                    position: 3.967,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 6.28318530718
+                  }
+                ]
+              },
+              ulCux9qXaJ: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "OX0Rw1fJnY",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 1
+                  },
+                  {
+                    id: "8M1HCiLVQT",
+                    position: 1.3,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -3
+                  },
+                  {
+                    id: "NWYnTd6UQx",
+                    position: 2.567,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "xUiG1UW8hp",
+                    position: 3.967,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 1
+                  }
+                ]
+              },
+              "5vmcKHv1n5": {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "phRF5fbF2A",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "dvvrpKCzGO",
+                    position: 1.3,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 1
+                  },
+                  {
+                    id: "NiytXSbtxM",
+                    position: 2.567,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  }
+                ]
+              },
+              i6lyChmNZy: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "5HCVO5NfOj",
+                    position: 0,
                     connectedRight: true,
                     handles: [
                       0.5,
@@ -68724,49 +68934,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                     value: 2
                   },
                   {
-                    id: "iILy3V2PDN",
-                    position: 2.2,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: -5
-                  },
-                  {
-                    id: "YYHKxeLoKj",
-                    position: 3.4,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 0
-                  }
-                ]
-              },
-              WAPk7P9tcB: {
-                type: "BasicKeyframedTrack",
-                keyframes: [
-                  {
-                    id: "0ZQniJIWkw",
-                    position: 0,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 0
-                  },
-                  {
-                    id: "96QuTJZ4sH",
-                    position: 1.733,
+                    id: "zkIHJuOOiT",
+                    position: 1.3,
                     connectedRight: true,
                     handles: [
                       0.5,
@@ -68777,8 +68946,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                     value: 3
                   },
                   {
-                    id: "aSXxkoyWoZ",
-                    position: 2.2,
+                    id: "HyJ-p6kH1y",
+                    position: 2.567,
                     connectedRight: true,
                     handles: [
                       0.5,
@@ -68786,158 +68955,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                       0.5,
                       0
                     ],
-                    value: -2
+                    value: 2
                   },
                   {
-                    id: "1My0x6yCVN",
-                    position: 3.4,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 0
-                  }
-                ]
-              },
-              YwreCoOHTK: {
-                type: "BasicKeyframedTrack",
-                keyframes: [
-                  {
-                    id: "NNkt1tsQ7x",
-                    position: 0,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 0
-                  },
-                  {
-                    id: "-HaRGE_XxO",
-                    position: 2.2,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 0
-                  },
-                  {
-                    id: "3WOmsTl0hl",
-                    position: 3,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: -32
-                  },
-                  {
-                    id: "5eYYpaXt2v",
-                    position: 3.4,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 0
-                  }
-                ]
-              },
-              w5vvzePDxN: {
-                type: "BasicKeyframedTrack",
-                keyframes: [
-                  {
-                    id: "ePg-Fe8IFE",
-                    position: 0,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 0
-                  },
-                  {
-                    id: "IGc9pqD7zk",
-                    position: 1.233,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 9
-                  },
-                  {
-                    id: "v1FFvfGjHu",
-                    position: 2.333,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 17
-                  },
-                  {
-                    id: "DLIxi_cJfg",
-                    position: 2.8,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 11
-                  },
-                  {
-                    id: "vTpSquJY5J",
-                    position: 3.667,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 0
-                  }
-                ]
-              },
-              BdgDKJaJDV: {
-                type: "BasicKeyframedTrack",
-                keyframes: [
-                  {
-                    id: "R1L3OY5Mbe",
-                    position: 0,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 0
-                  },
-                  {
-                    id: "UMYvkPEp3R",
-                    position: 1.233,
+                    id: "UZhi8ZczcP",
+                    position: 3.967,
                     connectedRight: true,
                     handles: [
                       0.5,
@@ -68946,10 +68968,174 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                       0
                     ],
                     value: 3
+                  }
+                ]
+              }
+            },
+            trackIdByPropPath: {
+              '["rotation","x"]': "lp-mpPcxQn",
+              '["rotation","y"]': "v2C6y5TSNJ",
+              '["rotation","z"]': "F9YR7TQfrF",
+              '["position","x"]': "ulCux9qXaJ",
+              '["position","y"]': "5vmcKHv1n5",
+              '["position","z"]': "i6lyChmNZy"
+            }
+          },
+          sphere: {
+            trackData: {
+              MQCIPWGLLf: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "iJM1JyF9yx",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -1
                   },
                   {
-                    id: "_b_4hN7Q5d",
-                    position: 2.333,
+                    id: "lyaZL8921o",
+                    position: 1.867,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -6
+                  },
+                  {
+                    id: "LMW7gUxeD9",
+                    position: 3.3,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -1
+                  }
+                ]
+              },
+              "8QnJrULplF": {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "GpV221CJHm",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "-XJL0NtnNO",
+                    position: 1.867,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -3
+                  },
+                  {
+                    id: "fsKYZ-r_ct",
+                    position: 3.3,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 0
+                  },
+                  {
+                    id: "u6I-f3bjKt",
+                    position: 4.5,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 1
+                  }
+                ]
+              },
+              vFnYpzupIE: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "0G9x7jMdyK",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -4
+                  },
+                  {
+                    id: "Ozy2FoBHMY",
+                    position: 1.867,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 1
+                  },
+                  {
+                    id: "z0sHeOTuFc",
+                    position: 3.3,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 2
+                  }
+                ]
+              },
+              "V-F6cy3UGN": {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "3kzrtBeauu",
+                    position: 0,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 5
+                  },
+                  {
+                    id: "8gsh0HVzvv",
+                    position: 0.9,
                     connectedRight: true,
                     handles: [
                       0.5,
@@ -68960,8 +69146,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                     value: 8
                   },
                   {
-                    id: "Bp5zvpiEWg",
-                    position: 3.667,
+                    id: "iWFO-wGpqU",
+                    position: 2.567,
                     connectedRight: true,
                     handles: [
                       0.5,
@@ -68969,16 +69155,28 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                       0.5,
                       0
                     ],
-                    value: 0
+                    value: 12
+                  },
+                  {
+                    id: "r07Uxsw8_7",
+                    position: 4.033,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 17
                   }
                 ]
               },
-              OMq94qGzVq: {
+              Wl9M9v2Omw: {
                 type: "BasicKeyframedTrack",
                 keyframes: [
                   {
-                    id: "SJ32jS1Rv6",
-                    position: 0,
+                    id: "DN616StZD5",
+                    position: 0.9,
                     connectedRight: true,
                     handles: [
                       0.5,
@@ -68986,11 +69184,52 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                       0.5,
                       0
                     ],
-                    value: 0
+                    value: 2
                   },
                   {
-                    id: "PIUBwjI0Rs",
-                    position: 1.233,
+                    id: "5Ugw1OMJqx",
+                    position: 2.567,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 5
+                  },
+                  {
+                    id: "tdgNNh3U9k",
+                    position: 4.033,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: 10
+                  }
+                ]
+              },
+              IUs6Jzz7oo: {
+                type: "BasicKeyframedTrack",
+                keyframes: [
+                  {
+                    id: "oAXmNImJbj",
+                    position: 0.9,
+                    connectedRight: true,
+                    handles: [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    value: -2
+                  },
+                  {
+                    id: "0RspNVbJuf",
+                    position: 2.567,
                     connectedRight: true,
                     handles: [
                       0.5,
@@ -69001,8 +69240,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                     value: 4
                   },
                   {
-                    id: "EPrkh0u8eG",
-                    position: 2.333,
+                    id: "FThBNoPMx5",
+                    position: 4.033,
                     connectedRight: true,
                     handles: [
                       0.5,
@@ -69010,30 +69249,18 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
                       0.5,
                       0
                     ],
-                    value: 11
-                  },
-                  {
-                    id: "3hGoeowVok",
-                    position: 2.8,
-                    connectedRight: true,
-                    handles: [
-                      0.5,
-                      1,
-                      0.5,
-                      0
-                    ],
-                    value: 2
+                    value: 7
                   }
                 ]
               }
             },
             trackIdByPropPath: {
-              '["position","x"]': "nDFiKx8OaI",
-              '["position","y"]': "WAPk7P9tcB",
-              '["position","z"]': "YwreCoOHTK",
-              '["rotation","x"]': "w5vvzePDxN",
-              '["rotation","y"]': "BdgDKJaJDV",
-              '["rotation","z"]': "OMq94qGzVq"
+              '["position","x"]': "MQCIPWGLLf",
+              '["position","y"]': "8QnJrULplF",
+              '["position","z"]': "vFnYpzupIE",
+              '["rotation","x"]': "V-F6cy3UGN",
+              '["rotation","y"]': "Wl9M9v2Omw",
+              '["rotation","z"]': "IUs6Jzz7oo"
             }
           }
         }
@@ -69042,6 +69269,9 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   };
   var definitionVersion = "0.4.0";
   var revisionHistory = [
+    "UEezRbPS-Jt717O-",
+    "AQ2yi9WVa1N6oG_y",
+    "hgXw00ZtOvxAmt-t",
     "anyaYskRAc3QiDIj",
     "A56qtOOBuvRITEaB"
   ];
@@ -69073,13 +69303,16 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this.camera = this.three.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1e3);
       this.camera.position.z = 5;
       this.scene = this.three.scene = new Scene();
+      this.scene.background = new Color(this.colors.activeBackgroundColor);
       this.renderer = this.three.renderer = new WebGLRenderer();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       window.addEventListener("resize", (e) => {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.renderer.setSize(window.innerWidth, window.innerHeight);
       });
-      this.god = new God(this);
+      this.god = new God(this, {
+        defaultMaterialColor: this.colors.accent
+      });
       document.body.appendChild(this.renderer.domElement);
       if (this.animating) {
         this.animate();
@@ -69103,11 +69336,48 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   // main.js
   var MainWorld = new World({
     theatreProjectName: "NEO",
-    animating: true
+    animating: true,
+    colors: {
+      activeBackgroundColor: 16187389,
+      activeContentColor: 2776976,
+      loadingBackgroundColor: 2776976,
+      loadingContentColor: 16187389,
+      accent: 16474750
+    }
   });
-  MainWorld.god.addBox();
+  MainWorld.god.addPointLight();
+  MainWorld.god.addSphere();
+  MainWorld.god.addBox("transparent cube", {
+    material: new MeshStandardMaterial({
+      emissive: MainWorld.colors.accent,
+      color: MainWorld.colors.accent,
+      transparent: true,
+      opacity: 0.5
+    })
+  });
+  MainWorld.god.addBox("transparent cube 2", {
+    material: new MeshStandardMaterial({
+      emissive: MainWorld.colors.accent,
+      color: MainWorld.colors.accent,
+      transparent: true,
+      opacity: 0.5
+    })
+  });
   MainWorld.theatre.project.ready.then(() => {
     MainWorld.currentMotionScene.sequence.play({ range: [0, 4], iterationCount: Infinity, direction: "alternateReverse" });
+  });
+  var chants = [];
+  var prompt = document.getElementById("neo-console-prompt");
+  var consoleTextContainer = document.getElementById("console-text");
+  prompt.addEventListener("keyup", (ev) => {
+    if (ev.code === "Enter") {
+      chants.push(prompt.value);
+      const prayer = document.createElement("div");
+      prayer.textContent = prompt.value;
+      consoleTextContainer.appendChild(prayer);
+      prompt.value = "";
+      console.log(chants);
+    }
   });
 })();
 /*
