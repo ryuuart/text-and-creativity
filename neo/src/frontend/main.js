@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import chunk from "chunk";
+import shuffle from "shuffle-array";
 
 import World from "./components/World";
 import anime from "animejs";
@@ -50,22 +52,23 @@ window.addEventListener("load", () => {
         }
     })
 
-    setTimeout(() => {
-        console.log('should have uploaded')
-        async () => {
-            const rawResponse = await fetch('/add/words', {
+
+    fetch("/words-10").then((response) => response.json()).then(data => {
+        const collective = data;
+        const marquees = chunk(shuffle([...chants, ...collective]))
+
+        setTimeout(() => {
+            console.log('should have uploaded')
+            fetch('/add/words', {
                 method: 'POST',
+                credentials: "same-origin",
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(chants)
-            });
-            const content = await rawResponse.json();
-            console.log("uploaded")
-            console.log(content);
-        }
-    }, 3000)
-
-    fetch("/words-5").then((response) => response.json()).then(data => { console.log(data) })
+            }).then((response) => response.text()).then(data => { console.log(data) });
+        }, 8000)
+        console.log(marquees)
+    })
 })

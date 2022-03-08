@@ -13,7 +13,11 @@
   "dependencies": {
     "@theatre/core": "^0.4.7",
     "animejs": "^3.2.1",
+    "chunk": "^0.0.3",
     "esbuild": "^0.14.25",
+    "install": "^0.13.0",
+    "npm": "^8.5.3",
+    "shuffle-array": "^1.0.1",
     "three": "^0.138.3"
   },
   "devDependencies": {
