@@ -9,11 +9,15 @@ export default fastifyPlugin(async (fastify, options, done) => {
         },
     })
 
-    const client = await fastify.pg.connect();
-    fastify.decorate("dbClient", client);
+    // let dbClient = await fastify.pg.connect();
+    let dbClient;
+    fastify.addHook('onRequest', async (request, reply, payload, done) => {
+        let client = await fastify.pg.connect();
+        dbClient = client;
+    })
 
     async function getNWords(n) {
-        return await fastify.dbClient.query('SELECT text FROM words LIMIT ' + n);
+        return await dbClient.query('SELECT text FROM words LIMIT ' + n);
     }
     fastify.decorate("dbGetNWords", getNWords);
 
@@ -22,12 +26,26 @@ export default fastifyPlugin(async (fastify, options, done) => {
     }
     fastify.decorate("dbQuery", query);
 
-    function insertWords() {
-        // TODO
+    async function insertWords(words) {
+        try {
+            await dbClient.query('BEGIN')
+            const queryText = 'INSERT INTO words VALUES($1)'
+            words.forEach(async word => {
+                console.log("Attempt insert " + word)
+                await dbClient.query(queryText, [word])
+            })
+            await dbClient.query('COMMIT')
+        } catch (e) {
+            await client.query('ROLLBACK')
+            throw e
+        } finally {
+            dbClient.release()
+        }
     }
+    fastify.decorate("dbInsertWords", insertWords)
 
     fastify.addHook('onClose', async (request, reply, payload, done) => {
-        await fastify.dbClient.release();
+        await dbClient.release();
         done();
     })
 

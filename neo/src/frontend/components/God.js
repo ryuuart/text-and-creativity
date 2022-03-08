@@ -15,6 +15,28 @@ export class God {
     }
 }
 
+export class Audion extends God {
+    constructor(world, options) {
+        super(world, options)
+
+        Object.assign(this, {
+            backgroundMusicURL: "/VOLANT - NEOY2K.mp3",
+        }, options)
+
+        this.backgroundMusic = new Audio(this.backgroundMusicURL)
+        this.backgroundMusic.setAttribute("autoplay", "")
+        let playAttempt = setInterval(() => {
+            this.backgroundMusic.play()
+                .then(() => {
+                    clearInterval(playAttempt);
+                })
+                .catch(error => {
+                    console.log('Unable to play the video, User has not interacted yet.');
+                });
+        }, 3000);
+    }
+}
+
 export class Creatio extends God {
     constructor(world, options) {
         super(world, options)

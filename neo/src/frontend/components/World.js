@@ -1,5 +1,5 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Color } from "three";
-import { Creatio, Lumina, Movementur } from "./God";
+import { Audion, Creatio, Lumina, Movementur } from "./God";
 
 export default class World {
     constructor(options) {
@@ -31,6 +31,7 @@ export default class World {
         });
         this.lightGod = new Lumina(this, {})
         this.motionGod = new Movementur(this, {})
+        this.musicGod = new Audion(this, {})
 
         this.time = 0;
 
