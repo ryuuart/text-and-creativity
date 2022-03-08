@@ -33,6 +33,78 @@
     };
   })(typeof WeakMap !== "undefined" ? /* @__PURE__ */ new WeakMap() : 0);
 
+  // node_modules/chunk/src/chunk.js
+  var require_chunk = __commonJS({
+    "node_modules/chunk/src/chunk.js"(exports, module) {
+      "use strict";
+      (function() {
+        function chunk2(collection, size) {
+          var result = [];
+          size = parseInt(size) || 2;
+          for (var x = 0; x < Math.ceil(collection.length / size); x++) {
+            var start = x * size;
+            var end = start + size;
+            result.push(collection.slice(start, end));
+          }
+          return result;
+        }
+        if (typeof exports !== "undefined") {
+          if (typeof module !== "undefined" && module.exports) {
+            exports = module.exports = chunk2;
+          }
+          exports.chunk = chunk2;
+        } else {
+          this.chunk = chunk2;
+        }
+      }).call(exports);
+    }
+  });
+
+  // node_modules/shuffle-array/index.js
+  var require_shuffle_array = __commonJS({
+    "node_modules/shuffle-array/index.js"(exports, module) {
+      "use strict";
+      function shuffle2(arr, options) {
+        if (!Array.isArray(arr)) {
+          throw new Error("shuffle expect an array as parameter.");
+        }
+        options = options || {};
+        var collection = arr, len = arr.length, rng = options.rng || Math.random, random, temp;
+        if (options.copy === true) {
+          collection = arr.slice();
+        }
+        while (len) {
+          random = Math.floor(rng() * len);
+          len -= 1;
+          temp = collection[len];
+          collection[len] = collection[random];
+          collection[random] = temp;
+        }
+        return collection;
+      }
+      shuffle2.pick = function(arr, options) {
+        if (!Array.isArray(arr)) {
+          throw new Error("shuffle.pick() expect an array as parameter.");
+        }
+        options = options || {};
+        var rng = options.rng || Math.random, picks = options.picks || 1;
+        if (typeof picks === "number" && picks !== 1) {
+          var len = arr.length, collection = arr.slice(), random = [], index;
+          while (picks && len) {
+            index = Math.floor(rng() * len);
+            random.push(collection[index]);
+            collection.splice(index, 1);
+            len -= 1;
+            picks -= 1;
+          }
+          return random;
+        }
+        return arr[Math.floor(rng() * arr.length)];
+      };
+      module.exports = shuffle2;
+    }
+  });
+
   // node_modules/object-assign/index.js
   var require_object_assign = __commonJS({
     "node_modules/object-assign/index.js"(exports, module) {
@@ -67478,6 +67550,10 @@ Note that it **is okay** to import '@theatre/core' multiple times. But those imp
     }
   }
 
+  // main.js
+  var import_chunk = __toESM(require_chunk());
+  var import_shuffle_array = __toESM(require_shuffle_array());
+
   // components/WorldObject.js
   var WorldObject = class extends Mesh {
     constructor(name, geometry, material, motionState) {
@@ -70551,24 +70627,24 @@ Note that it **is okay** to import '@theatre/core' multiple times. But those imp
         console.log(chants);
       }
     });
-    setTimeout(() => {
-      console.log("should have uploaded");
-      async () => {
-        const rawResponse = await fetch("/add/words", {
+    fetch("/words-10").then((response) => response.json()).then((data) => {
+      const collective = data;
+      const marquees = (0, import_chunk.default)((0, import_shuffle_array.default)([...chants, ...collective]));
+      setTimeout(() => {
+        console.log("should have uploaded");
+        fetch("/add/words", {
           method: "POST",
+          credentials: "same-origin",
           headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
           },
           body: JSON.stringify(chants)
+        }).then((response) => response.text()).then((data2) => {
+          console.log(data2);
         });
-        const content = await rawResponse.json();
-        console.log("uploaded");
-        console.log(content);
-      };
-    }, 3e3);
-    fetch("/words-5").then((response) => response.json()).then((data) => {
-      console.log(data);
+      }, 8e3);
+      console.log(marquees);
     });
   });
 })();

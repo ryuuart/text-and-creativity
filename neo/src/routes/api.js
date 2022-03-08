@@ -6,6 +6,7 @@ export function API(fastify, options, done) {
         })
 
         fastify.post("/add/words", async (req, rep) => {
+            console.log("received " + req.body);
             fastify.dbInsertWords(req.body);
             rep.send("Words Inserted");
         })

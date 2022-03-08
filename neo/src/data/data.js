@@ -9,20 +9,25 @@ export default fastifyPlugin(async (fastify, options, done) => {
         },
     })
 
-    // let dbClient = await fastify.pg.connect();
     let dbClient;
     fastify.addHook('onRequest', async (request, reply, payload, done) => {
         let client = await fastify.pg.connect();
         dbClient = client;
     })
 
+    fastify.addHook('onResponse', async (request, reply, payload, done) => {
+        await dbClient.release();
+    })
+
     async function getNWords(n) {
-        return await dbClient.query('SELECT text FROM words LIMIT ' + n);
+        const words = await dbClient.query('SELECT text FROM words ORDER BY random() LIMIT ' + n);
+        return words;
     }
     fastify.decorate("dbGetNWords", getNWords);
 
     async function query(query) {
-        return await fastify.dbClient.query(query);
+        const words = await fastify.dbClient.query(query);
+        return words;
     }
     fastify.decorate("dbQuery", query);
 
@@ -38,16 +43,9 @@ export default fastifyPlugin(async (fastify, options, done) => {
         } catch (e) {
             await client.query('ROLLBACK')
             throw e
-        } finally {
-            dbClient.release()
         }
     }
     fastify.decorate("dbInsertWords", insertWords)
-
-    fastify.addHook('onClose', async (request, reply, payload, done) => {
-        await dbClient.release();
-        done();
-    })
 
     done();
 });
