@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@theatre/core": "^0.4.7",
+    "animejs": "^3.2.1",
     "esbuild": "^0.14.25",
     "three": "^0.138.3"
   },

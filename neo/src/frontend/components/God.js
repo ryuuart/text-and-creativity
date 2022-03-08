@@ -1,48 +1,116 @@
 import { Mesh, SphereGeometry, BoxGeometry, MeshBasicMaterial, AmbientLight } from "three";
 import { PointLight } from "three";
-import shortid from "shortid";
-
 import WorldObject from "./WorldObject";
 
-export default class God {
+import state from "../motion/state.json";
+import studio from "@theatre/studio"
+import { getProject } from "@theatre/core"
+
+export class God {
     constructor(world, options) {
         Object.assign(this, {
-            defaultMaterialColor: 0xdddddd,
         }, options)
 
         this.world = world;
+    }
+}
+
+export class Creatio extends God {
+    constructor(world, options) {
+        super(world, options)
+
+        Object.assign(this, {
+            defaultMaterialColor: 0xdddddd,
+        }, options)
     }
 
     addBox(name = "box", settings) {
         const params = {};
         Object.assign(params, { width: 1, height: 1, depth: 1, widthSegments: 1, heightSegments: 1 }, settings);
-        this.addWorldObject(name, new BoxGeometry(params.width, params.height, params.depth, params.widthSegments, params.heightSegments), params.material);
+        return this.addWorldObject(name, new BoxGeometry(params.width, params.height, params.depth, params.widthSegments, params.heightSegments), params.material);
     }
 
     addSphere(name = "sphere", settings, material) {
-        const params = {};
+        const params = { material: material };
         Object.assign(params, { radius: 1, widthSegments: 10, heightSegments: 10 }, settings)
-        this.addWorldObject(name, new SphereGeometry(params.radius, params.widthSegments, params.heightSegments), params.material);
+        return this.addWorldObject(name, new SphereGeometry(params.radius, params.widthSegments, params.heightSegments), params.material);
     }
 
     addWorldObject(name, geometry, material = new MeshBasicMaterial({ color: this.defaultMaterialColor })) {
-        const mesh = new Mesh(geometry, material);
-        const motionState = this.world.currentMotionScene.object(name, {
-            position: {
-                x: 0,
-                y: 0,
-                z: 0,
-            },
-            rotation: {
-                x: 0,
-                y: 0,
-                z: 0,
-            }
-        });
-        const object = new WorldObject(name, mesh, motionState);
+        let motionState = undefined;
+        if (this.world.motionGod.theatre) {
+            motionState = this.world.motionGod.currentMotionScene.object(name, {
+                position: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                },
+                rotation: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                }
+            });
+        }
+        const object = new WorldObject(name, geometry, material, motionState);
         this.world.objects.push(object);
 
-        this.world.scene.add(object.mesh)
+        this.world.scene.add(object)
+
+        return object;
+    }
+}
+
+export class Movementur extends God {
+    constructor(world, options) {
+        super(world, options)
+
+        // initialize the studio so the editing tools will show up on the screen
+        if (process.env.NODE_ENV === "development" && this.world.theatre) {
+            studio.initialize()
+        }
+
+        Object.assign(this, {
+            theatreProjectName: "Project",
+        }, options)
+
+        if (this.world.animating) {
+            this.animate();
+        } else {
+            this.renderFrame();
+        }
+
+        const config = { state }
+        this.theatre = {};
+        this.theatre.project = getProject(this.theatreProjectName, config);
+        this.theatre.sheets = {
+            mainScene: this.theatre.project.sheet("Main Scene"),
+        };
+        this.currentMotionScene = this.theatre.sheets.mainScene;
+    }
+
+    animate() {
+        requestAnimationFrame(this.animate.bind(this))
+
+        this.world.time += this.world.timeRate;
+        this.world.objects.forEach((obj) => {
+            if (obj.animated)
+                obj.action()
+        })
+
+        this.world.renderer.render(this.world.scene, this.world.camera);
+    }
+
+    renderFrame() {
+        this.world.renderer.render(this.scene, this.camera);
+    }
+}
+
+export class Lumina extends God {
+    constructor(world, options) {
+        super(world, options)
+
+
     }
 
     addAmbientLight(color, intensity) {
