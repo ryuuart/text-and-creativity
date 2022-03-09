@@ -103,11 +103,13 @@ export class Movementur extends God {
         }
 
         const config = { state }
+        const fourthWall = [];
         this.theatre = {};
         this.theatre.project = getProject(this.theatreProjectName, config);
         this.theatre.sheets = {
             mainScene: this.theatre.project.sheet("Main Scene"),
         };
+
         this.currentMotionScene = this.theatre.sheets.mainScene;
     }
 

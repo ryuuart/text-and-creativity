@@ -69115,6 +69115,7 @@ Note that it **is okay** to import '@theatre/core' multiple times. But those imp
         this.renderFrame();
       }
       const config = { state: state_default };
+      const fourthWall = [];
       this.theatre = {};
       this.theatre.project = (0, import_core.getProject)(this.theatreProjectName, config);
       this.theatre.sheets = {
@@ -70627,9 +70628,19 @@ Note that it **is okay** to import '@theatre/core' multiple times. But those imp
         console.log(chants);
       }
     });
-    fetch("/words-10").then((response) => response.json()).then((data) => {
+    function chunk2(collection, size) {
+      var result = [];
+      size = parseInt(size) || 2;
+      for (var x = 0; x < Math.ceil(collection.length / size); x++) {
+        var start = x * size;
+        var end = start + size;
+        result.push(collection.slice(start, end));
+      }
+      return result;
+    }
+    fetch("/words-50").then((response) => response.json()).then((data) => {
       const collective = data;
-      const marquees = (0, import_chunk.default)((0, import_shuffle_array.default)([...chants, ...collective]));
+      const marquees = chunk2((0, import_shuffle_array.default)([...chants, ...collective]), 10);
       setTimeout(() => {
         console.log("should have uploaded");
         fetch("/add/words", {

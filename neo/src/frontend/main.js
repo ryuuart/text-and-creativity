@@ -52,10 +52,26 @@ window.addEventListener("load", () => {
         }
     })
 
+    function chunk(collection, size) {
+        var result = [];
 
-    fetch("/words-10").then((response) => response.json()).then(data => {
+        // default size to two item
+        size = parseInt(size) || 2;
+
+        // add each chunk to the result
+        for (var x = 0; x < Math.ceil(collection.length / size); x++) {
+            var start = x * size;
+            var end = start + size;
+
+            result.push(collection.slice(start, end));
+        }
+
+        return result;
+    }
+
+    fetch("/words-50").then((response) => response.json()).then(data => {
         const collective = data;
-        const marquees = chunk(shuffle([...chants, ...collective]))
+        const marquees = chunk(shuffle([...chants, ...collective]), 10)
 
         setTimeout(() => {
             console.log('should have uploaded')
