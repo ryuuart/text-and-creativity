@@ -74558,7 +74558,7 @@ Note that it **is okay** to import '@theatre/core' multiple times. But those imp
             }
           });
         });
-      }, 3e3);
+      }, 6e4);
       const backgroundMarquee = new marquee3000_default({
         element: document.querySelector("section.background"),
         gsap: Timeline,

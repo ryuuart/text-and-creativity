@@ -159,7 +159,7 @@ window.addEventListener("load", () => {
                     }
                 })
             });
-        }, 3000)
+        }, 60000)
 
         const backgroundMarquee = new Marquee({
             element: document.querySelector("section.background"),
