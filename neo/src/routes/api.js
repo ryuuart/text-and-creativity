@@ -7,9 +7,10 @@ export function API(fastify, options, done) {
 
         fastify.post("/add/words", async (req, rep) => {
             console.log("received " + req.body);
-            if (req.body)
-                fastify.dbInsertWords(req.body.text);
-            rep.send("Words Inserted");
+            if (req.body !== undefined) {
+                await fastify.dbInsertWords(req.body);
+                rep.send("Words Inserted");
+            }
         })
 
         done();

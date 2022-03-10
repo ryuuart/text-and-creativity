@@ -112,14 +112,14 @@ window.addEventListener("load", () => {
 
         return result;
     }
-    const URL = (proces.env.NODE_ENV === production) ? "https://uta-text-creativity-p-1.herokuapp.com/" : ""
-    fetch(URL + "words-50").then((response) => response.json()).then(data => {
+    const URL = (process.env.NODE_ENV === "production") ? "https://uta-text-creativity-p-1.herokuapp.com/" : ""
+    fetch("/words-50").then((response) => response.json()).then(data => {
         const collective = data;
 
         setTimeout(() => {
             const marqueess = chunk([...chants, ...shuffle(collective)], 10)
             console.log("MARQUEE", marqueess)
-            fetch(URL + '/add/words', {
+            fetch('add/words', {
                 method: 'POST',
                 credentials: "same-origin",
                 headers: {
@@ -159,7 +159,7 @@ window.addEventListener("load", () => {
                     }
                 })
             });
-        }, 60000)
+        }, 3000)
 
         const backgroundMarquee = new Marquee({
             element: document.querySelector("section.background"),

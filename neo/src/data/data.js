@@ -36,12 +36,12 @@ export default fastifyPlugin(async (fastify, options, done) => {
             await dbClient.query('BEGIN')
             const queryText = 'INSERT INTO words VALUES($1)'
             words.forEach(async word => {
-                console.log("Attempt insert " + word)
-                await dbClient.query(queryText, [word])
+                console.log("Attempt insert " + word.text)
+                await dbClient.query(queryText, [word.text])
             })
             await dbClient.query('COMMIT')
         } catch (e) {
-            await client.query('ROLLBACK')
+            await dbClient.query('ROLLBACK')
             throw e
         }
     }

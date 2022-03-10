@@ -74514,13 +74514,13 @@ Note that it **is okay** to import '@theatre/core' multiple times. But those imp
       }
       return result;
     }
-    const URL2 = proces.env.NODE_ENV === production ? "https://uta-text-creativity-p-1.herokuapp.com/" : "";
-    fetch(URL2 + "words-50").then((response) => response.json()).then((data) => {
+    const URL2 = false ? "https://uta-text-creativity-p-1.herokuapp.com/" : "";
+    fetch("/words-50").then((response) => response.json()).then((data) => {
       const collective = data;
       setTimeout(() => {
         const marqueess = (0, import_chunk.default)([...chants, ...(0, import_shuffle_array.default)(collective)], 10);
         console.log("MARQUEE", marqueess);
-        fetch(URL2 + "/add/words", {
+        fetch("add/words", {
           method: "POST",
           credentials: "same-origin",
           headers: {
@@ -74558,7 +74558,7 @@ Note that it **is okay** to import '@theatre/core' multiple times. But those imp
             }
           });
         });
-      }, 6e4);
+      }, 3e3);
       const backgroundMarquee = new marquee3000_default({
         element: document.querySelector("section.background"),
         gsap: Timeline,
