@@ -74514,12 +74514,13 @@ Note that it **is okay** to import '@theatre/core' multiple times. But those imp
       }
       return result;
     }
-    fetch("/words-50").then((response) => response.json()).then((data) => {
+    const URL2 = proces.env.NODE_ENV === production ? "https://uta-text-creativity-p-1.herokuapp.com/" : "";
+    fetch(URL2 + "words-50").then((response) => response.json()).then((data) => {
       const collective = data;
       setTimeout(() => {
         const marqueess = (0, import_chunk.default)([...chants, ...(0, import_shuffle_array.default)(collective)], 10);
         console.log("MARQUEE", marqueess);
-        fetch("/add/words", {
+        fetch(URL2 + "/add/words", {
           method: "POST",
           credentials: "same-origin",
           headers: {

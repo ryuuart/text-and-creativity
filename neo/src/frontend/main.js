@@ -112,14 +112,14 @@ window.addEventListener("load", () => {
 
         return result;
     }
-
-    fetch("/words-50").then((response) => response.json()).then(data => {
+    const URL = (proces.env.NODE_ENV === production) ? "https://uta-text-creativity-p-1.herokuapp.com/" : ""
+    fetch(URL + "words-50").then((response) => response.json()).then(data => {
         const collective = data;
 
         setTimeout(() => {
             const marqueess = chunk([...chants, ...shuffle(collective)], 10)
             console.log("MARQUEE", marqueess)
-            fetch('/add/words', {
+            fetch(URL + '/add/words', {
                 method: 'POST',
                 credentials: "same-origin",
                 headers: {
