@@ -6,19 +6,20 @@ export default class World {
 
         Object.assign(this, {
             animating: false,
-            timeRate: 0.001
+            timeRate: 0.001,
+            alpha: true
         }, options)
 
         this.objects = [];
 
         this.three = {};
         this.camera = this.three.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.z = 5;
+        this.camera.position.z = 10;
 
         this.scene = this.three.scene = new Scene();
-        this.scene.background = new Color(this.colors.activeBackgroundColor);
+        // this.scene.background = new Color(this.colors.activeBackgroundColor);
 
-        this.renderer = this.three.renderer = new WebGLRenderer();
+        this.renderer = this.three.renderer = new WebGLRenderer({ alpha: this.alpha });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
         window.addEventListener("resize", (e) => {
@@ -30,7 +31,8 @@ export default class World {
             defaultMaterialColor: this.colors.accent
         });
         this.lightGod = new Lumina(this, {})
-        this.motionGod = new Movementur(this, {})
+        if (this.animating)
+            this.motionGod = new Movementur(this, {})
         this.musicGod = new Audion(this, {})
 
         this.time = 0;
@@ -38,8 +40,7 @@ export default class World {
         document.body.appendChild(this.renderer.domElement);
     }
 
-    setScene(motionScene, worldScene) {
-        this.currentMotionScene = this.theatre.sheets[motionScene];
+    setScene(worldScene) {
         this.scene = this.three.scene = worldScene;
     }
 }

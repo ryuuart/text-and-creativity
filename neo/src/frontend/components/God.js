@@ -20,7 +20,8 @@ export class Audion extends God {
         super(world, options)
 
         Object.assign(this, {
-            backgroundMusicURL: "/VOLANT - NEOY2K.mp3",
+            // backgroundMusicURL: "/VOLANT - NEOY2K.mp3",
+            backgroundMusicURL: "/DVI-i PARAMETER.mp3",
         }, options)
 
         this.backgroundMusic = new Audio(this.backgroundMusicURL)
@@ -60,7 +61,7 @@ export class Creatio extends God {
 
     addWorldObject(name, geometry, material = new MeshBasicMaterial({ color: this.defaultMaterialColor })) {
         let motionState = undefined;
-        if (this.world.motionGod.theatre) {
+        if (this.world.animating && this.world.motionGod.theatre) {
             motionState = this.world.motionGod.currentMotionScene.object(name, {
                 position: {
                     x: 0,
@@ -109,12 +110,13 @@ export class Movementur extends God {
         this.theatre.sheets = {
             mainScene: this.theatre.project.sheet("Main Scene"),
         };
+        this.world.currentMotionScene = this.theatre.sheets["mainScene"];
 
         this.currentMotionScene = this.theatre.sheets.mainScene;
     }
 
     animate() {
-        requestAnimationFrame(this.animate.bind(this))
+        window.requestAnimationFrame(this.animate.bind(this))
 
         this.world.time += this.world.timeRate;
         this.world.objects.forEach((obj) => {

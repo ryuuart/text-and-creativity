@@ -10,9 +10,15 @@
 
 :root {
   /* Colors */
-  --active-background-color: rgba(248, 98, 98, 0.25);
-  --active-content-color: rgba(248, 98, 98, 0.35);
-  --accent-color: rgba(248, 98, 98, 1);
+  --active-background-color: rgba(15, 235, 44, 0.25);
+  --active-content-color: rgba(15, 235, 44, 0.75);
+  --accent-color: rgba(15, 235, 44, 1);
+  --secondary-color: rgba(196, 64, 248, 0.61);
+}
+
+pre {
+  word-wrap: break-word;
+  color: rgba(248, 168, 64, 0.877);
 }
 
 * {
@@ -22,24 +28,35 @@
 }
 
 body {
-  background: var(--active-background-color);
+  background: #ecf2ff;
 
   margin: 0;
 
   overflow-x: hidden;
 }
 
+section.background .marquee__inner {
+  font-size: 2vw !important;
+  font-weight: 400;
+}
+
 canvas {
   position: fixed;
   inset: 0;
 
-  z-index: 0;
+  z-index: 1;
 }
 
 body > *:not(canvas) {
   position: relative;
 
   z-index: 10;
+}
+
+section.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
 }
 
 .neo-label {
@@ -217,10 +234,6 @@ body > *:not(canvas) {
   transform: translateX(-50%);
 } */
 
-.background > .row > div {
-  margin-right: 2rem;
-}
-
 .foreground {
   font-family: "East Lift";
   font-size: 12rem;
@@ -230,35 +243,21 @@ body > *:not(canvas) {
   justify-content: center;
   align-items: center;
 
-  color: rgba(248, 98, 98, 0.65);
+  color: var(--secondary-color);
 
   inset: 0;
+
+  z-index: 10;
 }
 
-.marquee {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  overflow: hidden;
-  --offset: 20vw;
-  --item-font-size: 10vw;
-  --move-initial: calc(-25% + var(--offset));
-  --move-final: calc(-50% + var(--offset));
+pre {
+  opacity: 0.5;
+  max-width: 66ch;
+  filter: blur(1px);
 }
 
-.marquee__inner {
-  width: fit-content;
-  display: flex;
-  position: relative;
-  transform: translate3d(var(--move-initial), 0, 0);
-  animation: marquee 5s linear infinite;
-}
-
-.marquee__inner:nth-child(odd) {
-  margin-left: 25rem;
+.marquee > *:nth-child(odd) {
+  margin-right: 25rem;
 }
 
 .marquee span {
@@ -267,14 +266,4 @@ body > *:not(canvas) {
 
   font-size: 20vw;
   padding: 0 2vw;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translate3d(var(--move-initial), 0, 0);
-  }
-
-  100% {
-    transform: translate3d(var(--move-final), 0, 0);
-  }
 }
