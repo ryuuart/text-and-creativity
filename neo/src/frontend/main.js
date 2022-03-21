@@ -1,11 +1,10 @@
-import * as THREE from "three";
+import { MeshStandardMaterial } from "three";
 import shuffle from "shuffle-array";
 
-import World from "./components/World";
+import { World } from "@18nguyenl/artificer";
 import anime from "animejs";
 import chunk from "chunk";
 
-import Loader from "./loaders";
 import Marquee from "./motion/marquee3000";
 import { Timeline } from "gsap/gsap-core";
 
@@ -26,7 +25,7 @@ window.addEventListener("load", () => {
         width: 8,
         height: 8,
         depth: 8,
-        material: new THREE.MeshStandardMaterial({
+        material: new MeshStandardMaterial({
             emissive: MainWorld.colors.accent,
             color: MainWorld.colors.accent,
             transparent: true,
@@ -66,7 +65,7 @@ window.addEventListener("load", () => {
         radius: 3,
         widthSegments: 5,
         heightSegments: 5,
-        material: new THREE.MeshStandardMaterial({
+        material: new MeshStandardMaterial({
             emissive: 0x1704FF,
             color: 0x1704FF,
             transparent: true,
