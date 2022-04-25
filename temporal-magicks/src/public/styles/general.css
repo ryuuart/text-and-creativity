@@ -1,0 +1,19 @@
+body {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+body > main {
+  flex-grow: 1;
+}
+
+main {
+  height: 100%;
+
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+main > canvas {
+  flex: 1;
+}

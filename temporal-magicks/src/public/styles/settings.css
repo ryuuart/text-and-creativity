@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "Migra";
+  src: url("/fonts/PPMigra-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Migra";
+  font-style: italic;
+  src: url("/fonts/PPMigra-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Eiko";
+  src: url("/fonts/PPEiko-Regular.woff2") format("woff2");
+}
