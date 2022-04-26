@@ -1,0 +1,7 @@
+@import url(buttons.css);
+
+.great-magick-circle {
+  display: block;
+
+  margin: calc(var(--dim-sp-sm) * 5) auto;
+}

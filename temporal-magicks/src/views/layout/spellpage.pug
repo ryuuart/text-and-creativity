@@ -1,0 +1,9 @@
+extends layout.pug
+
+block content
+    header
+        h1.title=title
+        if !!subtitle
+            p=subtitle
+
+        block primary

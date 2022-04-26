@@ -1,0 +1,17 @@
+.button__container {
+  display: flex;
+}
+
+.button__container--center {
+  justify-content: center;
+}
+
+.button__main {
+  display: inline-block;
+  padding: 1rem 1.5rem;
+
+  background-color: var(--color-spell-ink);
+  color: var(--color-spell-aura);
+
+  font-size: var(--type-size-button);
+}
