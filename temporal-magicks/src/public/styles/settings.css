@@ -27,7 +27,7 @@
   --dim-sp-xxl: 4rem;
 
   /* Page */
-  --dim-page-top: 5.25rem;
+  --dim-page-top: var(--dim-sp-md);
 
   /* ================== */
   /* Typography */

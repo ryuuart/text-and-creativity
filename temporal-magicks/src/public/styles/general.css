@@ -3,7 +3,7 @@ body {
 }
 
 main {
-  min-height: 100%;
+  min-height: -webkit-fill-available;
 
   display: flex;
   flex-flow: column nowrap;
@@ -15,10 +15,6 @@ main > .content {
   display: flex;
   flex-direction: column;
 }
-
-/* main > canvas {
-  flex: 1;
-} */
 
 h3 {
   margin-bottom: var(--dim-sp-xs);
