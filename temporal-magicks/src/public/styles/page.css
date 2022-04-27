@@ -2,10 +2,27 @@
   font-size: var(--type-size-title);
 
   margin: auto;
+  margin-bottom: var(--dim-sp-md);
 
   max-width: 8ch;
 }
 
-body > :first-child {
+.subtitle {
+  margin: auto;
+
+  text-align: center;
+}
+
+.instruction {
+  margin: var(--dim-sp-lg);
+}
+
+.instruction > img {
+  display: block;
+
+  margin: var(--dim-sp-xl) auto;
+}
+
+.spellpage > :first-child {
   margin-top: var(--dim-page-top);
 }

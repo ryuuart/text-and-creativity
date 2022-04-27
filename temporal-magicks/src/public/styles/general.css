@@ -1,19 +1,30 @@
 body {
-  display: flex;
-  flex-flow: column nowrap;
-}
-
-body > main {
-  flex-grow: 1;
+  display: flow-root;
 }
 
 main {
-  height: 100%;
+  min-height: 100%;
 
   display: flex;
   flex-flow: column nowrap;
 }
 
-main > canvas {
+main > .content {
   flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* main > canvas {
+  flex: 1;
+} */
+
+h3 {
+  margin-bottom: var(--dim-sp-xs);
+}
+
+.hr__sp--small {
+  margin-top: var(--dim-sp-sm);
+  margin-bottom: var(--dim-sp-sm);
 }

@@ -19,8 +19,12 @@
   /* ========= */
   /* Dimensions*/
   /* ========= */
+  --dim-sp-xs: 0.5rem;
   --dim-sp-sm: 1rem;
-  --dim-sp-md: 2rem;
+  --dim-sp-md: 1.5rem;
+  --dim-sp-lg: 2rem;
+  --dim-sp-xl: 3.5rem;
+  --dim-sp-xxl: 4rem;
 
   /* Page */
   --dim-page-top: 5.25rem;
@@ -30,6 +34,7 @@
   /* ================== */
   --type-size-head-1: 3rem;
   --type-size-head-2: 2rem;
+  --type-size-head-3: 1.5rem;
   --type-size-body: 1rem;
 
   --type-size-title: var(--type-size-head-1);

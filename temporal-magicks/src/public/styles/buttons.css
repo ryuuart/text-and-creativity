@@ -1,8 +1,11 @@
-.button__container {
+div.button__container {
+  flex: 0;
+  flex-grow: 0;
+
   display: flex;
 }
 
-.button__container--center {
+div.button__container.button__container--center {
   justify-content: center;
 }
 
