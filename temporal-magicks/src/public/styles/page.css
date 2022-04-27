@@ -13,16 +13,6 @@
   text-align: center;
 }
 
-.instruction {
-  margin: var(--dim-sp-lg);
-}
-
-.instruction > img {
-  display: block;
-
-  margin: var(--dim-sp-xl) auto;
-}
-
 .spellpage > :first-child {
   margin-top: var(--dim-page-top);
 }
