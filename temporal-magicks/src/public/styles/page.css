@@ -18,5 +18,6 @@
 }
 
 .canvas {
+  height: -webkit-fill-available;
   overflow: hidden;
 }

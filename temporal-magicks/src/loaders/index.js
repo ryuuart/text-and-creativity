@@ -4,6 +4,6 @@ import websocket from "./websocket.js";
 
 export default async function (app) {
     await init(app);
-    await views(app);
     await websocket(app);
+    await views(app);
 }

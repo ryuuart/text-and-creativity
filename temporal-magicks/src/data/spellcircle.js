@@ -7,4 +7,11 @@ export default fastifyPlugin(async (fastify, options, done) => {
         objects: []
     }
 
+    async function addSpellAction(data) {
+        this.objects.push(data.object)
+        console.log(CURRENT_CIRCLE.objects);
+    }
+    fastify.decorate("addSpellAction", addSpellAction);
+
+    done();
 })

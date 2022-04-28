@@ -1,8 +1,8 @@
 import FastifyWebsocket from "fastify-websocket";
-
-import { websocket } from "../routes/index.js";
+import { SpellCircleModel } from "../data/index.js";
 
 export default async function (app) {
     app.register(FastifyWebsocket);
-    app.register(websocket);
+
+    app.register(SpellCircleModel);
 }

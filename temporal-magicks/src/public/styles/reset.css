@@ -33,3 +33,12 @@ a {
 a:visited {
   color: var(--color-spell-aura);
 }
+
+button {
+  background: none;
+  appearance: none;
+
+  font-size: 1rem;
+
+  border: none;
+}

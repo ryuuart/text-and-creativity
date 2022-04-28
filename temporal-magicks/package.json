@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "postinstall": "npm install --prefix src/frontend",
-    "start": "node src/app.js",
+    "start": "NODE_ENV=production node src/app.js",
     "dev": "run-p dev:*",
     "dev:frontend": "npm run dev --prefix src/frontend",
     "dev:server": "DATABASE_URL=$(heroku config:get DATABASE_URL -a uta-text-creativity-p-1) NODE_ENV=development nodemon src/app.js"

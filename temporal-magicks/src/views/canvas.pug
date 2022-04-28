@@ -4,19 +4,20 @@ block content
     .canvas__container
         canvas#canvas
         hr.hr__sp--small
-    button#websocket Websocket
     div.spell-action__container
             ul
+                //- li
+                //-     a(href="/history") History
                 li
-                    a(href="/history") History
+                    button#CircleAction Circle
                 li
-                    a() Circle
+                    button#LineAction Line
                 li
-                    a() Line
+                    button#OutlineAction Outline
                 li
-                    a() Outline
+                    button#LabelAction Label
                 li
-                    a() Label
+                    button#websocket Websocket
 
 block scripts
     script(type="module" src="/js/main.js") 

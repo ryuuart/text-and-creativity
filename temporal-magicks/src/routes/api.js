@@ -15,5 +15,19 @@ export function API(fastify, options, done) {
 
         done();
     })
+
+    fastify.register((fastify, options, done) => {
+        fastify.get("/circle", { websocket: true }, (connection, req) => {
+            connection.socket.on('message', message => {
+                switch (message.action) {
+                    case "create":
+
+                }
+                connection.socket.send('RECEIVED ACTION: ', message.action);
+            })
+        })
+
+        done();
+    })
     done();
 }

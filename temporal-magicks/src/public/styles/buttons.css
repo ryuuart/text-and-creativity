@@ -18,3 +18,14 @@ div.button__container.button__container--center {
 
   font-size: var(--type-size-button);
 }
+
+button,
+.button {
+  transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+button.active .button.active,
+button:hover,
+.button.active {
+  transform: scale(1.5);
+}
