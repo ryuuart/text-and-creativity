@@ -16,3 +16,7 @@
 .spellpage > :first-child {
   margin-top: var(--dim-page-top);
 }
+
+.canvas {
+  overflow: hidden;
+}
