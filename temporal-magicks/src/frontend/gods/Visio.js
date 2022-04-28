@@ -1,4 +1,5 @@
 import { God } from "@18nguyenl/artificer";
+import { hitTestItem } from "../divine_objects/VisaTools";
 
 import Paper from "paper";
 
@@ -9,17 +10,24 @@ export default class Visio extends God {
         Paper.setup(this.canvas);
     }
 
+    createOutlineFromPoint(point) {
+        const item = hitTestItem({ point: point });
+
+        return this.createOutline(item);
+    }
+
     createOutline(item) {
         const outline = item.clone()
         outline.data.label = undefined
         outline.data.selected = false;
 
-        item.data.scale += .35;
+        outline.data.scale = item.data.scale + 0.30;
         if (outline.data.type === "circle" || outline.data.type === "outline") {
-            outline.scale(item.data.scale);
+            outline.scale(outline.data.scale);
         }
         outline.data.type = "outline"
 
+        return outline;
     }
 
     createCircle(point) {
@@ -28,12 +36,18 @@ export default class Visio extends God {
         newCircle.closed = true;
         newCircle.data.type = "circle"
         newCircle.data.selected = false;
-        newCircle.data.scale = 1.25;
+        newCircle.data.scale = 1.15;
 
         return newCircle;
     }
 
-    createLine(startCircle, endCircle) {
+    createLine(start, end) {
+        const line = Paper.Path.Line(new Paper.Point(start), new Paper.Point(end));
+        line.strokeColor = (0, 0, 0);
+        return line;
+    }
+
+    createLineFromCircles(startCircle, endCircle) {
         const line = Paper.Path.Line(startCircle.position, endCircle.position);
 
         const intersect1 = line.getIntersections(startCircle);
@@ -43,7 +57,7 @@ export default class Visio extends God {
         finalLine.strokeColor = (0, 0, 0);
         line.remove()
 
-        finalLine.data.scale = 1.25;
+        finalLine.data.scale = 1.15;
         finalLine.data.type = "line"
 
         return finalLine;
@@ -59,6 +73,12 @@ export default class Visio extends God {
             if (style.fontWieght) text.fontWeight = style.fontWeight;
         }
         return text;
+    }
+
+    createPathFromJSON(path) {
+        const tmpPath = Paper.Path.importJSON(path);
+        tmpPath.strokeColor = (0, 0, 0);
+        return tmpPath;
     }
 
     createAlignedText(str, path, style, scale) {

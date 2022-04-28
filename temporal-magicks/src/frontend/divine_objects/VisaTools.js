@@ -1,6 +1,6 @@
 import Paper from "paper";
 
-function hitTestItem(evt) {
+export function hitTestItem(evt) {
     return Paper.project.getItems({
         // ...keep those containing event point...
         match: function (item) {
@@ -52,7 +52,18 @@ export default function VisaTools() {
         }
 
         if (selected.length === 2) {
-            this.createLine(selected[0], selected[1])
+            const line = this.createLineFromCircles(selected[0], selected[1])
+            this.world.pantheon["Communi"].act((god) => {
+                god.communeIdea("line", {
+                    positions: {
+                        start: [line.firstSegment.point.x, line.firstSegment.point.y],
+                        end: [line.lastSegment.point.x, line.lastSegment.point.y]
+                    },
+                    ...line.data
+                })
+            })
+
+            line.remove()
             cleanSelected()
         }
     })
@@ -70,7 +81,16 @@ export default function VisaTools() {
             selected.push(item);
             item.data.selected = true;
 
-            this.createOutline(item);
+            const outline = this.createOutline(item);
+
+            this.world.pantheon["Communi"].act((god) => {
+                god.communeIdea("outline", {
+                    position: outline.position,
+                    ...outline.data
+                })
+            })
+
+            outline.remove();
         }
         cleanSelected()
     })
@@ -95,8 +115,15 @@ export default function VisaTools() {
             }
             item.data.label = text;
 
-            this.createAlignedText(text, item, { fontSize: 10 }, item.data.scale)
-            item.data.scale += 0.15;
+            this.world.pantheon["Communi"].act((god) => {
+                god.communeIdea("label", {
+                    path: item.exportJSON(),
+                    ...item.data,
+                    scale: item.data.scale,
+                    type: "label",
+                })
+            })
+
         }
         cleanSelected()
     })

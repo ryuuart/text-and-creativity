@@ -30,13 +30,10 @@ export function API(fastify, options, done) {
                 const msg = JSON.parse(message);
                 console.log("MESSAGE RECEIVED");
                 console.log(msg)
-                switch (msg.action) {
-                    case "circle":
-                        await fastify.addSpellAction(msg.data);
-                        connections.forEach(con => {
-                            con.socket.send(JSON.stringify({ action: msg.action, data: msg.data }))
-                        })
-                }
+                await fastify.addSpellAction(msg.data);
+                connections.forEach(con => {
+                    con.socket.send(JSON.stringify({ action: msg.action, data: msg.data }))
+                })
             })
         })
 

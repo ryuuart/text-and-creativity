@@ -44,6 +44,21 @@ export default class Communi extends God {
                 case "circle":
                     const circle = god.createCircle([data.position.x, data.position.y]);
                     circle.data = data;
+                    break;
+                case "line":
+                    const line = god.createLine(data.positions.start, data.positions.end);
+                    line.data = data;
+                    break;
+                case "outline":
+                    const outline = god.createOutlineFromPoint(data.position);
+                    outline.data = data;
+                    break;
+                case "label":
+                    const tempPath = god.createPathFromJSON(data.path);
+                    god.createAlignedText(data.label, tempPath, { fontSize: 10 }, data.scale);
+
+                    tempPath.remove();
+                    break;
             }
         })
     }
