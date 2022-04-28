@@ -1,21 +1,22 @@
-extends layout/layout.pug
+extends layout/canvas.pug
 
 block content 
-        .canvas__container
-            canvas#canvas
-            hr.hr__sp--small
-            div.spell-action__container
-                ul
-                    li
-                        a(href="/history") History
-                    li
-                        a() Circle
-                    li
-                        a() Line
-                    li
-                        a() Outline
-                    li
-                        a() Label
+    .canvas__container
+        canvas#canvas
+        hr.hr__sp--small
+    button#websocket Websocket
+    div.spell-action__container
+            ul
+                li
+                    a(href="/history") History
+                li
+                    a() Circle
+                li
+                    a() Line
+                li
+                    a() Outline
+                li
+                    a() Label
 
 block scripts
     script(type="module" src="/js/main.js") 
