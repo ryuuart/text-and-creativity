@@ -4,8 +4,6 @@ export default class Communi extends God {
     constructor() {
         super("Communi");
 
-        const wsButton = document.getElementById("websocket");
-
         let websocketPrefix = "ws";
         if (process.env.NODE_ENV === "production") {
             const websocketPrefix = "wss";
@@ -14,6 +12,21 @@ export default class Communi extends God {
 
         this.telepathy.addEventListener("message", (ev) => {
             console.log(ev.data);
+            const data = JSON.parse(ev.data)
+
+            if (!!data.action) {
+                this.manifest(data.action, data.data);
+            }
+        })
+
+        this.initialize()
+    }
+
+    initialize() {
+        fetch("/circle/initialize").then(res => res.json()).then(data => {
+            data.data.forEach(action => {
+                this.manifest(action.type, action);
+            })
         })
     }
 
@@ -21,11 +34,17 @@ export default class Communi extends God {
         this.telepathy.send(JSON.stringify({ message: message }))
     }
 
-    communeIdea(message) {
-        this.telepathy.send()
+    communeIdea(action, idea) {
+        this.telepathy.send(JSON.stringify({ action: action, data: idea }))
     }
 
-    manifest() {
-
+    manifest(action, data) {
+        this.world.pantheon["Visio"].act((god) => {
+            switch (action) {
+                case "circle":
+                    const circle = god.createCircle([data.position.x, data.position.y]);
+                    circle.data = data;
+            }
+        })
     }
 }

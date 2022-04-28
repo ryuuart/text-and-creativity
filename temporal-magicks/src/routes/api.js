@@ -17,13 +17,26 @@ export function API(fastify, options, done) {
     })
 
     fastify.register((fastify, options, done) => {
-        fastify.get("/circle", { websocket: true }, (connection, req) => {
-            connection.socket.on('message', message => {
-                switch (message.action) {
-                    case "create":
+        const connections = [];
+        fastify.get("/circle/initialize", async (req, rep) => {
+            const CurrentCircle = await fastify.getCurrentCircle();
 
+            rep.send({ data: CurrentCircle.objects });
+        })
+
+        fastify.get("/circle", { websocket: true }, (connection, req) => {
+            connections.push(connection);
+            connection.socket.on('message', async message => {
+                const msg = JSON.parse(message);
+                console.log("MESSAGE RECEIVED");
+                console.log(msg)
+                switch (msg.action) {
+                    case "circle":
+                        await fastify.addSpellAction(msg.data);
+                        connections.forEach(con => {
+                            con.socket.send(JSON.stringify({ action: msg.action, data: msg.data }))
+                        })
                 }
-                connection.socket.send('RECEIVED ACTION: ', message.action);
             })
         })
 

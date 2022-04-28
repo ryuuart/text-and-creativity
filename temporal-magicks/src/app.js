@@ -1,8 +1,6 @@
 // Require the framework and instantiate it
 import Fastify from "fastify";
 import Initializer from "./loaders/index.js";
-import fs from "fs";
-import path from "path";
 
 const fastify = Fastify({ logger: true })
 

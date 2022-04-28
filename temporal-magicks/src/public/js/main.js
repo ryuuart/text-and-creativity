@@ -47347,12 +47347,16 @@
       Object.assign(this, {}, options);
       this.name = name;
     }
+    useTool(tool) {
+      return tool.bind(this)();
+    }
   };
   var World = class {
     constructor() {
       this.pantheon = {};
     }
     assignGod(god) {
+      god.world = this;
       this.pantheon[god.name] = {
         act: (action) => {
           god.world = this;
@@ -96957,122 +96961,11 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
 
   // gods/Visio.js
   var import_paper = __toESM(require_paper_full());
-  var import_alloyfinger = __toESM(require_alloy_finger());
-  function hitTestItem(evt) {
-    return import_paper.default.project.getItems({
-      match: function(item) {
-        return item.contains(evt.point);
-      }
-    }).pop();
-  }
   var Visio = class extends God {
     constructor() {
       super("Visio");
       this.canvas = document.getElementById("canvas");
       import_paper.default.setup(this.canvas);
-      this.selected = [];
-      this.cleanSelected.bind(this);
-      {
-        let zoom = 1;
-        let rotation = 0;
-        this.gestures = new import_alloyfinger.default(canvas, {
-          rotate: function(evt) {
-            let delta = evt.angle + rotation;
-            import_paper.default.view.rotation += delta;
-            rotation = evt.angle;
-          },
-          pinch: function(evt) {
-            let delta = evt.zoom - zoom;
-            import_paper.default.view.zoom += delta;
-            zoom = evt.zoom;
-          },
-          pressMove: (evt) => {
-            let evtDelta = new import_paper.default.Point(evt.deltaX, evt.deltaY);
-            evtDelta = evtDelta.rotate(-import_paper.default.view.rotation);
-            import_paper.default.view.center = import_paper.default.view.center.subtract(evtDelta);
-          }
-        });
-      }
-      {
-        const CircleAction = new import_paper.default.Tool();
-        const CircleActionButton = document.getElementById("CircleAction");
-        CircleActionButton.addEventListener("click", (evt) => {
-          console.log("Casting Circle Spell Action...");
-          this.cleanSelected();
-          CircleAction.activate();
-        });
-        CircleAction.on("mouseup", (evt) => {
-          this.createCircle([evt.point.x, evt.point.y]);
-          this.world.pantheon["Communi"].act((god) => {
-          });
-        });
-        const LineAction = new import_paper.default.Tool();
-        const LineActionButton = document.getElementById("LineAction");
-        LineActionButton.addEventListener("click", (evt) => {
-          console.log("Casting Line Spell Action...");
-          this.cleanSelected();
-          LineAction.activate();
-        });
-        LineAction.on("mouseup", (evt) => {
-          const item = hitTestItem(evt);
-          if (!!item && this.selected.length < 2 && (item.data.type === "outline" || item.data.type === "circle") && !item.data.selected) {
-            item.strokeWidth = 5;
-            item.data.selected = true;
-            this.selected.push(item);
-          }
-          if (this.selected.length === 2) {
-            this.createLine(this.selected[0], this.selected[1]);
-            this.cleanSelected();
-          }
-        });
-        const OutlineAction = new import_paper.default.Tool();
-        const OutlineActionButton = document.getElementById("OutlineAction");
-        OutlineActionButton.addEventListener("click", (evt) => {
-          console.log("Casting Outline Spell Action...");
-          this.cleanSelected();
-          OutlineAction.activate();
-        });
-        OutlineAction.on("mouseup", (evt) => {
-          const item = evt.item || hitTestItem(evt);
-          if (!!item && !item.data.selected && (item.data.type === "circle" || item.data.type === "line" || item.data.type === "outline")) {
-            this.selected.push(item);
-            item.data.selected = true;
-            this.createOutline(item);
-          }
-          this.cleanSelected();
-        });
-        const LabelAction = new import_paper.default.Tool();
-        const LabelActionButton = document.getElementById("LabelAction");
-        LabelActionButton.addEventListener("click", (evt) => {
-          console.log("Casting Label Spell Action...");
-          this.cleanSelected();
-          LabelAction.activate();
-        });
-        LabelAction.on("mouseup", (evt) => {
-          const item = evt.item || hitTestItem(evt);
-          if (!!item && !item.data.selected && !item.data.label && (item.data.type === "circle" || item.data.type === "line" || item.data.type === "outline")) {
-            this.selected.push(item);
-            item.data.selected = true;
-            const text = prompt("Speak your words");
-            if (!text) {
-              return;
-            }
-            item.data.label = text;
-            this.createAlignedText(text, item, { fontSize: 10 }, item.data.scale);
-            this.data.scale += 0.15;
-          }
-          this.cleanSelected();
-        });
-        import_paper.default.tool = void 0;
-      }
-    }
-    cleanSelected() {
-      while (this.selected.length > 0) {
-        const item = this.selected[this.selected.length - 1];
-        item.strokeWidth = 1;
-        item.data.selected = false;
-        this.selected.pop();
-      }
     }
     createOutline(item) {
       const outline = item.clone();
@@ -97090,7 +96983,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       newCircle.closed = true;
       newCircle.data.type = "circle";
       newCircle.data.selected = false;
-      newCircle.data.scale = 1.15;
+      newCircle.data.scale = 1.25;
       return newCircle;
     }
     createLine(startCircle, endCircle) {
@@ -97100,7 +96993,7 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       const finalLine = import_paper.default.Path.Line(intersect1[0].point.clone(), intersect2[0].point.clone());
       finalLine.strokeColor = (0, 0, 0);
       line.remove();
-      finalLine.data.scale = 1.15;
+      finalLine.data.scale = 1.25;
       finalLine.data.type = "line";
       return finalLine;
     }
@@ -97121,7 +97014,8 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
     }
     createAlignedText(str, path, style, scale) {
       const pathClone = path.clone();
-      pathClone.scale(scale);
+      if (path.data.type !== "line")
+        pathClone.scale(scale);
       if (str && str.length > 0 && path) {
         const glyphTexts = [];
         for (let i = 0; i < str.length; i++) {
@@ -97162,7 +97056,6 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
   var Communi = class extends God {
     constructor() {
       super("Communi");
-      const wsButton = document.getElementById("websocket");
       let websocketPrefix = "ws";
       if (false) {
         const websocketPrefix2 = "wss";
@@ -97170,23 +97063,169 @@ Note that it **is okay** to import '@theatre/studio' multiple times. But those i
       this.telepathy = new WebSocket(`${websocketPrefix}://${window.location.host}/circle`);
       this.telepathy.addEventListener("message", (ev) => {
         console.log(ev.data);
+        const data = JSON.parse(ev.data);
+        if (!!data.action) {
+          this.manifest(data.action, data.data);
+        }
+      });
+      this.initialize();
+    }
+    initialize() {
+      fetch("/circle/initialize").then((res) => res.json()).then((data) => {
+        data.data.forEach((action) => {
+          this.manifest(action.type, action);
+        });
       });
     }
     communeWords(message) {
       this.telepathy.send(JSON.stringify({ message }));
     }
-    communeIdea(message) {
-      this.telepathy.send();
+    communeIdea(action, idea) {
+      this.telepathy.send(JSON.stringify({ action, data: idea }));
     }
-    manifest() {
+    manifest(action, data) {
+      this.world.pantheon["Visio"].act((god) => {
+        switch (action) {
+          case "circle":
+            const circle = god.createCircle([data.position.x, data.position.y]);
+            circle.data = data;
+        }
+      });
     }
   };
+
+  // divine_objects/Gestura.js
+  var import_paper2 = __toESM(require_paper_full());
+  var import_alloyfinger = __toESM(require_alloy_finger());
+  function Gestura() {
+    let zoom = 1;
+    let rotation = 0;
+    const gestures = new import_alloyfinger.default(canvas, {
+      rotate: function(evt) {
+        let delta = evt.angle + rotation;
+        import_paper2.default.view.rotation += delta;
+        rotation = evt.angle;
+      },
+      pinch: function(evt) {
+        let delta = evt.zoom - zoom;
+        import_paper2.default.view.zoom += delta;
+        zoom = evt.zoom;
+      },
+      pressMove: (evt) => {
+        let evtDelta = new import_paper2.default.Point(evt.deltaX, evt.deltaY);
+        evtDelta = evtDelta.rotate(-import_paper2.default.view.rotation);
+        import_paper2.default.view.center = import_paper2.default.view.center.subtract(evtDelta);
+      }
+    });
+    return gestures;
+  }
+
+  // divine_objects/VisaTools.js
+  var import_paper3 = __toESM(require_paper_full());
+  function hitTestItem(evt) {
+    return import_paper3.default.project.getItems({
+      match: function(item) {
+        return item.contains(evt.point);
+      }
+    }).pop();
+  }
+  function VisaTools() {
+    const selected = [];
+    const CircleAction = new import_paper3.default.Tool();
+    const CircleActionButton = document.getElementById("CircleAction");
+    CircleActionButton.addEventListener("click", (evt) => {
+      console.log("Casting Circle Spell Action...");
+      cleanSelected();
+      CircleAction.activate();
+    });
+    CircleAction.on("mouseup", (evt) => {
+      const circle = this.createCircle([evt.point.x, evt.point.y]);
+      this.world.pantheon["Communi"].act((god) => {
+        god.communeIdea("circle", {
+          position: {
+            x: circle.position.x,
+            y: circle.position.y
+          },
+          ...circle.data
+        });
+      });
+      circle.remove();
+    });
+    const LineAction = new import_paper3.default.Tool();
+    const LineActionButton = document.getElementById("LineAction");
+    LineActionButton.addEventListener("click", (evt) => {
+      console.log("Casting Line Spell Action...");
+      cleanSelected();
+      LineAction.activate();
+    });
+    LineAction.on("mouseup", (evt) => {
+      const item = hitTestItem(evt);
+      if (!!item && selected.length < 2 && (item.data.type === "outline" || item.data.type === "circle") && !item.data.selected) {
+        item.strokeWidth = 5;
+        item.data.selected = true;
+        selected.push(item);
+      }
+      if (selected.length === 2) {
+        this.createLine(selected[0], selected[1]);
+        cleanSelected();
+      }
+    });
+    const OutlineAction = new import_paper3.default.Tool();
+    const OutlineActionButton = document.getElementById("OutlineAction");
+    OutlineActionButton.addEventListener("click", (evt) => {
+      console.log("Casting Outline Spell Action...");
+      cleanSelected();
+      OutlineAction.activate();
+    });
+    OutlineAction.on("mouseup", (evt) => {
+      const item = evt.item || hitTestItem(evt);
+      if (!!item && !item.data.selected && (item.data.type === "circle" || item.data.type === "line" || item.data.type === "outline")) {
+        selected.push(item);
+        item.data.selected = true;
+        this.createOutline(item);
+      }
+      cleanSelected();
+    });
+    const LabelAction = new import_paper3.default.Tool();
+    const LabelActionButton = document.getElementById("LabelAction");
+    LabelActionButton.addEventListener("click", (evt) => {
+      console.log("Casting Label Spell Action...");
+      cleanSelected();
+      LabelAction.activate();
+    });
+    LabelAction.on("mouseup", (evt) => {
+      const item = evt.item || hitTestItem(evt);
+      if (!!item && !item.data.selected && !item.data.label && (item.data.type === "circle" || item.data.type === "line" || item.data.type === "outline")) {
+        selected.push(item);
+        item.data.selected = true;
+        const text = prompt("Speak your words");
+        if (!text) {
+          return;
+        }
+        item.data.label = text;
+        this.createAlignedText(text, item, { fontSize: 10 }, item.data.scale);
+        item.data.scale += 0.15;
+      }
+      cleanSelected();
+    });
+    function cleanSelected() {
+      while (selected.length > 0) {
+        const item = selected[selected.length - 1];
+        item.strokeWidth = 1;
+        item.data.selected = false;
+        selected.pop();
+      }
+    }
+    import_paper3.default.tool = void 0;
+  }
 
   // main.js
   window.addEventListener("load", () => {
     const MainWorld = new World();
     MainWorld.assignGod(new Visio());
     MainWorld.assignGod(new Communi());
+    MainWorld.pantheon["Visio"].god.useTool(Gestura);
+    MainWorld.pantheon["Visio"].god.useTool(VisaTools);
   });
 })();
 /*
