@@ -1,4 +1,4 @@
-import { World } from "@18nguyenl/artificer";
+import { World } from "./external/artificer.min.mjs";
 import { Communi, Visio } from "./gods";
 import { Gestura, VisaTools } from "./divine_objects";
 

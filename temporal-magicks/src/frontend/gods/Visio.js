@@ -1,4 +1,4 @@
-import { God } from "@18nguyenl/artificer";
+import { God } from "../external/artificer.min.mjs";
 import { hitTestItem } from "../divine_objects/VisaTools";
 
 import Paper from "paper";

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production node esbuild.config.js",
-    "dev": "NODE_ENV=development node esbuild.config.js"
+    "dev": "NODE_ENV=development SECURE=on node esbuild.config.js"
   },
   "keywords": [],
   "author": "",

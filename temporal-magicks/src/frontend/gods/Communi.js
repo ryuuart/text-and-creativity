@@ -1,13 +1,10 @@
-import { God } from "@18nguyenl/artificer";
+import { God } from "../external/artificer.min.mjs";
 
 export default class Communi extends God {
     constructor() {
         super("Communi");
 
-        let websocketPrefix = "ws";
-        if (process.env.NODE_ENV === "production") {
-            const websocketPrefix = "wss";
-        }
+        const websocketPrefix = "wss";
         this.telepathy = new WebSocket(`${websocketPrefix}://${window.location.host}/circle`)
 
         this.telepathy.addEventListener("message", (ev) => {
