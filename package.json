@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm install --prefix neo"
+    "postinstall": "npm install --prefix neo",
+    "temporalmagicks": "npm run start --prefix temporal-magicks"
   },
   "repository": {
     "type": "git",
